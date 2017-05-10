@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="scrollview_margin">13dp</dimen>
+    <dimen name="relativlayout_width">548dp</dimen>
+    <dimen name="relativlayout_height">160dp</dimen>
+    <dimen name="relativlayout_padding">10.6dp</dimen>
+    <dimen name="textview_margin_top">10dp</dimen>
+</resources>

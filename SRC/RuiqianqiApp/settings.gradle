@@ -1,0 +1,1 @@
+include ':tools', ':flytek', ':plugin', ':zcui', ':socket', ':drive', ':zcbrain', ':allinone'

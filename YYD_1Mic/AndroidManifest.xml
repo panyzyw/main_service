@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.yongyida.robot.voice"
+    android:versionCode="29"
+    android:versionName="2.0.8" >
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="21" />
+
+    <!-- 改变短信的已读状态 -->
+    <uses-permission android:name="android.permission.WRITE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <!-- 连接网络权限，用于执行云端语音能力 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- 读取网络信息状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 获取当前wifi状态 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 允许程序改变网络连接状态 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <!-- 读取手机信息权限 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 读取联系人权限，上传联系人需要用到此权限 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- 外存储写入权限，构建语法需要用到此权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.READ_SMS" >
+    </uses-permission>
+    <!-- 摄相头权限，拍照需要用到 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 开机自启权限 -->
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>  
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- 蓝牙 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" /> 
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+	<uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+   
+    <application
+        android:name="com.yongyida.robot.voice.app.MyApp"
+        android:allowBackup="true"
+        android:icon="@drawable/main_icon"
+        android:label="@string/app_name"
+        android:persistent="true"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+
+        <activity
+            android:name="com.yongyida.robot.voice.SplashActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" 
+            android:launchMode="singleTop" >
+            <intent-filter>
+                
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+		<activity android:name="com.yongyida.robot.voice.mic.MicTestActivity"></activity>
+       
+        <receiver android:name="com.yongyida.robot.voice.broadcast.StartMainServiceReceiver"
+            android:enabled="true" >
+            <intent-filter android:priority="1000">
+                
+                <action android:name="com.yongyida.robot.voice.MAIN"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.yongyida.robot.voice.broadcast.TranslateRevcevier"
+            android:enabled="true" >
+            <intent-filter android:priority="1000">
+                <action android:name="com.yongyida.robot.voice.translate"/>
+            </intent-filter>
+        </receiver>
+
+        <provider android:exported="true"
+            android:name="com.yongyida.robot.voice.dao.MyProvider"
+            android:authorities="com.yongyida.robot.voice.master.httprequest">
+            
+        </provider>
+        
+        <provider
+            android:name="com.yongyida.robot.voice.dao.RobotsFriendsProvider"
+            android:authorities="com.yongyidarobot.provider"
+            android:enabled="true"
+            android:exported="true" />
+        
+        <!-- 服务 -->
+        <service android:name="com.yongyida.robot.voice.service.SplashService" 
+            android:priority = "1000">
+        </service>
+		
+		<activity
+            android:name=".activity.MonitorExpressionActivity"
+            android:screenOrientation="landscape" />
+    </application>
+
+</manifest>

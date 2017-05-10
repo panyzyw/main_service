@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlly_start"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:alpha="0"
+    
+    >
+ <!-- 	android:alpha="0" -->
+    <LinearLayout
+        android:id="@+id/llay_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#EA3E2D"
+        android:orientation="horizontal" >
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:background="#EA3E2D"
+            android:drawableLeft="@drawable/bg_back"
+            android:text="@string/exit"
+            android:textColor="@color/color_white" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:text="@string/mainservice"
+            android:textColor="@color/color_white"
+            android:textSize="18dp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="#EA3E2D"
+            android:text="@string/about"
+            android:textColor="@color/color_white" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_above="@+id/btn_recoding"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="15dp"
+        android:background="@color/color_black" />
+
+    <Button
+        android:id="@+id/btn_recoding"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/bg_recoding_p" />
+
+</RelativeLayout>

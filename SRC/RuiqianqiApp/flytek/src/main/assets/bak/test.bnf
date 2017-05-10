@@ -1,0 +1,334 @@
+#BNF+IAT 1.0 UTF-8;
+!grammar dynamic;
+!slot <abx1>;
+!slot <abx2>;
+!slot <abx3>;
+!slot <abx4>;
+!slot <abx5>;
+!slot <abx6>;
+!slot <abx7>;
+!slot <abx8>;
+!slot <abx9>;
+!slot <abx10>;
+!slot <abx11>;
+!slot <abx12>;
+!slot <abx13>;
+!slot <abx14>;
+!slot <abx15>;
+!slot <abx16>;
+!slot <abx17>;
+!slot <abx18>;
+!slot <abx19>;
+!slot <abx20>;
+!slot <abx21>;
+!slot <abx22>;
+!slot <abx23>;
+!slot <abx24>;
+!slot <abx25>;
+!slot <abx26>;
+!slot <abx27>;
+!slot <abx28>;
+!slot <abx29>;
+!slot <abx30>;
+!slot <abx31>;
+!slot <abx32>;
+!slot <abx33>;
+!slot <abx34>;
+!slot <abx35>;
+!slot <abx36>;
+!slot <abx37>;
+!slot <abx38>;
+!slot <abx39>;
+!slot <abx40>;
+!slot <abx41>;
+!slot <abx42>;
+!slot <abx43>;
+!slot <abx44>;
+!slot <abx45>;
+!slot <abx46>;
+!slot <abx47>;
+!slot <abx48>;
+!slot <abx49>;
+!slot <abx50>;
+!slot <abx51>;
+!slot <abx52>;
+!slot <abx53>;
+!slot <abx54>;
+!slot <abx55>;
+!slot <abx56>;
+!slot <abx57>;
+!slot <abx58>;
+!slot <abx59>;
+!slot <abx60>;
+!slot <abx61>;
+!slot <abx62>;
+!slot <abx63>;
+!slot <abx64>;
+!slot <abx65>;
+!slot <abx66>;
+!slot <abx67>;
+!slot <abx68>;
+!slot <abx69>;
+!slot <abx70>;
+!slot <abx71>;
+!slot <abx72>;
+!slot <abx73>;
+!slot <abx74>;
+!slot <abx75>;
+!slot <abx76>;
+!slot <abx77>;
+!slot <abx78>;
+!slot <abx79>;
+!slot <abx80>;
+!slot <abx81>;
+!slot <abx82>;
+!slot <abx83>;
+!slot <abx84>;
+!slot <abx85>;
+!slot <abx86>;
+!slot <abx87>;
+!slot <abx88>;
+!slot <abx89>;
+!slot <abx90>;
+!slot <abx91>;
+!slot <abx92>;
+!slot <abx93>;
+!slot <abx94>;
+!slot <abx95>;
+!slot <abx96>;
+!slot <abx97>;
+!slot <abx98>;
+!slot <abx99>;
+!slot <abx100>;
+!start <openStart>;
+
+<openStart>:<abx1>|
+<abx2>|
+<abx3>|
+<abx4>|
+<abx5>|
+<abx6>|
+<abx7>|
+<abx8>|
+<abx9>|
+<abx10>|
+<abx11>|
+<abx12>|
+<abx13>|
+<abx14>|
+<abx15>|
+<abx16>|
+<abx17>|
+<abx18>|
+<abx19>|
+<abx20>|
+<abx21>|
+<abx22>|
+<abx23>|
+<abx24>|
+<abx25>|
+<abx26>|
+<abx27>|
+<abx28>|
+<abx29>|
+<abx30>|
+<abx31>|
+<abx32>|
+<abx33>|
+<abx34>|
+<abx35>|
+<abx36>|
+<abx37>|
+<abx38>|
+<abx39>|
+<abx40>|
+<abx41>|
+<abx42>|
+<abx43>|
+<abx44>|
+<abx45>|
+<abx46>|
+<abx47>|
+<abx48>|
+<abx49>|
+<abx50>|
+<abx51>|
+<abx52>|
+<abx53>|
+<abx54>|
+<abx55>|
+<abx56>|
+<abx57>|
+<abx58>|
+<abx59>|
+<abx60>|
+<abx61>|
+<abx62>|
+<abx63>|
+<abx64>|
+<abx65>|
+<abx66>|
+<abx67>|
+<abx68>|
+<abx69>|
+<abx70>|
+<abx71>|
+<abx72>|
+<abx73>|
+<abx74>|
+<abx75>|
+<abx76>|
+<abx77>|
+<abx78>|
+<abx79>|
+<abx80>|
+<abx81>|
+<abx82>|
+<abx83>|
+<abx84>|
+<abx85>|
+<abx86>|
+<abx87>|
+<abx88>|
+<abx89>|
+<abx90>|
+<abx91>|
+<abx92>|
+<abx93>|
+<abx94>|
+<abx95>|
+<abx96>|
+<abx97>|
+<abx100>;
+
+<abx1>:北京市| 
+天津市|
+上海市|
+重庆市|
+河北省|
+河南省|
+云南省|
+辽宁省|
+黑龙江|
+湖南省|
+安徽省|
+山东省|
+维吾尔|
+江苏省|
+浙江省|
+江西省|
+湖北省|
+广西省|
+甘肃省|
+山西省| 
+内蒙古|
+陕西省|
+吉林省| 
+福建省|
+贵州省| 
+广东省| 
+青海省|
+西藏省|
+四川省|
+宁夏省|
+海南省|
+台湾省;
+<abx2>:在哪里|是哪里|到哪里|走哪里|增哪里|夺哪里|肝哪里|脚哪里|是硒鼓|桭要村;
+<abx3>:你会做|顶替在|星罗棋|杜鹏胡|雪国夺|山路好|好妹子|专用机|李志鹏|舅舅加;
+<abx4>:美术了|音乐啊|体育啊|语文啊|数学啊|英语了|地理了|化学呀|物理的|生物吧;
+<abx5>:日天了|好地呀|王族呀;
+<abx6>:你好吗;
+<abx7>:你好吗;
+<abx8>:你好吗;
+<abx9>:你好吗;
+<abx10>:你好吗;
+<abx11>:你好吗;
+<abx12>:你好吗;
+<abx13>:你好吗;
+<abx14>:你好吗;
+<abx15>:你好吗;
+<abx16>:你好吗;
+<abx17>:你好吗;
+<abx18>:你好吗;
+<abx19>:你好吗;
+<abx20>:你好吗;
+<abx21>:你好吗;
+<abx22>:你好吗;
+<abx23>:你好吗;
+<abx24>:你好吗;
+<abx25>:你好吗;
+<abx26>:你好吗;
+<abx27>:你好吗;
+<abx28>:你好吗;
+<abx29>:你好吗;
+<abx30>:你好吗;
+<abx31>:你好吗;
+<abx32>:你好吗;
+<abx33>:你好吗;
+<abx34>:你好吗;
+<abx35>:你好吗;
+<abx36>:你好吗;
+<abx37>:你好吗;
+<abx38>:你好吗;
+<abx39>:你好吗;
+<abx40>:你好吗;
+<abx41>:你好吗;
+<abx42>:你好吗;
+<abx43>:你好吗;
+<abx44>:你好吗;
+<abx45>:你好吗;
+<abx46>:你好吗;
+<abx47>:你好吗;
+<abx48>:你好吗;
+<abx49>:你好吗;
+<abx50>:你好吗;
+<abx51>:你好吗;
+<abx52>:你好吗;
+<abx53>:你好吗;
+<abx54>:你好吗;
+<abx55>:你好吗;
+<abx56>:你好吗;
+<abx57>:你好吗;
+<abx58>:你好吗;
+<abx59>:你好吗;
+<abx60>:你好吗;
+<abx61>:你好吗;
+<abx62>:你好吗;
+<abx63>:你好吗;
+<abx64>:你好吗;
+<abx65>:你好吗;
+<abx66>:你好吗;
+<abx67>:你好吗;
+<abx68>:你好吗;
+<abx69>:你好吗;
+<abx70>:你好吗;
+<abx71>:你好吗;
+<abx72>:你好吗;
+<abx73>:你好吗;
+<abx74>:你好吗;
+<abx75>:你好吗;
+<abx76>:你好吗;
+<abx77>:你好吗;
+<abx78>:你好吗;
+<abx79>:你好吗;
+<abx80>:你好吗;
+<abx81>:你好吗;
+<abx82>:你好吗;
+<abx83>:你好吗;
+<abx84>:你好吗;
+<abx85>:你好吗;
+<abx86>:你好吗;
+<abx87>:你好吗;
+<abx88>:你好吗;
+<abx89>:你好吗;
+<abx90>:你好吗;
+<abx91>:你好吗;
+<abx92>:你好吗;
+<abx93>:你好吗;
+<abx94>:你好吗;
+<abx95>:你好吗;
+<abx96>:你好吗;
+<abx97>:你好吗;
+<abx98>:你好吗;
+<abx99>:你好吗;
+<abx100>:你好吗;

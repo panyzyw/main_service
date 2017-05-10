@@ -1,0 +1,72 @@
+apply plugin: 'com.android.application'
+apply from: '../buildshell/android.gradle'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+
+    defaultConfig {
+        applicationId "com.zccl.ruiqianqi.brain"
+        testApplicationId "com.zccl.ruiqianqi.brain.test"
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    //这个是选择配置，而不是编译配置
+    productFlavors {
+        P_Test{
+            applicationId 'com.zccl.ruiqianqi.brain'
+        }
+        P_armv7 {
+            applicationId 'com.zccl.ruiqianqi.brain'
+        }
+        P_armall {
+            applicationId 'com.zccl.ruiqianqi.brain'
+        }
+        P_x86 {
+            applicationId 'com.zccl.ruiqianqi.brain'
+        }
+        P_zhshr {
+            applicationId 'com.zccl.ruiqianqi.brain'
+        }
+    }
+
+}
+
+//主要是使用android.os.SystemProperties
+def getLayoutLibPath() {
+    return "${android.getSdkDirectory().getAbsolutePath()}" + "/platforms/" +
+            android.compileSdkVersion + "/data/layoutlib.jar"
+}
+
+dependencies {
+
+    provided files(getLayoutLibPath())
+    compile fileTree(include: ['*.jar'], dir: 'src/main/libs')
+
+    def presentationTest = rootProject.ext.presentationTest
+    testCompile presentationTest.junit
+
+    androidTestCompile presentationTest.mockito
+    androidTestCompile presentationTest.dexmaker
+    androidTestCompile presentationTest.dexmakerMockito
+    androidTestCompile (presentationTest.espresso, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile presentationTest.testingSupportLib
+
+    def presentationDepend = rootProject.ext.presentationDepend
+    compile presentationDepend.butterknife
+    apt     presentationDepend.butterknifeApt
+    compile presentationDepend.dbflow
+    compile presentationDepend.dbflowCore
+    apt     presentationDepend.dbflowApt
+
+    def developmentDepend = rootProject.ext.developmentDepend
+    debugCompile      developmentDepend.leakcanary
+    releaseCompile    developmentDepend.leakcanaryNoop
+
+    compile project(':flytek')
+    compile project(':drive')
+    compile project(':socket')
+    compile project(':zcui')
+}

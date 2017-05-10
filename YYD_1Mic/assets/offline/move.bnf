@@ -1,0 +1,135 @@
+#BNF+IAT 1.0 UTF-8;
+!grammar move;
+!slot <M>;
+!slot <M1>;
+!slot <A1A>;
+!slot <A1B>;
+!slot <A2>;
+!slot <A3>;
+!slot <A4>;
+!slot <A5A>;
+!slot <A5B>;
+!slot <A5C>;
+!slot <A6>;
+!slot <A7>;
+!slot <A8A>;
+!slot <A8B>;
+!slot <A8C>;
+!slot <A9>;
+!slot <A10>;
+!slot <A11A>;
+!slot <A11B>;
+!slot <A12>;
+!slot <ONE>;
+!slot <sing>;
+!slot <song>;
+!slot <jump>;
+!slot <dance>;
+!slot <take>;
+!slot <picture>;
+!slot <your>;
+!slot <movePre>;
+!slot <direction>;
+!slot <moveEnd>;
+!slot <moveHeadPre>;
+!slot <moveHeadEnd>;
+!slot <turnHeadPre>;
+!slot <turnHeadMid>;
+!slot <turnHeadEnd>;
+!slot <turnHead2Pre>;
+!slot <turnHead2Mid>;
+!slot <turnHead2End>;
+!slot <turnHead3Pre>;
+!slot <turnHead3Mid>;
+!slot <turnHead3Mid2>;
+!slot <turnHead3End>;
+!slot <alwaysMovePre>;
+!slot <alwaysMoveMid>;
+!slot <contact>;
+!slot <callPre>;
+!slot <call>;
+!slot <Phone>;
+!slot <callTo>;
+!slot <words>;
+!slot <operaNet1A>;
+!slot <operaNet1B>;
+!start <moveStart>;
+
+<moveStart>:
+<A1A><A1B>|
+<A2>[<M>]|
+<A3>[<M>]|
+[<M1>]<A4>[<M>]|
+[<M1>][<A5A>][<A5B>]<A5C>[<M>]|
+[<M1>]<A6>[<M>]|
+[<M1>]<A7>[<M>]|
+[<M1>]<A8A><A8B>[<A8C>][<M>]|
+[<M1>]<A9>[<M>]|
+[<M1>]<A10>[<M>]|
+[<M1>][<A11A>][<A11B>][<M>]|
+<A12>[<M>]|
+<sing>[<ONE>]<song>|
+<jump>[<ONE>]<dance>|
+<take>[<ONE>]<picture>|
+<movePre><direction>[<moveEnd>]|
+<moveHeadPre>[<your>]<moveHeadEnd>|
+[<turnHeadPre>][<your>]<turnHeadMid><turnHeadEnd>|
+[<turnHead2Pre>]<turnHead2Mid><turnHead2End>|
+[<turnHead3Pre>][<your>]<turnHead3Mid><turnHead3Mid2>[<turnHead3End>]|
+<alwaysMovePre><movePre><alwaysMoveMid>[<moveEnd>]|
+[<callPre>][<callTo>]<contact><call>[ONE]<Phone>|[<callPre>]<call>[ONE]<Phone>[<callTo>]<contact>|
+<words>|<operaNet1A><operaNet1B>;
+
+<M>:啊|呀|的|吗|呢|哦;
+<M1>:那;
+<A1A>:早上|上午|中午|下午|晚上;
+<A1B>:好;
+<A2>:你来自哪里|你从哪里来;
+<A3>:你知道你现在在哪里|你现在在哪里|你在哪里;
+<A4>:你知道你参加的是什么会议;
+<A5A>:北京;
+<A5B>:今天的|的;
+<A5C>:天气怎么样;
+<A6>:这个天气吃什么东西比较养生;
+<A7>:老年人要怎么养生;
+<A8A>:你来北京有;
+<A8B>:想吃的|什么想吃的;
+<A8C>:东西;
+<A9>:你会做什么|你会干嘛|你有什么功能;
+<A10>:你这么厉害;
+<A11A>:拜拜;
+<A11B>:下次见|再见;
+<A12>:你好;
+<ONE>:首|个|支|张;
+<sing>:唱;
+<song>:歌;
+<jump>:跳;
+<dance>:舞;
+<take>:拍;
+<picture>:照;
+<your>:你的;
+<movePre>:向|往;
+<direction>:前|后|左|右;
+<moveEnd>:走|跑|转|移动|行走|退;
+<moveHeadPre>:抬|抬起|低|低下;
+<moveHeadEnd>:头;
+<turnHeadPre>:把;
+<turnHeadMid>:头向|头往;
+<turnHeadEnd>:左转|右转;
+<turnHead2Pre>:向|往;
+<turnHead2Mid>:左|右|又;
+<turnHead2End>:看|转头|瞅;
+<turnHead3Pre>:把;
+<turnHead3Mid>:头转向;
+<turnHead3Mid2>:左|右;
+<turnHead3End>:边|面;
+<alwaysMovePre>:一直;
+<alwaysMoveMid>:前|后;
+<contact>:10086;
+<callPre>:我要|我想|我想要;
+<call>:打|拨;
+<Phone>:电话;
+<callTo>:给;
+<words>:过来;
+<operaNet1A>:断|断开|连|连接;
+<operaNet1B>:网|网络;

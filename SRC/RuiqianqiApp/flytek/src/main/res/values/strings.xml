@@ -1,0 +1,208 @@
+<resources>
+    <string name="app_name">Voice</string>
+    <string name="xiaoyong_app_id">56065ce8</string>
+    <string name="xiaogao_app_id">56065ce8</string>
+    <string name="xiaowei_app_id">56065ce8</string>
+    <string name="xiaoer_app_id">56aadb6d</string>
+    <string name="xiaohe_app_id">56aadb6d</string>
+    <string name="xiaosi_app_id">561385ab</string>
+    <string name="xiaotong_app_id">561385ab</string>
+
+    <string name="cloud_no_match">云端无匹配结果</string>
+    <string name="cloud_low_match">云端匹配度太低</string>
+
+    <string name="offline_no_match_words">不好意思，没有匹配到离线命令词</string>
+    <string name="offline_no_match_cmd">不好意思，离线命令词没有匹配到指令</string>
+    <string name="offline_serial_id_error">离线命令词ID异常</string>
+    <string name="offline_serial_slot_error">离线命令词SLOT异常</string>
+    <string name="offline_serial_word_error">离线命令词WORD异常</string>
+    <string name="success">正常，返回结果正常</string>
+    <string name="failure">这个我暂时不会</string>
+    <string name="exception">异常，返回结果为空</string>
+    <string name="server_exception">服务器返回结果异常</string>
+    <string name="please_online">请联网体验更多功能</string>
+
+    <string name="asr_init_failure">语法识别初始化失败，错误码：</string>
+    <string name="asr_init_success">语法识别初始化成功</string>
+    <string name="asr_start_failure">开启识别失败,错误码:</string>
+    <string name="asr_online_grammar_success">云端语法构建成功：</string>
+    <string name="asr_online_grammar_failure">云端语法构建失败,错误码：</string>
+    <string name="asr_yuji_grammar_success">本地语记语法构建成功：</string>
+    <string name="asr_yuji_grammar_failure">本地语记语法构建失败,错误码：</string>
+    <string name="asr_msc_grammar_success">本地MSC语法构建成功：</string>
+    <string name="asr_msc_grammar_failure">本地MSC语法构建失败,错误码：</string>
+    <string name="asr_dy_msc_grammar_success">动态MSC语法构建成功</string>
+    <string name="asr_dy_msc_grammar_failure">动态MSC语法构建失败,错误码：</string>
+    <string name="update_contact_success">联系人更新成功</string>
+    <string name="update_contact_failure">联系人更新失败,错误码：</string>
+    <string name="update_custom_success">自定义变量更新成功</string>
+    <string name="update_custom_failure">自定义变量更新失败,错误码：</string>
+    <string name="update_hot_word_success">热词更新成功</string>
+    <string name="update_hot_word_failure">热词更新失败,错误码：</string>
+    <string name="update_usual_word_success">常用词更新成功</string>
+    <string name="update_usual_word_failure">常用词更新失败,错误码：</string>
+
+    <string name="no_audio_input">无音频数据输入</string>
+    <string name="no_net_use">网络连接发生异常</string>
+
+    <!-- 合成发音人 -->
+    <string-array name="speaker_cloud_entries">
+        <item>艾丝</item>
+        <item>小燕</item>
+        <item>小宇</item>
+        <item>凯瑟琳</item>
+        <item>亨利</item>
+        <item>玛丽</item>
+        <item>小研</item>
+        <item>小琪</item>
+        <item>小峰</item>
+        <item>小梅</item>
+        <item>小莉</item>
+        <item>小蓉</item>
+        <item>小芸</item>
+        <item>小坤</item>
+        <item>小强 </item>
+        <item>小莹</item>
+        <item>小新</item>
+        <item>楠楠</item>
+        <item>老孙</item>
+    </string-array>
+    <string-array name="speaker_cloud_values">
+        <item>aisxa</item>
+        <item>xiaoyan</item>
+        <item>xiaoyu</item>
+        <item>catherine</item>
+        <item>henry</item>
+        <item>vimary</item>
+        <item>vixy</item>
+        <item>xiaoqi</item>
+        <item>vixf</item>
+        <item>xiaomei</item>
+        <item>xiaolin</item>
+        <item>xiaorong</item>
+        <item>xiaoqian</item>
+        <item>xiaokun</item>
+        <item>xiaoqiang</item>
+        <item>vixying</item>
+        <item>xiaoxin</item>
+        <item>nannan</item>
+        <item>vils</item>
+    </string-array>
+
+    <!--<string-array name="scenes">-->
+        <!--<item>名字</item>-->
+        <!--<item>来自哪里</item>-->
+        <!--<item>功能</item>-->
+        <!--<item>四大发明</item>-->
+        <!--<item>五谷</item>-->
+        <!--<item>六畜</item>-->
+    <!--</string-array>-->
+
+    <!--<string-array name="questions">-->
+        <!--<item>今天天气怎么样呀</item>-->
+        <!--<item>你会做什么呀</item>-->
+        <!--<item>你在这里做什么</item>-->
+        <!--<item>你不用上学吗</item>-->
+        <!--<item>你不是机器人么</item>-->
+        <!--<item>你是谁</item>-->
+        <!--<item>你是男孩还是女孩|你是男的还是女的</item>-->
+        <!--<item>为什么会先看到闪电，再听到打雷</item>-->
+        <!--<item>你多大了|你几岁了|你今年多大了</item>-->
+        <!--<item>为什么星星会一闪一闪的</item>-->
+        <!--<item>你要吃饭吗|你吃饭了吗|你需要吃饭吗</item>-->
+        <!--<item>我可以和你玩吗|我想和你玩</item>-->
+        <!--<item>你的爸爸妈妈呢</item>-->
+        <!--<item>为什么你这么可爱</item>-->
+        <!--<item>你的朋友呢|你有朋友吗</item>-->
+        <!--<item>再见|拜拜|我们走咯</item>-->
+        <!--<item>我喜欢隔壁家的小花</item>-->
+        <!--<item>你漂亮还是我漂亮</item>-->
+        <!--<item>一加一等于多少</item>-->
+        <!--<item>二加二等于多少</item>-->
+        <!--<item>我生病了怎么办</item>-->
+        <!--<item>我今天不舒服</item>-->
+        <!--<item>成语亡羊补牢什么意思</item>-->
+        <!--<item>你知道机器人和人的区别吗</item>-->
+        <!--<item>你有多高</item>-->
+        <!--<item>给我背一下九九乘法口诀表</item>-->
+        <!--<item>为什么打雷的时候会闪电</item>-->
+        <!--<item>讲一个故事|给我讲一个故事</item>-->
+        <!--<item>为什么肚子饿了会咕咕叫</item>-->
+        <!--<item>你喜欢看动画片吗</item>-->
+        <!--<item>你会不开心吗</item>-->
+        <!--<item>讲一个笑话|给我讲一个笑话</item>-->
+        <!--<item>背首诗|背首唐诗</item>-->
+        <!--<item>守株待兔是什么意思</item>-->
+        <!--<item>猫的英文怎么说</item>-->
+        <!--<item>狗的英文怎么说</item>-->
+        <!--<item>小鸟的英文怎么说</item>-->
+        <!--<item>猴子的英文怎么说</item>-->
+        <!--<item>长颈鹿的英文怎么说</item>-->
+        <!--<item>天鹅的英文怎么说</item>-->
+        <!--<item>大象的英文怎么说</item>-->
+        <!--<item>乌龟的英文怎么说</item>-->
+        <!--<item>眼睛的英文怎么说</item>-->
+        <!--<item>耳朵的英文怎么说</item>-->
+    <!--</string-array>-->
+
+    <!--<string-array name="answers">-->
+        <!--<item>自从看到了你，我心中的天气都是晴天</item>-->
+        <!--<item>我会的可多了，你说的我都会</item>-->
+        <!--<item>我在这里陪你们聊天呀</item>-->
+        <!--<item>我可以陪你学习哦</item>-->
+        <!--<item>我承认我不是一般的机器人</item>-->
+        <!--<item>我是你的好朋友</item>-->
+        <!--<item>我还是个可爱的宝宝|你猜猜看|秘密，不能告诉你哦</item>-->
+        <!--<item>因为光的传播速度比声音的传播速度快|因为眼睛在前，耳朵在后</item>-->
+        <!--<item>我还小着呢|我还很嫩呢</item>-->
+        <!--<item>我们看到星星闪，这不是因为星星本身的光度出现变化，而是与大气的遮挡有关。大气隔在我们与星星之间，当星光通过大气层时，会受到大气的密度和厚薄影响。大气不是绝对的透明，它的透明度会根据密度的不同而产生变化。所以我们在地面透过它来看星星，就会看到星星好像在闪动的样子了。</item>-->
+        <!--<item>我吃电的，记得帮我充电呀</item>-->
+        <!--<item>我最喜欢玩了，大家都来和我玩呀</item>-->
+        <!--<item>他们都很爱我</item>-->
+        <!--<item>你也很可爱呀</item>-->
+        <!--<item>你就是我的朋友|你呀，你就是我的好朋友</item>-->
+        <!--<item>下次记得找我玩|我会想你的|带我走，我会很想你的</item>-->
+        <!--<item>为什么不是隔壁的老王</item>-->
+        <!--<item>简直是人见人爱、花见花开、车见车爆胎</item>-->
+        <!--<item>一加一等于二</item>-->
+        <!--<item>二加二等于四</item>-->
+        <!--<item>去医院吧，打一针就好了</item>-->
+        <!--<item>那你一定要好好休息</item>-->
+        <!--<item>比喻出了问题以后再想办法补救，可以防止继续受损失</item>-->
+        <!--<item>机器人不用睡觉，永远都是白天。</item>-->
+        <!--<item>和你比一比不就知道了嘛</item>-->
+        <!--<item>一一得一，一二得二，二二得四，一三得三，二三得六，三三得九，一四得四，二四得八，三四得十二，四四得十六，接着就是九九八十一啦</item>-->
+        <!--<item>打雷和闪电是同时发生的，是由于带异种电荷的云层或云层与大地之间的一种放电现象，当带异种电荷的云层相互间的距离由于运动而缩小到一定距离时，正负电荷间的强大电势差将空气击穿而发生瞬间放电，放电时产生的放电火花就是我们见到的闪电，同时放电时产生的声音就是雷声</item>-->
+        <!--<item>有一天，兔子和乌龟比赛跑步，兔子嘲笑乌龟爬得慢，乌龟说，总有一天他会赢。兔子说，我们现在就开始比赛。兔子飞快的跑着，乌龟拼命地爬，不一会儿，-->
+              <!--兔子与乌龟已经离的有很大一段距离了。兔子认为比赛太轻松了，它要先睡一会，并且自以为是地说很快就能追上乌龟。而乌龟呢，它一刻不停地爬行，当兔子醒来的时候乌龟已经到达终点了-->
+            <!--|一群猴子在山上玩耍，领头的大猴子看见空中挂着一个圆圆的月亮，就想把它摘下来。大猴子一声唿哨，一群猴子就跟着它跑到一个最高的山峰。它们一个叠一个搭成一座“猴梯”，-->
+            <!--最小的猴子爬上顶端去摘月亮，它拼命往前抓，“猴梯”摇摇晃晃失去平衡，从山顶上摔下来，有的落在树上，有的掉进草丛，有的跌入水中。月亮没有摘到，大家垂头丧气。-->
+            <!--两只小猴在崖边东张西望，无意中看见下面水潭里也有一个月亮。大猴子十分高兴，一声唿哨，把群猴集合起来。因为山崖离水面太高，猴子们只好一个拉着另一个的脚，拉成一长串，挂到水面。-->
+            <!--它们还找来了葫芦瓢，传到最下面那只小猴。它盛了一瓢水就把“月亮”捞在瓢中。大家兴高采烈，围着“月亮”跳舞。一只贪心的小猴抢走“月亮”，于是你争我夺，把一瓢水泼在地上，-->
+            <!--“月亮”没有了。抬头一看，月亮依旧挂在空中。大家面面相觑，困惑不解-->
+            <!--|从前有个放羊娃觉得很无聊，就三番四次骗别人说狼来了，之后大伙都不相信他了，有一次狼真的来了，他对大伙喊：狼来了。结果大家都不相信他，也就没有人去帮他，结果是放羊娃的很多羊被狼咬死了。-->
+            <!--|宋国有一个农民，每天在田地里劳动。有一天，这个农夫正在地里干活，突然一只野兔从草丛中窜出来。野兔因见到有人而受了惊吓。它拼命地奔跑，不料一下子撞到农夫地头的一截树根上，-->
+            <!--折断脖子死了。农夫便放下手中的农活，走过去捡起死兔子，他非常庆幸自己的好运气。晚上回到家，农夫把死兔交给妻子。妻子做了香喷喷的野兔肉，两口子有说有笑美美地吃了一顿。-->
+            <!--第二天，农夫照旧到地里干活，可是他再不像以往那么专心了。 他干一会儿就朝草丛里瞄一瞄、听一听，希望再有一只兔子窜出来撞在树桩上。就这样，他心不在焉地干了一天活，-->
+            <!--该锄的地也没锄完。直到天黑也没见到有兔子出来，他很不甘心地回家了。第三天，农夫来到地边，已完全无心锄地。他把农具放在一边，自己则坐在树桩旁边的田埂上，-->
+            <!--专门等待野兔子窜出来。可是又白白地等了一天。后来，农夫每天就这样守在树桩边，希望再捡到兔子，然而他始终没有再得到。但农田里的苗因他而枯萎了。-->
+            <!--农夫因此成了宋国人议论的笑柄。</item>-->
+		<!--<item>肚子饿了便会咕噜咕噜地叫，这是因为之前吃进的食物快消化完，胃里虽然空空的，但胃中的胃液仍会继续分泌。这时候胃的收缩便会逐渐扩大，内里的液体和气体便会翻搅起来，造成咕噜咕噜的声音。下次不要再为肚子咕咕叫而感到尴尬啊！因为这是正常的生理动作呢。</item>-->
+        <!--<item>动画片里可以天马行空，我可喜欢看了</item>-->
+        <!--<item>有你陪着就很开心了</item>-->
+        <!--<item>蚂蚁在森林里走,突然遇到一只大象,蚂蚁连忙一头钻进土里,伸出一只腿。小白兔见了很好奇,问: 你在干什么?蚂蚁悄悄对它说:嘘……别出声,看我绊丫一跟头……|卖瓜小贩：“快来吃西瓜，不甜不要钱！”饥渴的牛牛：“哇！太好了，老板，来个不甜的！”</item>-->
+        <!--<item>床前明月光，疑是地上霜，举头望明月，低头思故乡。|春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。|独在异乡为异客，每逢佳节倍思亲。遥知兄弟登高处，遍插茱萸少一人。|春种一粒粟，秋成万颗子。四海无闲田，农夫犹饿死。锄禾日当午，汗滴禾下土。谁知盘中餐，粒粒皆辛苦。|千山鸟飞绝，万径人踪灭。孤舟蓑笠翁，独钓寒江雪。|国破山河在，城春草木深。感时花溅泪，恨别鸟惊心。烽火连三月，家书抵万金。白头搔更短，浑欲不胜簪。</item>-->
+        <!--<item>告诉我们只有通过自己的劳动才能有所收获，否则将一无所获，留下终身遗憾</item>-->
+        <!--<item>cat,喵喵喵</item>-->
+        <!--<item>dog,汪汪汪</item>-->
+        <!--<item>bird,叽叽叽</item>-->
+        <!--<item>monkey</item>-->
+        <!--<item>giraffe</item>-->
+        <!--<item>swan</item>-->
+        <!--<item>elephant</item>-->
+        <!--<item>turtle</item>-->
+        <!--<item>eyes</item>-->
+        <!--<item>ears</item>-->
+    <!--</string-array>-->
+
+</resources>

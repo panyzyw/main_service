@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="phone_idle">idle</string>
+    <string name="phone_off_hook">off_hook</string>
+    <string name="phone_ringing">ringing</string>
+    <string name="phone_dialing">dialing</string>
+
+    <string name="sensor_touch">touch_head_wake</string>
+    <string name="sensor_voice">voice_wake</string>
+    <string name="sensor_left_arm">left_arm</string>
+    <string name="sensor_right_arm">right_arm</string>
+    <string name="sensor_dance">dance</string>
+    <string name="hdmi_long_press">long_press</string>
+    <string name="hdmi_short_press">short_press</string>
+    <string name="screen_on">screen_on</string>
+    <string name="screen_off">screen_off</string>
+    <string name="user_present">user_present</string>
+    <string name="shutdown">shutdown</string>
+
+    <string name="entry_video_monitor">entry_video_monitor</string>
+    <string name="exit_video_monitor">exit_video_monitor</string>
+    <string name="entry_video_comm">entry_video_comm</string>
+    <string name="exit_video_comm">exit_video_comm</string>
+    <string name="factory_start">factory_start</string>
+    <string name="factory_close">factory_close</string>
+
+    <!-- 循环监听来自哪里的KEY -->
+    <string name="recycle_from_key">from</string>
+    <!-- 循环监听显示表情与否 -->
+    <string name="recycle_expression_key">expression</string>
+    <!-- 停止监听来自哪里的KEY -->
+    <string name="stop_from_key">from</string>
+
+    <string name="home_press">home_press</string>
+    <string name="home_long_press">home_long_press</string>
+
+</resources>

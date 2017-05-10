@@ -1,0 +1,30 @@
+apply plugin: 'com.android.library'
+apply from: '../buildshell/library.gradle'
+
+def getLayoutLibPath() {
+    return "${android.getSdkDirectory().getAbsolutePath()}" + "/platforms/" +
+            android.compileSdkVersion + "/data/layoutlib.jar"
+}
+
+//compile 'group:module:version'
+dependencies {
+    provided files(getLayoutLibPath())
+    compile fileTree(include: ['*.jar'],  exclude: ['android-support*.jar'], dir: 'src/main/libs')
+
+    def presentationTest = rootProject.ext.presentationTest
+    androidTestCompile(presentationTest.espresso, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    def dataTest = rootProject.ext.dataTest
+    testCompile dataTest.junit
+
+    def publicDepend = rootProject.ext.publicDepend
+    compile publicDepend.support
+    compile publicDepend.appcompat
+    compile publicDepend.rxjava
+    compile publicDepend.rxandroid
+
+    compile project(':allinone')
+
+}

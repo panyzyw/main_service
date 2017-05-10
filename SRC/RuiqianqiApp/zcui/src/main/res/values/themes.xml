@@ -1,0 +1,31 @@
+<resources>
+
+    <!--
+    当我们从 A1 启动 A2 时，A1 从屏幕上消失，这个动画叫做 android:activityOpenExitAnimation
+    当我们从 A1 启动 A2 时，A2 出现在屏幕上，这个动画叫做 android:activityOpenEnterAnimation
+    当我们从 A2 退出回到 A1 时，A2 从屏幕上消失，这个叫做 android:activityCloseExitAnimation
+    当我们从 A2 退出回到 A1 时，A1 出现在屏幕上，这个叫做 android:activityCloseEnterAnimation
+
+    在项目中WindowAnimation的控制权大于Activity的控制权，即在Activity转场过程中，
+    如果同时设置了WindowAnimation和ActivityAnimation,那么可能（因为这种情况非常多）只会执行WindowAnimation
+    -->
+
+    <!-- 窗体透明时动画效果 @android:style/Animation.Translucent -->
+    <style name="ZC.Activity.Ani" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_up</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_in_up</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_out_down</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_down</item>
+    </style>
+
+    <style name="ZC.Translucent.Ani" parent="@android:style/Animation.Translucent">
+        <item name="android:windowEnterAnimation">@anim/slide_in_micro</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_micro</item>
+    </style>
+
+    <!-- 窗体正常时动画效果 -->
+    <style name="ZC.Normal.Ani" parent="@android:style/Animation.Activity">
+
+    </style>
+
+</resources>
