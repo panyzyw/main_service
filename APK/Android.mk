@@ -3,8 +3,14 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := YYDRobotVoiceMainService
 LOCAL_MODULE_TAGS := optional	
- 
+
+ifeq ($(WAKE_UP_NAME),)
+LOCAL_SRC_FILES := xiaoyong.apk
+else
 LOCAL_SRC_FILES := $(WAKE_UP_NAME).apk
+endif
+
+
 LOCAL_MODULE_CLASS := APPS
 LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
 
