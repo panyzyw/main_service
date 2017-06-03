@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.zccl.ruiqianqi.brain">
+
+    <!-- 获取开机广播的权限 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+
+    <application
+        android:name=".app.MyApplication"
+        android:allowBackup="true"
+        android:persistent="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+        <activity
+            android:name="com.zccl.ruiqianqi.presentation.view.MainActivity"
+            android:theme="@style/ZcclCompatApp">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.zccl.ruiqianqi.presentation.mictest.MicTestActivity">
+        </activity>
+        <activity
+            android:name="com.zccl.ruiqianqi.presentation.view.translation.TranslateActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.zccl.ruiqianqi.presentation.view.expression.ExpressionActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|mcc|mnc|touchscreen|keyboard|navigation|screenLayout|fontScale"
+            android:launchMode="singleTask"
+            android:excludeFromRecents="true"
+            android:screenOrientation="landscape"
+            android:theme="@style/Fullscreen"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+        </activity>
+
+        <service
+            android:name=".service.MainService"
+            android:stopWithTask="false">
+        </service>
+
+        <service
+            android:name=".service.TtsService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false">
+        </service>
+
+        <receiver
+            android:name="com.zccl.ruiqianqi.brain.receiver.MainReceiver"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
+            android:exported="true">
+            <intent-filter android:priority="2147483647">
+                <!-- 开机广播 -->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
+                <!-- 接收闹钟广播，设置为60秒一次-->
+                <!--<action android:name="com.zccl.ruiqianqi.ALARM_ACTION"/>-->
+                <!-- launcher发的，5秒一次-->
+                <action android:name="com.yongyida.robot.voice.MAIN" />
+                <!-- 查询绑定用户 -->
+                <action android:name="com.yydrobot.qrcode.QUERY" />
+                <!-- 删除绑定用户 -->
+                <action android:name="com.yydrobot.qrcode.DELETE" />
+                <!-- 通过手机查询提醒，等待结果的广播【接收】 -->
+                <action android:name="com.yongyida.robot.notification.QUERY_RESULT" />
+                <!-- 机器人当前应用场景 -->
+                <action android:name="com.yongyida.robot.SCENE" />
+                <!-- 测试机器人五麦 -->
+                <action android:name="com.yydrobot.MICTEST"/>
+                <!-- 科大讯飞声源定位与唤醒状态 -->
+                <action android:name="com.yongyida.robot.VOICE"/>
+                <!-- 给其他应用发音用的 -->
+                <action android:name="com.yongyida.robot.TTS"/>
+
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receiver.MediaReceiver">
+            <intent-filter android:priority="1000">
+                <!-- 往手机端发送多媒体命令 -->
+                <action android:name="com.yongyida.media.SEND"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.zccl.ruiqianqi.mind.receiver.media.MediaButtonReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.zccl.ruiqianqi.mind.receiver.battery.BatteryReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OKAY" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:authorities="com.zccl.ruiqianqi.provider"
+            android:name="com.zccl.ruiqianqi.mind.provider.MyProvider">
+        </provider>
+
+        <provider
+            android:exported="true"
+            android:authorities="com.yongyida.robot.voice.request"
+            android:name=".service.provider.AddrProvider">
+        </provider>
+
+    </application>
+
+</manifest>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/tools">
+
+    <!--
+        Base application theme for API 14+. This theme completely replaces
+        AppBaseTheme from BOTH 
+        res/values/styles.xml       and
+        res/values-v11/styles.xml 
+        on API 14+ devices.
+    -->
+    <!-- 一般模式APP风格，没有标题栏 -->
+    <style name="ZcclNoActionBar" parent="android:Theme.DeviceDefault.Light.NoActionBar">
+    </style>
+
+    <!-- 一般模式APP风格，没有标题栏且全屏，去掉状态栏 -->
+    <style name="ZcclFullscreen" parent="android:Theme.DeviceDefault.Light.NoActionBar.Fullscreen">
+    </style>
+
+    <!-- 一般模式APP风格 -->
+    <style name="ZcclAppTheme" parent="android:Theme.DeviceDefault" >
+    </style>
+
+    <!-- 一般模式APP风格 -->
+    <style name="ZcclLightTheme" parent="android:Theme.DeviceDefault.Light">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="ZcclCompatApp" parent="ZcclCompatApp.Super">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    </style>
+
+</resources>

@@ -1,0 +1,5 @@
+<resources>
+    <!--<add-resource type="string" name="app_name" />-->
+    <string name="app_name">Tools</string>
+    <string name="hello">hello</string>
+</resources>

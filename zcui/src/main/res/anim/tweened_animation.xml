@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/linear_interpolator"
+    android:shareInterpolator="false">
+    <!--
+    repeatCount，动画重复的计数，动画将会执行该值+1次，默认为0，必须是int，可以为-1表示不停止
+    repeatMode，动画重复的模式，reverse为反向，当第偶次执行时，动画方向会相反。restart为重新执行，方向不变
+    fillBefore，是指动画结束时画面停留在第一帧。
+    fillAfter，是指动画结束是画面停留在最后一帧。
+    -->
+    <!-- rotate 旋转动画效果
+       属性：interpolator 指定一个动画的插入器
+             在我试验过程中，使用android.res.anim中的资源时候发现
+             有三种动画插入器:
+                accelerate_decelerate_interpolator   加速-减速 动画插入器
+                accelerate_interpolator               加速-动画插入器
+                decelerate_interpolator               减速- 动画插入器
+             其他的属于特定的动画效果
+
+       浮点数型值:
+            fromDegrees 属性为动画起始时物件的角度
+            toDegrees   属性为动画结束时物件旋转的角度 可以大于360度
+
+            说明:
+                     当角度为负数——表示逆时针旋转
+                     当角度为正数——表示顺时针旋转
+                     (负数from——to正数:顺时针旋转)
+                     (负数from——to负数:逆时针旋转)
+                     (正数from——to正数:顺时针旋转)
+                     (正数from——to负数:逆时针旋转)
+
+            pivotX     属性为动画相对于物件的X坐标的开始位置
+            pivotY     属性为动画相对于物件的Y坐标的开始位置
+
+            说明:        以上两个属性值 从0%-100%中取值
+                         50%为物件的X或Y方向坐标上的中点位置
+
+        长整型值：
+            duration  属性为动画持续时间
+            说明:       时间以毫秒为单位
+    -->
+    <rotate
+        android:fromDegrees="0"
+        android:toDegrees="179"
+        android:duration="100"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:repeatCount="0"
+        android:fillEnabled="true"
+        android:fillAfter="true"
+        />
+
+    <!-- translate 位置转移动画效果
+        整型值:
+            fromXDelta 属性为动画起始时 X坐标上的位置
+            toXDelta   属性为动画结束时 X坐标上的位置
+            fromYDelta 属性为动画起始时 Y坐标上的位置
+            toYDelta   属性为动画结束时 Y坐标上的位置
+            注意:
+                     没有指定fromXType toXType fromYType toYType 时候，
+                     默认是以自己为相对参照物
+        长整型值：
+            duration  属性为动画持续时间
+            说明:   时间以毫秒为单位
+    -->
+    <translate
+        android:duration="500"
+        android:fromXDelta="0.0"
+        android:fromYDelta="100%"
+        android:toXDelta="0.0"
+        android:toYDelta="0.0" />
+
+    <!-- 透明度控制动画效果 alpha
+        浮点型值：
+            fromAlpha 属性为动画起始时透明度
+            toAlpha   属性为动画结束时透明度
+            说明:
+                0.0表示完全透明
+                1.0表示完全不透明
+            以上值取0.0-1.0之间的float数据类型的数字
+
+        长整型值：
+            duration  属性为动画持续时间
+            说明:
+                时间以毫秒为单位
+    -->
+    <alpha
+        android:fromAlpha="0.1"
+        android:toAlpha="1.0"
+        android:duration="3000"/>
+
+    <!-- 尺寸伸缩动画效果 scale
+       属性：interpolator 指定一个动画的插入器
+        在我试验过程中，使用android.res.anim中的资源时候发现
+        有三种动画插入器:
+            accelerate_decelerate_interpolator  加速-减速 动画插入器
+            accelerate_interpolator        加速-动画插入器
+            decelerate_interpolator        减速- 动画插入器
+           其他的属于特定的动画效果
+      浮点型值：
+
+            fromXScale 属性为动画起始时 X坐标上的伸缩尺寸
+            toXScale   属性为动画结束时 X坐标上的伸缩尺寸
+
+            fromYScale 属性为动画起始时Y坐标上的伸缩尺寸
+            toYScale   属性为动画结束时Y坐标上的伸缩尺寸
+            startOffset  属性为从上次动画停多少时间开始执行下个动画
+
+            说明:
+                 以上四种属性值
+
+                    0.0表示收缩到没有
+                    1.0表示正常无伸缩
+                    值小于1.0表示收缩
+                    值大于1.0表示放大
+
+            pivotX     属性为动画相对于物件的X坐标的开始位置
+            pivotY     属性为动画相对于物件的Y坐标的开始位置
+
+            说明:
+                    以上两个属性值 从0%-100%中取值
+                    50%为物件的X或Y方向坐标上的中点位置
+
+        长整型值：
+            duration  属性为动画持续时间
+            说明:   时间以毫秒为单位
+
+        布尔型值:
+            fillAfter 属性 当设置为true ，该动画转化在动画结束后被应用
+    -->
+    <scale
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        android:fromXScale="0.0"
+        android:toXScale="1.4"
+        android:fromYScale="0.0"
+        android:toYScale="1.4"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:fillAfter="false"
+        android:startOffset="700"
+        android:duration="700" />
+
+</set>
+<!--
+    动画只是动画，没有背景的，操作的是VIEW的背景
+
+    Animation anim = AnimationUtils.loadAnimation(this, R.anim.home_uninstall_normal);
+    LinearInterpolator linear = new LinearInterpolator();
+    // setInterpolator表示设置旋转速率。LinearInterpolator为匀速效果，Accelerateinterpolator为加速效果、
+    // DecelerateInterpolator为减速效果，具体可见下面android:interpolator的介绍。
+    anim.setInterpolator(linear);
+    home_uninstall.startAnimation(anim);
+-->

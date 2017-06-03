@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/tools">
+
+    <!-- 兼容模式APP风格，有状态栏，无ActionBar -->
+    <style name="ZcclCompatNoActionBar.Super" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:listDivider">@drawable/common_list_divider</item>
+    </style>
+
+    <!-- 兼容模式APP风格，最常用之一  -->
+    <style name="ZcclCompatApp" parent="ZcclCompatApp.Super">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <!-- 兼容模式APP风格，无状态栏，无ActionBar，全屏 -->
+    <style name="ZcclCompatFullscreen" parent="ZcclCompatApp.Super">
+        <item name="android:listDivider">@drawable/common_list_divider</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!-- 兼容模式APP风格，有状态栏，无ActionBar，透明属性 -->
+    <style name="ZcclCompatTranslucent" parent="ZcclCompatApp.Super">
+        <item name="android:listDivider">@drawable/common_list_divider</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+    </style>
+
+</resources>

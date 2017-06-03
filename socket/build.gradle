@@ -1,0 +1,66 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.neenbedankt.android-apt'
+apply from: '../buildshell/library.gradle'
+
+// ext_nio
+// ext_netty3
+// ext_netty4
+def net_frame = "ext_netty3"
+
+android{
+    sourceSets.main {
+        //aidl.srcDirs = ['src/main/aidl']
+        java.srcDirs = ["src/main/java",
+                        "src/main/" + net_frame + "/java"]
+        res.srcDir "src/main/res"
+        //disable automatic ndk-build call
+        jni.srcDirs = []
+        jniLibs.srcDirs = ['src/main/libs',
+                           'src/main/' + net_frame + '/libs']
+        manifest.srcFile "src/main/AndroidManifest.xml"
+        assets.srcDirs = ["src/main/assets"]
+        resources.srcDirs = ['src/main/resources/']
+    }
+}
+
+def getLayoutLibPath() {
+    return "${android.getSdkDirectory().getAbsolutePath()}" + "/platforms/" +
+            android.compileSdkVersion + "/data/layoutlib.jar"
+}
+
+//compile 'group:module:version'
+dependencies {
+    provided files(getLayoutLibPath())
+    compile fileTree(include: ['*.jar'], dir: 'src/main/libs')
+    compile fileTree(include: ['*.jar'], dir: 'src/main/' + net_frame + '/libs')
+
+    def presentationTest = rootProject.ext.presentationTest
+    androidTestCompile(presentationTest.espresso, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    def dataTest = rootProject.ext.dataTest
+    testCompile dataTest.junit
+
+
+    def publicDepend = rootProject.ext.publicDepend
+    compile publicDepend.support
+    compile publicDepend.appcompat
+    compile publicDepend.commons_io
+    compile publicDepend.eventbus
+    apt     publicDepend.eventbusApt
+
+    def toolsDepend = rootProject.ext.toolsDepend
+    compile toolsDepend.gson
+
+    if(net_frame=="ext_nio"){
+
+    }else if(net_frame=="ext_netty3"){
+
+    }else if(net_frame=="ext_netty4"){
+        compile publicDepend.netty4
+    }
+    //compile 'com.lmax:disruptor:3.3.6'
+    compile project(':tools')
+
+}

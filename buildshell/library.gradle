@@ -1,0 +1,95 @@
+android {
+
+    def globalConfig = rootProject.extensions.getByName("ext")
+    compileSdkVersion globalConfig.getAt("compileSdkVersion")
+    buildToolsVersion globalConfig.getAt("buildToolsVersion")
+
+    defaultConfig {
+        minSdkVersion globalConfig.getAt("minSdkVersion")
+        targetSdkVersion globalConfig.getAt("targetSdkVersion")
+        versionCode globalConfig.getAt("versionCode")
+        versionName globalConfig.getAt("versionName")
+
+        testInstrumentationRunner rootProject.ext.testInstrumentationRunner
+    }
+
+    sourceSets.main {
+        //aidl.srcDirs = ['src/main/aidl']
+        java.srcDir "src/main/java"
+        res.srcDir "src/main/res"
+        //disable automatic ndk-build call
+        jni.srcDirs = []
+        jniLibs.srcDir "src/main/libs"
+        manifest.srcFile "src/main/AndroidManifest.xml"
+        assets.srcDir "src/main/assets"
+        resources.srcDirs = ['src/main/resources/']
+    }
+
+    /*
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    */
+
+    buildTypes {
+
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            // 是不是测试，要加一些测试代码
+            buildConfigField "boolean", "IS_TEST", "true"
+            //混淆配置为不使用
+            minifyEnabled false
+            //调式，开了也不会用
+            debuggable true
+            //JNI调式，NDK_DEBUG=1
+            jniDebuggable true
+        }
+
+        release {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            // 是不是测试，要加一些测试代码
+            buildConfigField "boolean", "IS_TEST", "true"
+            // 混淆现在还不能启用，因为还没有配置
+            minifyEnabled false
+            // 混淆配置文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // 使用伪代码
+            pseudoLocalesEnabled true
+            // 字节对齐
+            zipAlignEnabled true
+            // 移除没用的res
+            //shrinkResources true
+            // 关闭调式
+            debuggable false
+            // 关闭JNI调式
+            jniDebuggable true
+        }
+
+        zcrelease {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            // 是不是测试，要加一些测试代码
+            buildConfigField "boolean", "IS_TEST", "true"
+            // 混淆现在还不能启用，因为还没有配置
+            minifyEnabled false
+            // 混淆配置文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // 使用伪代码
+            pseudoLocalesEnabled true
+            // 字节对齐
+            zipAlignEnabled true
+            // 移除没用的res
+            //shrinkResources true
+            // 关闭调式
+            debuggable false
+            // 关闭JNI调式
+            jniDebuggable false
+        }
+    }
+
+    // 主工程依赖子module时，默认依赖的是release版本，加上这个子module就和主工程版本一致了
+    publishNonDefault true
+}

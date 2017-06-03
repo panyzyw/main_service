@@ -1,0 +1,9 @@
+##################################【挚康】####################################
+xiaobaoversionCode=1
+xiaobaoversionName=zhikang-1.0.0
+#################################【荣事达】###################################
+xiaoshuaiversionCode=1
+xiaoshuaiversionName=rongshida-1.0.0
+#################################【勇艺达】##################################
+xiaoyongversionCode=1
+xiaoyongversionName=yongyida-1.0.0

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/tools">
+
+    <!-- ####################################################################################### -->
+    <!-- 一般模式APP风格，没有标题栏 -->
+    <style name="ZcclNoActionBar" parent="android:Theme.Light.NoTitleBar">
+    </style>
+
+    <!-- 一般模式APP风格，没有标题栏且全屏，去掉状态栏 -->
+    <style name="ZcclFullscreen" parent="android:Theme.Light.NoTitleBar.Fullscreen">
+    </style>
+
+    <!-- 一般模式APP风格，没有标题栏且全屏透明 -->
+    <style name="ZcclTransFullscreen" parent="ZcclFullscreen" >
+        <!-- 为Theme设置透明属性 给人程序启动慢的感觉，界面会一次性刷出来，刷新同步 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 窗体背景半透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- Activity切换动画集 -->
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+    </style>
+
+    <!-- 一般模式APP风格 -->
+    <style name="ZcclAppTheme" parent="android:Theme" >
+    </style>
+
+    <!-- 一般模式APP风格 -->
+    <style name="ZcclLightTheme" parent="android:Theme.Light" >
+    </style>
+
+
+    <!-- ####################################################################################### -->
+    <!-- 兼容模式APP风格  -->
+    <style name="ZcclCompatTheme" parent="Theme.AppCompat">
+    </style>
+
+    <!-- 兼容模式APP风格  -->
+    <style name="ZcclCompatDarkTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+    </style>
+
+
+    <!-- ####################################################################################### -->
+    <!-- 兼容模式APP风格，有状态栏，无ActionBar -->
+    <style name="ZcclCompatNoActionBar.Super" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:listDivider">@drawable/common_list_divider</item>
+    </style>
+
+    <!-- 兼容模式APP风格，最常用之一  -->
+    <style name="ZcclCompatApp.Super" parent="ZcclCompatNoActionBar.Super">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <!-- 保留状态栏 -->
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- ActionBar要使用覆盖模式 -->
+        <item name="android:windowActionBarOverlay">false</item>
+        <!-- 是否允许背景灰暗 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!--可以通过修改主题来修改Actionbar 溢出菜单默认图标（右边的那个三个点）-->
+        <!--android:actionOverflowButtonStyle-->
+        <item name="actionOverflowButtonStyle">@style/ActionButton.Overflow</item>
+        <!-- 箭头 -->
+        <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
+        <!-- 弹出框菜单风格设置 -->
+        <item name="android:popupMenuStyle">@style/ZcclAppTheme.PopupOverlay.One</item>
+
+        <!-- 状态栏背景色，沉浸式，用不到这个属性-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+
+        <!-- Appbar底色，这个设定分为二，
+        若你的 android app 仍是使用 actionbar ，则直接在风格 (styles) 或是主题 (themes) 里进行设定 colorPrimary 参数即可；
+        若是采用 toolbar 的话，则要在界面 (layout) 里面设定 toolbar 控件的 background 属性。
+        我用的是toolbar，所以用不到这个属性-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+
+        <!-- 按钮选中或者点击获得焦点后的颜色，选中后的颜色 -->
+        <item name="colorAccent">@color/colorAccent2</item>
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
+
+    <!-- 兼容模式APP风格 -->
+    <style name="ZcclCompatApp" parent="ZcclCompatApp.Super">
+    </style>
+
+    <!-- 兼容模式APP风格，无状态栏，无ActionBar，全屏 -->
+    <style name="ZcclCompatFullscreen" parent="ZcclCompatApp.Super">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!-- 兼容模式APP风格，有状态栏，无ActionBar，透明属性 -->
+    <style name="ZcclCompatTranslucent" parent="ZcclCompatApp.Super">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+    </style>
+
+
+    <!-- ####################################################################################### -->
+    <!-- 溢出菜单默认图标 -->
+    <style name="ActionButton.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/shape_circle</item>
+    </style>
+
+    <!-- 箭头颜色 -->
+    <style name="AppTheme.DrawerArrowToggle" parent="Base.Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/white</item>
+    </style>
+
+
+    <!-- ####################################################################################### -->
+    <!-- Toolbar风格设置，一般用这个 -->
+    <style name="ZcclCompatApp2" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <item name="colorPrimaryDark">#FF1565C0</item>
+        <item name="colorPrimary">#FF2196F3</item>
+        <item name="colorAccent">#FFE91E63</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <!-- ####################################################################################### -->
+    <!-- AppBar风格设置 -->
+    <style name="ZcclAppTheme.AppBar.Super" parent="Widget.AppCompat.Toolbar">
+
+        <!-- App bar 上的标题与更多菜单中的文字颜色。-->
+        <item name="android:textColorPrimary">@android:color/holo_green_light</item>
+        <!-- 和 colorAccent相反，正常状态下按钮的颜色，设置的三个点的颜色-->
+        <item name="colorControlNormal">@color/popmenu_colorAccent</item>
+
+        <!-- Activity窗口的颜色-->
+        <item name="android:windowBackground">@color/material_blue_grey_800</item>
+
+        <!-- Button按钮正常状态颜色-->
+        <item name="colorButtonNormal">@color/accent_material_light</item>
+        <!-- EditText 输入框中字体的颜色-->
+        <item name="editTextColor">@android:color/white</item>
+
+        <!-- 显示在AppBar上的【菜单的】颜色 -->
+        <item name="actionMenuTextColor">@color/accent_material_light</item>
+        <!-- 显示在AppBar上的【菜单的】颜色，修改menu字体大小、颜色 -->
+        <item name="actionMenuTextAppearance">@style/MenuTextStyle</item>
+    </style>
+
+    <style name="ZcclAppTheme.AppBar" parent="ZcclAppTheme.AppBar.Super">
+    </style>
+
+
+    <!-- ####################################################################################### -->
+    <!-- 显示在AppBar上的文字标题风格 -->
+    <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!-- 显示在AppBar上的菜单的风格 -->
+    <style name="MenuTextStyle">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!-- ####################################################################################### -->
+    <!-- 弹出框风格设置 -->
+    <style name="ZcclAppTheme.PopupOverlay.One" parent="@style/ThemeOverlay.AppCompat.Light" >
+        <!-- 弹出框背景色 -->
+        <item name="android:colorBackground">@color/popmenu_colorAccent</item>
+        <!-- 显示在弹出框的文字的颜色 -->
+        <item name="android:textColor">@android:color/white</item>
+        <!-- 显示在弹出框的文字的大小 -->
+        <item name="android:textSize">18sp</item>
+        <!-- 是否覆盖设置按钮 -->
+        <item name="overlapAnchor">false</item>
+        <!-- 右边的边距 -->
+        <item name="android:layout_marginRight">0dp</item>
+        <!-- 弹出文字的布局 -->
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- 弹出框风格设置 -->
+    <style name="ZcclAppTheme.PopupOverlay.Two" parent="@style/Widget.AppCompat.Light.PopupMenu.Overflow" >
+        <item name="android:colorBackground">@color/popmenu_colorAccent</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="overlapAnchor">false</item>
+        <item name="android:dropDownWidth">wrap_content</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:popupBackground">?attr/colorPrimary</item>
+        <item name="android:dropDownVerticalOffset">28dip</item>
+        <item name="android:dropDownHorizontalOffset">0dip</item>
+    </style>
+
+</resources>

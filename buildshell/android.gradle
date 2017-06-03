@@ -1,0 +1,281 @@
+android {
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId rootProject.ext.applicationId
+        testApplicationId rootProject.ext.testApplicationId
+        testInstrumentationRunner rootProject.ext.testInstrumentationRunner
+
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+
+        // dex突破65535的限制
+        multiDexEnabled true
+
+        dexOptions {
+            javaMaxHeapSize "4g"
+            preDexLibraries = false
+        }
+    }
+
+    sourceSets.main {
+        aidl.srcDirs = ['src/main/aidl']
+        java.srcDir "src/main/java"
+        res.srcDir "src/main/res"
+        //jni.srcDirs = ['src/main/jni']
+        jni.srcDirs = []
+        jniLibs.srcDir "src/main/libs"
+        manifest.srcFile "src/main/AndroidManifest.xml"
+        assets.srcDir "src/main/assets"
+        resources.srcDirs = ['src/main/resources/']
+
+    }
+
+    /*
+    sourceSets {
+        instrumentTest.setRoot('tests')
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
+    */
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+
+    // 经常由于lint错误终止，而这些错误又经常是第三方库中的，我们可以跳过这些错误，继续编译
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+        disable 'MissingTranslation', 'ExtraTranslation'
+
+        quiet true
+        ignoreWarnings true
+        disable 'InvalidPackage'            //Some libraries have issues with this.
+        disable 'OldTargetApi'              //Lint gives this warning but SDK 20 would be Android L Beta.
+        disable 'IconDensities'             //For testing purpose. This is safe to remove.
+        disable 'IconMissingDensityFolder' //For testing purpose. This is safe to remove.
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    signingConfigs {
+        debug{
+
+        }
+    }
+
+    buildTypes {
+
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            // 是不是测试，要加一些测试代码
+            buildConfigField "boolean", "IS_TEST", "true"
+            // debug签名
+            signingConfig signingConfigs.debug
+            // 作用是将applicationId设置为package加上你所配置的后缀
+            applicationIdSuffix ".debug"
+            // 混淆配置为不使用
+            minifyEnabled false
+            // 调式，可以下断点什么的
+            debuggable true
+            // You can also set android.buildTypes.debug.jniDebuggable to true so
+            // it will pass NDK_DEBUG=1 to ndk-build when generating a debug APK.
+            jniDebuggable true
+            // 什么脚本渲染使能
+            renderscriptDebuggable true
+            ndk {
+                // 调式，可以下断点什么的
+                debuggable true
+            }
+
+        }
+
+        release {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            // 是不是测试，要加一些测试代码
+            buildConfigField "boolean", "IS_TEST", "false"
+            // release版本签名
+            signingConfig signingConfigs.debug
+            // 混淆现在还不能启用，因为还没有配置
+            minifyEnabled false
+            // 混淆配置文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // 使用伪代码
+            pseudoLocalesEnabled true
+            // 字节对齐
+            zipAlignEnabled true
+            // 移除没用的res
+            //shrinkResources true
+            // 关闭调式
+            debuggable false
+            // 关闭JNI调式
+            jniDebuggable false
+            ndk {
+                // 关闭调式
+                debuggable false
+            }
+        }
+
+    }
+
+    // 这个是选择配置，而不是编译配置，这里是配置渠道，
+    // 签名对直接运行有用，就用这个签名运行
+    // 签名对build没有用，所有版本的签名都会编译
+    productFlavors {
+        /*
+        P_Test{
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            buildConfigField "boolean", "IS_TEST", "true"
+            applicationId 'com.zccl.ruiqianqi'
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+        }
+        */
+
+        P_armv7{
+            applicationId 'com.zccl.ruiqianqi'
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+            // 这个没什么用
+            // signingConfig signingConfigs.release
+        }
+
+        /*
+        P_armall{
+            applicationId 'com.zccl.ruiqianqi'
+            ndk {
+                abiFilters "armeabi"
+                abiFilters "armeabi-v7a"
+                abiFilters "arm64-v8a"
+            }
+            // 这个没什么用
+            // signingConfig signingConfigs.zcrelease
+        }
+        */
+
+        P_x86{
+            applicationId 'com.zccl.ruiqianqi'
+            ndk {
+                abiFilters "x86"
+                //abiFilters "x86_64"
+            }
+        }
+
+        /*
+        P_zhshr{
+            applicationId 'com.zccl.ruiqianqi'
+            ndk {
+                abiFilters "armeabi"
+                abiFilters "armeabi-v7a"
+                //abiFilters "arm64-v8a"
+                abiFilters "x86"
+                //abiFilters "x86_64"
+                //abiFilters "mips"
+                //abiFilters "mips64"
+            }
+        }
+        */
+
+    }
+
+    // flavors里的AndroidManifest.xml也只是做补充用来，不是替代这个的
+    /*
+    sourceSets.P_Test {
+        manifest.srcFile "flavors/test/AndroidManifest.xml"
+    }
+    sourceSets.P_armv7 {
+        manifest.srcFile "flavors/armv7/AndroidManifest.xml"
+    }
+    sourceSets.P_armall {
+        manifest.srcFile "flavors/armall/AndroidManifest.xml"
+    }
+    sourceSets.P_x86 {
+        manifest.srcFile "flavors/x86/AndroidManifest.xml"
+    }
+    sourceSets.P_zhshr{
+        manifest.srcFile "flavors/zhshr/AndroidManifest.xml"
+    }
+    */
+
+}
+
+android {
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/io.netty.versions.properties'
+        exclude 'META-INF/io.grpc.ManagedChannelProvider'
+        exclude 'META-INF/services/io.grpc.ManagedChannelProvider'
+        pickFirst 'META-INF/license.txt'
+    }
+}
+
+// 引用本地aar时，指定的库路径
+// compile(name: 'sdk-1.10.0', ext: 'aar')
+// compile files('src/main/libs/gson-2.8.0.jar')
+// compile project(':ailib')
+// 引用网络库
+// compile 'ai.api:sdk:1.10.0@aar'
+// compile 'com.google.code.gson:gson:2.8.0'
+repositories {
+    flatDir {
+        dirs 'src/main/libs'
+    }
+}
+
+/*
+android.applicationVariants.all { variant ->
+
+    variant.outputs.each { output ->
+        def outputFile = output.outputFile
+        if (outputFile != null && outputFile.name.endsWith('.apk')) {
+            def fileName = outputFile.name;
+
+            if (android.defaultConfig.versionName != null) {
+                fileName = fileName.replace(".apk", "-${android.defaultConfig.versionName}.apk")
+            }
+            if (project.hasProperty('OUT_PUT_APK_SUFFIX_PARA')) {
+                fileName = fileName.replace(".apk", "-${OUT_PUT_APK_SUFFIX_PARA}.apk")
+            }
+            def today = new Date().format('yyMMddHHmm');
+            fileName = fileName.replace(".apk", "-${today}.apk")
+            if (project.hasProperty('OUT_PUT_DIR_PARA')) {
+                File output_dir1 = file("${OUT_PUT_DIR_PARA}");
+                output.outputFile = new File(output_dir1, fileName)
+                println "输出文件位置： " + output.outputFile
+            } else {
+                output.outputFile = new File(outputFile.parent, fileName)
+                println "输出文件位置： " + output.outputFile
+            }
+
+            output.outputFile = new File(".", fileName)
+            println "输出文件位置： " + output.outputFile
+        }
+    }
+}
+*/

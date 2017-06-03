@@ -1,0 +1,88 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/trans_bg"
+    android:orientation="vertical"
+    android:keepScreenOn="true" >
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/scrollview_margin"
+        android:scrollbars="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/trans_from"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/relativlayout_height"
+                android:padding="@dimen/relativlayout_padding"
+                android:background="@drawable/trans_border"
+                android:layout_marginBottom="@dimen/relativlayout_padding" >
+
+                <ImageView
+                    android:id="@+id/trans_iv_from"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null" />
+
+                <TextView
+                    android:id="@+id/trans_content_from"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/relativlayout_padding"
+                    android:layout_marginTop="@dimen/textview_margin_top"
+                    android:layout_toRightOf="@id/trans_iv_from"
+                    android:textColor="@color/quote"
+                    android:textSize="27sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/trans_to"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/relativlayout_height"
+                android:padding="@dimen/relativlayout_padding"
+                android:background="@drawable/trans_border"
+                android:layout_below="@id/trans_from" >
+
+                <ImageView
+                    android:id="@+id/trans_iv_to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null" />
+
+                <TextView
+                    android:id="@+id/trans_content_to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/relativlayout_padding"
+                    android:layout_marginTop="@dimen/textview_margin_top"
+                    android:layout_toRightOf="@id/trans_iv_to"
+                    android:textColor="@color/result"
+                    android:textSize="27sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+    
+    <ToggleButton 
+        android:id="@+id/trans_switch_language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/trans_toggle_selector"
+        android:button="@null"
+ 		android:textOn="@null"
+  		android:textOff="@null"
+  		android:layout_alignParentRight="true"
+  		android:layout_marginRight="16dip"
+  		android:layout_marginTop="-4dp"/>
+    
+	<include 
+	    layout="@layout/trans_tip_lay"/>
+
+</RelativeLayout>

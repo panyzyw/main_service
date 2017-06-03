@@ -1,0 +1,128 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply from: '../buildshell/android.gradle'
+
+// 唤醒词、平台配置
+def mic_ver = ""
+def app_id = ""
+def platform = ""
+def wakeup = ""
+if(project.hasProperty("config") && file(project.property("config")).exists()) {
+    Properties props = new Properties()
+    props.load(new FileInputStream(file(project.property("config"))))
+    mic_ver = props['mic_ver']
+    app_id = props['app_id']
+    platform = props['platform']
+    wakeup = props['wakeup']
+}
+
+// 软件版本配置
+def versionCodeApp = "0"
+def versionNameApp = "0"
+if(project.hasProperty("app.version") && file(project.property("app.version")).exists()) {
+    Properties props = new Properties()
+    props.load(new FileInputStream(file(project.property("app.version"))))
+    versionCodeApp = props[wakeup + 'versionCode']
+    versionNameApp = props[wakeup + 'versionName']
+}
+
+
+android {
+
+    sourceSets.main {
+        res.srcDirs = ["src/main/res", 'src/main/ext_res/'+ wakeup + '/res']
+        java.srcDirs = ["src/main/java", 'src/main/ext_src/'+ wakeup + '/java']
+    }
+
+    defaultConfig {
+        applicationId "com.zccl.ruiqianqi.brain"
+        testApplicationId "com.zccl.ruiqianqi.brain.test"
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    // 这个是选择配置，而不是编译配置
+    productFlavors {
+
+        P_armv7 {
+            applicationId 'com.yongyida.robot.voice'
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+            versionCode Integer.parseInt(versionCodeApp)
+            versionName versionNameApp
+        }
+
+        P_x86 {
+            applicationId 'com.yongyida.robot.voice'
+            ndk {
+                abiFilters "x86"
+            }
+            versionCode Integer.parseInt(versionCodeApp)
+            versionName versionNameApp
+        }
+
+        /*
+        "${wakeup}" {
+            applicationId 'com.yongyida.robot.voice'
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+            versionCode Integer.parseInt(versionCodeApp)
+            versionName versionNameApp
+        }
+        */
+
+    }
+}
+
+// 主要是使用android.os.SystemProperties
+def getLayoutLibPath() {
+    return "${android.getSdkDirectory().getAbsolutePath()}" + "/platforms/" +
+            android.compileSdkVersion + "/data/layoutlib.jar"
+}
+
+dependencies {
+
+    provided files(getLayoutLibPath())
+    compile fileTree(include: ['*.jar'], dir: 'src/main/libs')
+
+    def presentationTest = rootProject.ext.presentationTest
+    testCompile presentationTest.junit
+
+    androidTestCompile presentationTest.mockito
+    androidTestCompile presentationTest.dexmaker
+    androidTestCompile presentationTest.dexmakerMockito
+    androidTestCompile (presentationTest.espresso, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile presentationTest.testingSupportLib
+
+    def presentationDepend = rootProject.ext.presentationDepend
+    compile presentationDepend.butterknife
+    apt     presentationDepend.butterknifeApt
+    compile presentationDepend.dbflow
+    compile presentationDepend.dbflowCore
+    apt     presentationDepend.dbflowApt
+
+    def developmentDepend = rootProject.ext.developmentDepend
+    debugCompile      developmentDepend.leakcanary
+    releaseCompile    developmentDepend.leakcanaryNoop
+
+    compile project(':flytek')
+    compile project(':drive')
+    compile project(':socket')
+    compile project(':zcui')
+}
+
+/*
+android.applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+        def outputFile = output.outputFile
+        if (outputFile != null && outputFile.name.endsWith('.apk')) {
+            def fileName = outputFile.name;
+            output.outputFile = new File(".", fileName)
+            println "输出文件位置： " + output.outputFile
+        }
+    }
+}*/

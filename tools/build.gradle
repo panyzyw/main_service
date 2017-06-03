@@ -1,0 +1,45 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.neenbedankt.android-apt'
+apply from: '../buildshell/library.gradle'
+//apply from: '../buildshell/ndk.gradle'
+
+def getLayoutLibPath() {
+    return "${android.getSdkDirectory().getAbsolutePath()}" + "/platforms/" +
+            android.compileSdkVersion + "/data/layoutlib.jar"
+}
+
+//compile 'group:module:version'
+dependencies {
+    provided files(getLayoutLibPath())
+    compile fileTree(include: ['*.jar'], dir: 'src/main/libs')
+
+    def presentationTest = rootProject.ext.presentationTest
+    androidTestCompile(presentationTest.espresso, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    def toolsTest = rootProject.ext.toolsTest
+    testCompile toolsTest.junit
+    testCompile toolsTest.mockito
+    testCompile toolsTest.assertj
+    testCompile toolsTest.robolectric
+
+    def publicDepend = rootProject.ext.publicDepend
+    compile publicDepend.support
+    compile publicDepend.appcompat
+    compile publicDepend.rxjava
+    compile publicDepend.rxandroid
+
+    def toolsDepend = rootProject.ext.toolsDepend
+    compile toolsDepend.gson
+    compile toolsDepend.fastjson
+
+    def dataDepend = rootProject.ext.dataDepend
+    compile dataDepend.okhttp
+    compile dataDepend.okhttpLogging
+    compile dataDepend.retrofit
+    compile dataDepend.retrofitScalars
+    compile dataDepend.retrofitGson
+    compile dataDepend.retrofitRxjava
+    compile dataDepend.retrofitProtobuf
+}

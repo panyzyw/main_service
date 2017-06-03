@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/tools">
+
+    <style name="ZcclLightDialog" parent="android:Theme.DeviceDefault.Light.Dialog.NoActionBar">
+        <!-- 边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- 浮动 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 就是在Activity跳转时，会不会有背景色的变化 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!-- 点击外部关闭 -->
+        <item name="android:windowCloseOnTouchOutside">true</item>
+
+        <!-- 下面是透明选项的 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+</resources>

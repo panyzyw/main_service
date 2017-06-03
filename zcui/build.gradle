@@ -1,0 +1,60 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.neenbedankt.android-apt'
+apply from: '../buildshell/library.gradle'
+
+def getLayoutLibPath() {
+    return "${android.getSdkDirectory().getAbsolutePath()}" + "/platforms/" +
+            android.compileSdkVersion + "/data/layoutlib.jar"
+}
+
+//compile 'group:module:version'
+dependencies {
+    provided files(getLayoutLibPath())
+    compile fileTree(include: ['*.jar'], dir: 'src/main/libs')
+
+    def presentationTest = rootProject.ext.presentationTest
+    androidTestCompile(presentationTest.espresso, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    def dataTest = rootProject.ext.dataTest
+    testCompile dataTest.junit
+
+    def publicDepend = rootProject.ext.publicDepend
+    compile publicDepend.support
+    compile publicDepend.appcompat
+    compile publicDepend.design
+    compile publicDepend.multidex
+    compile publicDepend.preference
+    compile publicDepend.preference14
+    compile publicDepend.eventbus
+    apt     publicDepend.eventbusApt
+
+    def presentationDepend = rootProject.ext.presentationDepend
+    compile presentationDepend.butterknife
+    apt     presentationDepend.butterknifeApt
+    compile presentationDepend.rxbinding
+    compile presentationDepend.rxbindingDesign
+    compile presentationDepend.rxbindingAppcompat
+    compile presentationDepend.rxlifecycle
+    compile presentationDepend.rxlifecycleComps
+    compile presentationDepend.fragmentargs
+    apt     presentationDepend.fragmentargsApt
+
+    def toolsDepend = rootProject.ext.toolsDepend
+    compile toolsDepend.glide
+
+    def developmentDepend = rootProject.ext.developmentDepend
+    compile developmentDepend.crashreport
+    compile developmentDepend.nativecrashreport
+
+    compile project(':tools')
+    compile project(':plugin')
+}
+
+// 传递处理器参数，有些注解处理器需要传递参数，你能通过使用apt.arguments达到此目的
+apt {
+    arguments {
+        eventBusIndex "org.eventbus.zccl.Event"
+    }
+}

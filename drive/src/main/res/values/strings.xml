@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Move</string>
+    <string name="load_move_service_time_out">加载运动服务超时</string>
+    <string name="speed_out_of_range">速度范围为1至100</string>
+</resources>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/tools">
+
+    <!-- 一般模式APP风格，没有标题栏 -->
+    <style name="ZcclNoActionBar" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- 一般模式APP风格，没有标题栏且全屏，去掉状态栏 -->
+    <style name="ZcclFullscreen" parent="android:Theme.Material.Light.NoActionBar.Fullscreen">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+
+    <!-- 一般模式APP风格 -->
+    <style name="ZcclAppTheme" parent="android:Theme.Material" >
+    </style>
+
+    <!-- 一般模式APP风格 -->
+    <style name="ZcclLightTheme" parent="android:Theme.Material.Light">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+
+    <!-- 兼容模式APP风格，有状态栏，无ActionBar -->
+    <style name="ZcclCompatNoActionBar.Super" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:listDivider">@drawable/common_list_divider</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- 兼容模式APP风格，最常用之一  -->
+    <style name="ZcclCompatApp" parent="ZcclCompatApp.Super">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <!-- 21之后，沉浸式不能加这个属性 -->
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+    </style>
+
+    <!-- 兼容模式APP风格，无状态栏，无ActionBar，全屏 -->
+    <style name="ZcclCompatFullscreen" parent="ZcclCompatApp.Super">
+        <item name="android:listDivider">@drawable/common_list_divider</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!-- 兼容模式APP风格，有状态栏，无ActionBar，透明属性 -->
+    <style name="ZcclCompatTranslucent" parent="ZcclCompatApp.Super">
+        <item name="android:listDivider">@drawable/common_list_divider</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+    </style>
+
+
+    <style name="ZcclAppTheme.AppBar" parent="ZcclAppTheme.AppBar.Super">
+        <!--Navigation bar color-->
+        <item name="android:navigationBarColor">@color/accent_material_light</item>
+    </style>
+
+</resources>
