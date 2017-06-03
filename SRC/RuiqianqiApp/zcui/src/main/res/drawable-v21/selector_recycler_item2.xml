@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- ripple 是5.0才出现的新标签-->
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="#244d5b" ><!-- 点击出现的水波纹的颜色 -->
-    <!-- 这是正常情况下的背景 -->
-    <item android:drawable="@drawable/common_frame_line"></item>
-    <!-- 这是正常情况下的背景 -->
-    <item android:drawable="@drawable/selector_recycler_item_ref2"/>
-</ripple>

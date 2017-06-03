@@ -1,9 +1,0 @@
-#BNF+IAT 1.0 UTF-8;
-!grammar dynamic;
-!slot <st>;
-!start <stStart>;
-
-<stStart>:<st>;
-
-<st>:给爱一个千秋万载，把传奇流芳百世。!id(1)|
-人生如画，有了微笑的画卷便添了亮丽的色彩。!id(2);

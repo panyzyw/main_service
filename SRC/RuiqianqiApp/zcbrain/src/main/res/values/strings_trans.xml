@@ -1,5 +1,0 @@
-<resources>
-    <string name="identify_error_en">identification error，try again</string>
-    <string name="trans_result_exception_zh">获取结果异常</string>
-    <string name="trans_result_exception_en">NetWork State Exception</string>
-</resources>

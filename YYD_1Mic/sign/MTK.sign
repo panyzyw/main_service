@@ -1,4 +1,0 @@
-RELEASE_STORE_FILE=src\\main\\sign\\MTK_system.jks
-RELEASE_STORE_PASSWORD=android
-RELEASE_KEY_ALIAS=androiddebugkey
-RELEASE_KEY_PASSWORD=android
