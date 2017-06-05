@@ -249,6 +249,9 @@ public class FileUtils {
 	 * @param append   true追加 false覆盖
 	 */
     private static void copyFile_(File fromFile, File toFile, boolean append){
+		if(!(null != fromFile && fromFile.exists())){
+			return;
+		}
         BufferedInputStream inBuff = null;
         BufferedOutputStream outBuff = null;
         try {
