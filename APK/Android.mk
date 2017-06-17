@@ -19,7 +19,6 @@ LOCAL_PREBUILT_JNI_LIBS:= \
   @lib/armeabi-v7a/libalsa-jni.so\
   @lib/armeabi-v7a/libBugly.so \
   @lib/armeabi-v7a/libcae.so \
-  @lib/armeabi-v7a/libhdmictl.so \
   @lib/armeabi-v7a/libmictest.so \
   @lib/armeabi-v7a/libmsc.so 
   
@@ -37,14 +36,6 @@ include $(BUILD_PREBUILT)
 include $(CLEAR_VARS)
 LOCAL_MODULE := libcae
 LOCAL_SRC_FILES_32 := lib/armeabi-v7a/libcae.so
-LOCAL_MULTILIB := 32
-LOCAL_MODULE_CLASS := SHARED_LIBRARIES
-LOCAL_MODULE_SUFFIX := .so
-include $(BUILD_PREBUILT)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := libhdmictl
-LOCAL_SRC_FILES_32 := libs/armeabi/libhdmictl.so
 LOCAL_MULTILIB := 32
 LOCAL_MODULE_CLASS := SHARED_LIBRARIES
 LOCAL_MODULE_SUFFIX := .so
