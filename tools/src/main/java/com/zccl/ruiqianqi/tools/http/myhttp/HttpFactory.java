@@ -83,6 +83,7 @@ public class HttpFactory {
 			// 对https做处理
 			if (urls.startsWith("https")) {
 				HttpsURLConnection connections = (HttpsURLConnection) connection;
+
 				MySecurity mySecurity = new MySecurity(MySecurity.SECURITY.SSL);
 				SSLContext sslContext = mySecurity.getSSLContext();
 				SSLSocketFactory ssf = sslContext.getSocketFactory();
@@ -90,6 +91,7 @@ public class HttpFactory {
 				connections.setSSLSocketFactory(ssf);
 				HttpsURLConnection.setDefaultSSLSocketFactory(ssf);
 
+				//
 				connections.setHostnameVerifier(new MySecurity.TrustAnyHostnameVerifier());
 			}
 

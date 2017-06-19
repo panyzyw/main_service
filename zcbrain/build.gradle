@@ -3,33 +3,34 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply from: '../buildshell/android.gradle'
 
 // 唤醒词、平台配置
-def mic_ver = ""
-def app_id = ""
-def platform = ""
+def nlu = ""
 def wakeup = ""
 if(project.hasProperty("config") && file(project.property("config")).exists()) {
     Properties props = new Properties()
     props.load(new FileInputStream(file(project.property("config"))))
-    mic_ver = props['mic_ver']
-    app_id = props['app_id']
-    platform = props['platform']
+    nlu = props['nlu']
     wakeup = props['wakeup']
 }
 
 // 软件版本配置
-def versionCodeApp = "0"
-def versionNameApp = "0"
+def versionCodeApp = "1"
+def versionNameApp = "1.0.0"
 if(project.hasProperty("app.version") && file(project.property("app.version")).exists()) {
     Properties props = new Properties()
     props.load(new FileInputStream(file(project.property("app.version"))))
     versionCodeApp = props[wakeup + 'versionCode']
     versionNameApp = props[wakeup + 'versionName']
+    if("gspeech" == nlu){
+        versionCodeApp = props['gspeechversionCode']
+        versionNameApp = props['gspeechversionName']
+    }
 }
 
 
 android {
 
     sourceSets.main {
+        resources.srcDirs = ['src/main/resources/', 'src/main/ext_res/'+ wakeup + '/resources']
         res.srcDirs = ["src/main/res", 'src/main/ext_res/'+ wakeup + '/res']
         java.srcDirs = ["src/main/java", 'src/main/ext_src/'+ wakeup + '/java']
     }
@@ -110,6 +111,7 @@ dependencies {
     releaseCompile    developmentDepend.leakcanaryNoop
 
     compile project(':flytek')
+    //compile project(':googlespeech')
     compile project(':drive')
     compile project(':socket')
     compile project(':zcui')

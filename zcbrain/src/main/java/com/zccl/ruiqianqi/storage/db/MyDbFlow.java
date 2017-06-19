@@ -324,7 +324,7 @@ public class MyDbFlow {
         return SQLite.select()
                 .from(ServerBean.class)
                 .where(ServerBean_Table.flagVersion.eq(flagVersion))
-                .orderBy(ServerBean_Table.id, true)
+                .orderBy(ServerBean_Table.id, ascDesc)
                 .query();
     }
 

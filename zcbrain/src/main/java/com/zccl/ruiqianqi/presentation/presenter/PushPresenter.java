@@ -38,7 +38,7 @@ public class PushPresenter extends BasePresenter {
         if(StringUtils.isEmpty(tts))
             return;
         if(null != voice){
-            voice.startTTS(tts, null, null);
+            voice.startTTS(tts, null);
         }
     }
 

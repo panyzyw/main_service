@@ -12,9 +12,9 @@ import android.view.WindowManager;
 
 import com.zccl.ruiqianqi.brain.R;
 import com.zccl.ruiqianqi.brain.eventbus.MindBusEvent;
+import com.zccl.ruiqianqi.brain.voice.RobotVoice;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.SystemUtils;
-import com.zccl.ruiqianqi.utils.AppUtils;
 import com.zccl.ruiqianqi.view.activity.BaseCompatActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -117,7 +117,7 @@ public class ExpressionActivity extends BaseCompatActivity {
     /*********************************【事件总线】*************************************************/
     /**
      * 接收到结束大表情事件，从
-     * {@link com.zccl.ruiqianqi.brain.voice.RobotVoice#notifyChange} 发过来的
+     * {@link RobotVoice#notifyChange} 发过来的
      * @param expressionEvent
      */
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 1)

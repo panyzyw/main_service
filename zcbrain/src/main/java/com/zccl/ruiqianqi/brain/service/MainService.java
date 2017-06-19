@@ -32,6 +32,9 @@ import static com.zccl.ruiqianqi.brain.service.observer.VideoObserver.VIDEO_URI;
 
 public class MainService extends SystemService {
 
+    // 类功能标识
+    public static final String TAG = MainService.class.getSimpleName();
+
     /**
      * 启动主服务
      * @param context
@@ -69,6 +72,8 @@ public class MainService extends SystemService {
 
     @Override
     public void onCreate() {
+
+        // 有动态注册的广播
         super.onCreate();
 
         // 注册远程Media控制广播

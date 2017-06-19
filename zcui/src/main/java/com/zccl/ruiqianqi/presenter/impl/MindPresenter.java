@@ -7,7 +7,6 @@ import com.zccl.ruiqianqi.mind.receiver.sensor.SensorReceiver;
 import com.zccl.ruiqianqi.mind.receiver.system.SystemReceiver;
 import com.zccl.ruiqianqi.mind.state.MyPhoneStateListener;
 import com.zccl.ruiqianqi.plugin.voice.AbstractVoice;
-import com.zccl.ruiqianqi.plugin.voice.ProxyVoice;
 import com.zccl.ruiqianqi.presenter.base.BasePresenter;
 
 import org.greenrobot.eventbus.EventBus;
@@ -66,7 +65,6 @@ public class MindPresenter extends BasePresenter {
      * MyApplication的OnCreate()中调用
      */
     public void initSpeech(AbstractVoice voice){
-        //this.voice = new ProxyVoice(voice);
         this.voice = voice;
         this.voice.initSpeech();
     }
@@ -150,9 +148,9 @@ public class MindPresenter extends BasePresenter {
     public void OnListenEvent(MainBusEvent.ListenEvent listenEvent){
         if(null != voice) {
             if(MainBusEvent.ListenEvent.RECYCLE_LISTEN == listenEvent.getType()) {
-                voice.notifyChange(AbstractVoice.RECYCLE_LISTEN, listenEvent);
+                voice.notifyChange(AbstractVoice.RECYCLE_LISTEN_CHANGE, listenEvent);
             }else {
-                voice.notifyChange(AbstractVoice.STOP_LISTEN, listenEvent);
+                voice.notifyChange(AbstractVoice.STOP_LISTEN_CHANGE, listenEvent);
             }
         }
     }
@@ -167,6 +165,18 @@ public class MindPresenter extends BasePresenter {
             voice.notifyChange(AbstractVoice.BATTERY_CHANGE, batteryEvent);
         }
     }
+
+    /**
+     * 接收到HDMI插拔事件
+     * @param hdmiEvent
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, priority = 1)
+    public void OnHdmiEvent(MainBusEvent.HdmiEvent hdmiEvent){
+        if(null != voice) {
+            voice.notifyChange(AbstractVoice.HDMI_CHANGE, hdmiEvent);
+        }
+    }
+
 
     /** 语言配置改变时的订阅者 */
     //private Subscription subscription;

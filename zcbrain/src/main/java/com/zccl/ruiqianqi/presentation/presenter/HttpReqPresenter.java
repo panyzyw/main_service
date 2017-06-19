@@ -1,9 +1,7 @@
 package com.zccl.ruiqianqi.presentation.presenter;
 
 import android.content.Context;
-import android.os.Bundle;
 
-import com.zccl.ruiqianqi.brain.R;
 import com.zccl.ruiqianqi.domain.interactor.IHttpReqInteractor;
 import com.zccl.ruiqianqi.domain.interactor.httpreq.HttpReqInteractor;
 import com.zccl.ruiqianqi.domain.model.httpreq.BoYanDown;
@@ -12,11 +10,8 @@ import com.zccl.ruiqianqi.presenter.base.BasePresenter;
 import com.zccl.ruiqianqi.presenter.impl.MindPresenter;
 import com.zccl.ruiqianqi.storage.HttpReqRepository;
 import com.zccl.ruiqianqi.tools.LogUtils;
-import com.zccl.ruiqianqi.tools.MyAppUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
 import com.zccl.ruiqianqi.utils.AppUtils;
-
-import static com.zccl.ruiqianqi.mind.receiver.system.SystemReceiver.ACT_RECYCLE_LISTEN;
 
 /**
  * Created by ruiqianqi on 2016/7/19 0019.

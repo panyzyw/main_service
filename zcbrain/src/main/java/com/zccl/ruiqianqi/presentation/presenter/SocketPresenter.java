@@ -282,6 +282,7 @@ public class SocketPresenter extends BasePresenter {
 
     /**
      * 解析Case1
+     * login ----> {"ret":"1","msg":"robot is null","cmd":"/robot/login"}
      * @param result
      */
     private void parseCase1(String result){

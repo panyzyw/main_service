@@ -27,8 +27,8 @@ public class LocalServer implements Runnable{
     public static final String LOCAL_LOGIN = "/localserver/login";
     // 视频客户端
     public static final String VIDEO_CLIENT = "video";
-    // 音乐客户端
-    public static final String MUSIC_CLIENT = "music";
+    // SDK客户端
+    public static final String SDK_CLIENT = "sdk";
 
     // 类标志
     private static String TAG = LocalServer.class.getSimpleName();
@@ -39,9 +39,10 @@ public class LocalServer implements Runnable{
     // 本地LocalServerSocket
     private LocalServerSocket mLocalServerSocket = null;
     // 对应的客户端ID
-    private Map<String, LocalSocket> mClientSocketMap;
+    private Map<String, LocalSocket> mClientSocketMap = null;
     // 对应的客户端回调接口
-    private Map<String, LocalSocketCallback> mLocalSocketCallbackMap;
+    private Map<String, LocalSocketCallback> mLocalSocketCallbackMap = null;
+
 
     // 是不是结束了
     private boolean isOver = false;

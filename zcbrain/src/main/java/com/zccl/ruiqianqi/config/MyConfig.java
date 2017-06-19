@@ -33,15 +33,6 @@ public class MyConfig {
     // 登录失败【平行】
     public final static String STATE_LOGIN_FAILURE = RET_FAILURE;
 
-    // 开始语音监听广播
-    //public static final String INTENT_ACTION_LISTEN = "com.yongyida.robot.voice.VOICE_UNDERSTAND";
-    public static final String INTENT_ACTION_LISTEN = "com.yongyida.robot.VOLUME_CHANGE";
-    // 开始还是结束监听
-    public static final String KEY_LISTEN_STATUS = "status";
-    // 开始监听
-    public static final String VALUE_LISTEN_START = "start";
-    // 结束监听
-    public static final String VALUE_LISTEN_END = "end";
 
     // 结束任务的广播
     public static final String INTENT_ACTION_STOP = "com.yydrobot.STOP";

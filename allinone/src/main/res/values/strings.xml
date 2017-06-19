@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">allinone</string>
-    <string name="app_id">56065ce8</string>
     <string name="wakeup_parse_error">唤醒内容解析出错</string>
     <string name="wakeup_invalid">唤醒值低于阀值</string>
 

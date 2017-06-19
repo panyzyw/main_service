@@ -1,4 +1,4 @@
-package com.zccl.ruiqianqi.mind.voice.iflytek.beans;
+package com.zccl.ruiqianqi.mind.voice.impl.beans;
 
 import com.google.gson.annotations.SerializedName;
 

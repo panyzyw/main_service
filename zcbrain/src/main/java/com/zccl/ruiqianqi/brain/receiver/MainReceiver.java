@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.yongyida.robot.entity.Notice;
-import com.zccl.ruiqianqi.brain.eventbus.MindBusEvent;
 import com.zccl.ruiqianqi.mind.receiver.system.SystemReceiver;
 import com.zccl.ruiqianqi.plugin.voice.AbstractVoice;
 import com.zccl.ruiqianqi.presentation.mictest.MicTestActivity;
@@ -19,14 +18,7 @@ import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.MyAppUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
-
-import static com.zccl.ruiqianqi.config.LocalProtocol.ACTION_MEDIA_SEND;
-import static com.zccl.ruiqianqi.config.LocalProtocol.MEDIA_RESULT;
-import static com.zccl.ruiqianqi.config.RemoteProtocol.A_MEDIA_FORWARD_2_SERVER;
-import static com.zccl.ruiqianqi.config.RemoteProtocol.B_ROBOT_MEDIA_CONTROL;
 
 public class MainReceiver extends SystemReceiver {
 

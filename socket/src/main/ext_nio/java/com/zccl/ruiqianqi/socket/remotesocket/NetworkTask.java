@@ -24,6 +24,10 @@ import java.util.Iterator;
 /**
  * Mina 这样的框架很好，如果再配上 protobuf 这样的多平台序列化工具，
  * 可以很好的实现自定义协议的通信。自己订协议的好处就是安全，而且能做应答机制
+ *
+ * java.net.SocketException: recvfrom failed: ECONNRESET
+ * 并发连接的服务器的数目超过了其承载能力，其中一些已连接到服务器将被关闭;
+ *
  * @author zccl
  *
  */

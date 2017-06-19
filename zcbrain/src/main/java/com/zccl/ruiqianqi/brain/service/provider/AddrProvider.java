@@ -35,15 +35,15 @@ public class AddrProvider extends ContentProvider {
      *   其中#表示匹配任意长度的数字
      *   所以：
      *   一个能匹配所有表的Uri可以写成:
-     *   content://com.yongyida.robot.voice.master.httprequest/*
+     *   content://com.yongyida.robot.voice.request/*
      *   一个能匹配http_request表中任意一行的Uri可以写成:
-     *   content://com.yongyida.robot.voice.master.httprequest/http_request/#
+     *   content://com.yongyida.robot.voice.request/http_request/#
      */
     static {
-        // 匹配：content://com.yongyida.robot.voice.master.httprequest/http_request，返回值为1
+        // 匹配：content://com.yongyida.robot.voice.request/http_request，返回值为1
         MATCHER.addURI(AUTHORITY, AUTHORITY_TABLE, HTTP_REQUEST_ALL);
 
-        // 匹配：content://com.yongyida.robot.voice.master.httprequest/http_request/10，返回值为2
+        // 匹配：content://com.yongyida.robot.voice.request/http_request/10，返回值为2
         // 后面加了#表示为数字通配符
         MATCHER.addURI(AUTHORITY, AUTHORITY_TABLE + "/#", HTTP_REQUEST_SINGLE);
 

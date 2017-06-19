@@ -1356,10 +1356,10 @@ public class SystemUtils {
         sb.append("4.1.2版[16]：" + Build.VERSION_CODES.JELLY_BEAN + NEWLINE);
         sb.append("4.2.2版[17]：" + Build.VERSION_CODES.JELLY_BEAN_MR1 + NEWLINE);
         sb.append("4.3.1版[18]：" + Build.VERSION_CODES.JELLY_BEAN_MR2 + NEWLINE);
-        sb.append("4.4.2版[19]：" + Build.VERSION_CODES.KITKAT + NEWLINE);
-        sb.append("4.4W.2版[20]：" + Build.VERSION_CODES.KITKAT_WATCH + NEWLINE);
-        sb.append("5.0.1版[21]：" + Build.VERSION_CODES.LOLLIPOP + NEWLINE);
-        sb.append("5.1.1版[22]：" + Build.VERSION_CODES.LOLLIPOP_MR1 + NEWLINE);
+        sb.append("4.4.2版[19]：" + Build.VERSION_CODES.KITKAT + NEWLINE); // kitkat
+        sb.append("4.4W.2版[20]：" + Build.VERSION_CODES.KITKAT_WATCH + NEWLINE); // kitkat
+        sb.append("5.0.1版[21]：" + Build.VERSION_CODES.LOLLIPOP + NEWLINE); // Lollipop
+        sb.append("5.1.1版[22]：" + Build.VERSION_CODES.LOLLIPOP_MR1 + NEWLINE); // Lollipop
         sb.append("6.0版[23]：" + Build.VERSION_CODES.M + NEWLINE); // Marshmallow
         sb.append("7.0版[24]：" + Build.VERSION_CODES.N + NEWLINE); // Nougat
         sb.append("7.1.1版[25]：" + Build.VERSION_CODES.N_MR1 + NEWLINE); // Nougat++

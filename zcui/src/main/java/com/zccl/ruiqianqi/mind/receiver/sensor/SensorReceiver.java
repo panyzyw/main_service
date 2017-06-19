@@ -22,8 +22,10 @@ public class SensorReceiver extends BroadcastReceiver {
 
     /** 触摸广播携带的【数据一】的KEY */
     public static final String TOUCH_KEY = "android.intent.extra.Touch";
-    // 摸肚子
+    // 摸肚子，摸头
     public static final String TOUCH_HEAD_VALUE = "t_head";
+    // 摸下巴
+    public static final String TOUCH_CHIN_VALUE = "t_back";
     // 右胳膊
     public static final String TOUCH_RIGHT_ARM_VALUE = "yyd5";
     // 左胳膊
@@ -82,6 +84,11 @@ public class SensorReceiver extends BroadcastReceiver {
                     else if(VOICE_WAKE_VALUE.equals(wakeValue)){
                         sendSensorEvent(context.getString(R.string.sensor_voice));
                     }
+
+                }
+                // 摸下巴
+                else if (TOUCH_CHIN_VALUE.equals(touchValue)) {
+                    sendSensorEvent(context.getString(R.string.sensor_chin));
 
                 }
                 // 右胳膊

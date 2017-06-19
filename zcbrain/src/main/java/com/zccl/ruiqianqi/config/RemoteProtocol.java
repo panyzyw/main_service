@@ -1,6 +1,7 @@
 package com.zccl.ruiqianqi.config;
 
 import com.google.gson.Gson;
+import com.zccl.ruiqianqi.domain.model.dataup.LogCollectBack;
 import com.zccl.ruiqianqi.domain.model.dataup.QueryBindUser;
 import com.zccl.ruiqianqi.domain.model.dataup.QueryPhotosBack;
 import com.zccl.ruiqianqi.domain.model.dataup.RemindBack;
@@ -133,6 +134,15 @@ public class RemoteProtocol {
     // 推送的是文字
     public static final String TYPE_CONTENT_TEXT = "text";
 
+    // 音乐推送【二级指令】【新加的】
+    public static final String B_PUSH_MUSIC = "playAll";
+    // 音乐播放控制推送【二级指令】【新加的】
+    public static final String B_PUSH_MUSIC_CTRL = "play_control";
+
+    // 定时关机【二级指令】【新加的】
+    public static final String B_PUSH_TIMED_SHUTDOWN = "timed_shutdown";
+
+
 
     // 手机推送的返回指令【一级指令】
     public static final String A_ORDER_CALLBACK = "/robot/callback";
@@ -144,6 +154,8 @@ public class RemoteProtocol {
     public static final String B_PHOTO_QUERY_RESULT = "photo_query";
     // 机器人向手机推送的指令【二级指令】
     public static final String B_ROBOT_MEDIA_CONTROL = "robot_media_control";
+    // 用户操作日志收集【二级指令】
+    public static final String B_LOG_COLLECT = "log_collect";
 
     // 查询绑定用户列表【一级指令】
     public static final String A_BINDER_USER_QUERY = "/robot/bind/list";
@@ -512,5 +524,14 @@ public class RemoteProtocol {
      */
     public static ByteBuffer buildRobotMediaBack2(RobotMediaBack robotMediaBack){
         return buildMsg2(robotMediaBack);
+    }
+
+    /**
+     * 构造用户操作日志上行指令
+     * @param logCollectBack
+     * @return
+     */
+    public static ByteBuffer buildLogCollectBack2(LogCollectBack logCollectBack){
+        return buildMsg2(logCollectBack);
     }
 }

@@ -31,4 +31,6 @@ public class ServerBean extends BaseModel {
     public String flagVersion;
     @Column
     public String rid;
+    @Column
+    public String isInControl;
 }

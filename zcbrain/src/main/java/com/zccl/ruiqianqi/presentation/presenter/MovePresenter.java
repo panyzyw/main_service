@@ -2,7 +2,7 @@ package com.zccl.ruiqianqi.presentation.presenter;
 
 import android.os.RemoteException;
 
-import com.zccl.ruiqianqi.mind.voice.iflytek.slotsvalue.MoveSlots;
+import com.zccl.ruiqianqi.mind.voice.impl.slotsvalue.MoveSlots;
 import com.zccl.ruiqianqi.move.MoveAction;
 import com.zccl.ruiqianqi.move.MoveException;
 import com.zccl.ruiqianqi.presenter.base.BasePresenter;
@@ -20,8 +20,6 @@ public class MovePresenter extends BasePresenter {
 
     // 类日志标志
     private static String TAG = MovePresenter.class.getSimpleName();
-    // 移动循环监听标志
-    private final String mMove = "listen_Move";
     // 单例引用
     private static MovePresenter instance;
     // 运动服务
@@ -193,7 +191,7 @@ public class MovePresenter extends BasePresenter {
         mainThread.postDelayed(new Runnable() {
             @Override
             public void run() {
-                AppUtils.startListen(mContext, mMove, true, true);
+                AppUtils.startListen(mContext, TAG, true, true);
             }
         }, delay);
     }

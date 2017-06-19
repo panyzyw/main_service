@@ -6,12 +6,14 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
+import android.os.storage.StorageManager;
 import android.text.TextUtils;
 
 import com.zccl.ruiqianqi.tools.config.MyConfigure;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,8 +21,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.SyncFailedException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
@@ -32,6 +37,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
+
+import static android.content.Context.STORAGE_SERVICE;
 
 /**
  * 文件管理
@@ -959,4 +966,154 @@ public class FileUtils {
 		LogUtils.e(TAG, "goodsId = " + goodsId);
 
 	}
+
+	/***********************************【获取OTG路径】********************************************/
+	/**
+	 * 获取手机系统中所有被挂载的TF卡，包括OTG等
+	 *
+	 * @return
+	 */
+	public static List<String> getOtgPath(){
+		LogUtils.e(TAG, "getOtgPath_mount");
+		List<String> sdList = new ArrayList<>();
+		try{
+			Runtime runtime = Runtime.getRuntime();
+			// 运行mount命令，获取命令的输出，得到系统中挂载的所有目录
+			Process proc = runtime.exec("mount");
+			InputStream is = proc.getInputStream();
+			InputStreamReader isr = new InputStreamReader(is);
+			String line;
+			BufferedReader br = new BufferedReader(isr);
+			while ((line = br.readLine()) != null)
+			{
+				LogUtils.d(TAG, line);
+				// 将常见的linux分区过滤掉
+				if (line.contains("proc") ||
+						line.contains("tmpfs") ||
+						line.contains("media") ||
+						line.contains("asec") ||
+						line.contains("secure") ||
+						line.contains("system") ||
+						line.contains("cache")	||
+						line.contains("sys") ||
+						line.contains("data") ||
+						line.contains("shell") ||
+						line.contains("root") ||
+						line.contains("acct") ||
+						line.contains("misc") ||
+						line.contains("obb") ||
+						line.contains("adb")||
+						line.contains("cpu"))
+				{
+					continue;
+				}
+
+				// 下面这些分区是我们需要的
+				if (line.contains("fat") || line.contains("fuse") || (line.contains("ntfs"))){
+					// 将mount命令获取的列表分割，items[0]为设备名，items[1]为挂载路径
+					String items[] = line.split(" ");
+					if (items != null && items.length > 1)	{
+						String path = items[1].toLowerCase(Locale.getDefault());
+						// 添加一些判断，确保是sd卡，如果是otg等挂载方式，可以具体分析并添加判断条件
+						if (path != null && !sdList.contains(path)) {
+							if (path.contains("/storage/emulated") ||
+									path.contains("/storage/sdcard") ||
+									path.contains("/storage/self") ||
+									path.contains("sd")) {
+
+							}else if(path.contains("usb") || path.contains("otg")){
+								sdList.add(path);
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return sdList;
+	}
+
+	/**
+	 * /storage/emulated/0/: to my knowledge, this refers to the "emulated MMC" ("owner part").
+	 * 		Usually this is the internal one. The "0" stands for the user here, "0" is the first user aka device-owner.
+	 * 		If you create additional users, this number will increment for each.
+	 *
+	 * /storage/emulated/legacy/ as before, but pointing to the part of the currently working user
+	 * 		(for the owner, this would be a symlink to /storage/emulated/0/). So this path should bring every user to his "part".
+	 *
+	 * 因为google在4.2中考虑多用户的问题，对每个用户（user）来说，看各自的文件夹可以，
+	 * 但对于数据文件夹的处理就稍微麻烦了，所以调整了数据的挂载结构，
+	 * 如使用fuse技术/dev/fuse 会被挂载到/storage/emulated/0 目录，
+	 * 为了兼容以前，同时挂载到 /storage/emulated/legacy （故名思议，传统的），
+	 * 还建立三个软连接 /storage/sdcard0 ，/sdcard，/mnt/sdcard ，都指向  /storage/emulated/legacy/
+	 *
+	 * /sdcard/: According to a comment by Shywim, this is a symlink to...
+	 * /mnt/sdcard: (Android < 4.0)
+	 * /storage/sdcard0/: (Android 4.0+) As there's no legacy pendant here (see comments below), the "0" in this case
+	 * 		rather identifies the device (card) itself. One could, eventually, connect a card reader with another SDCard via OTG,
+	 * 		which then would become /storage/sdcard1 (no proof for that, just a guess -- but I'd say a good one)
+	 *
+	 * 在android中OTG加载的SD卡或U盘目录为 /mnt/udisk  或者是 /storage/udisk
+	 * 可以在/system/etc/vold.fstab文件中找到挂载的盘符
+	 *
+	 * /storage/emulated/0/ ------- /storage/emulated/1/
+	 * /storage/sdcard0/  --------- /storage/sdcard1/
+	 * /storage/self/primary
+	 *
+	 * 获取OTG盘符的根目录
+	 * 返回全部存储卡路径, 包括已挂载的和未挂载的.
+	 * 即: 有外置存储卡卡槽的机器,即使未插入外置存储卡,其路径也会被这个接口列出.
+	 *
+	 * @param context
+	 * @return
+	 */
+	public static List<String> getOtgPath(Context context) {
+		LogUtils.e(TAG, "getOtgPath_getVolumePaths");
+		List<String> sdList = new ArrayList<>();
+		String[] result = null;
+		StorageManager storageManager = (StorageManager) context.getSystemService(STORAGE_SERVICE);
+		try {
+			Method method = StorageManager.class.getMethod("getVolumePaths");
+			method.setAccessible(true);
+			try {
+				result = (String[]) method.invoke(storageManager);
+			} catch (InvocationTargetException e) {
+			}
+			if (null != result && result.length > 0) {
+				for (int i = 0; i < result.length; i++) {
+					String path = result[i].toLowerCase(Locale.getDefault());
+					if (path != null && !sdList.contains(path)) {
+						if (!(path.contains("/storage/emulated") ||
+								path.contains("/storage/sdcard") ||
+								path.contains("/storage/self") || path.contains("sd"))) {
+							sdList.add(result[i]);
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			// FIXME: Android6已经不是/storage/usbotg路径了。类似“B4FE-5315”，不相同U盘则不相同。
+			e.printStackTrace();
+		}
+		return sdList;
+	}
+
+	/**
+	 * 获取存储卡的挂载状态. path 参数传入上个方法得到的路径
+	 * @param context
+	 * @param path
+	 * @return
+	 */
+	public static String getStorageState(Context context, String path) {
+		try {
+			StorageManager sm = (StorageManager) context.getSystemService(STORAGE_SERVICE);
+			Method getVolumeStateMethod = StorageManager.class.getMethod("getVolumeState", new Class[] {String.class});
+			String state = (String) getVolumeStateMethod.invoke(sm, path);
+			return state;
+		} catch (Exception e) {
+		}
+		return null;
+	}
+
 }

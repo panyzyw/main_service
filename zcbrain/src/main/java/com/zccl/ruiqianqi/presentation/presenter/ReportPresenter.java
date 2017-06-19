@@ -23,7 +23,7 @@ public class ReportPresenter extends BasePresenter {
             return;
         // 语音处理类
         AbstractVoice voice = MindPresenter.getInstance().getVoiceDevice();
-        voice.startTTS(msg, null, null);
+        voice.startTTS(msg, null);
     }
 
     /**
@@ -36,7 +36,7 @@ public class ReportPresenter extends BasePresenter {
         // 语音处理类
         AbstractVoice voice = MindPresenter.getInstance().getVoiceDevice();
         if(CODE_TTS == reportBean.getCode()){
-            voice.startTTS(reportBean.getMsg(), null, null);
+            voice.startTTS(reportBean.getMsg(), null);
         }
     }
 }

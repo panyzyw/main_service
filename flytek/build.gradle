@@ -1,6 +1,25 @@
 apply plugin: 'com.android.library'
 apply from: '../buildshell/library.gradle'
 
+// 唤醒词、平台配置
+def nlu = ""
+def app_id = ""
+if(project.hasProperty("config") && file(project.property("config")).exists()) {
+    Properties props = new Properties()
+    props.load(new FileInputStream(file(project.property("config"))))
+    nlu = props['nlu']
+    app_id = props['app_id']
+}
+
+
+android {
+
+    sourceSets.main {
+        res.srcDirs = ["src/main/res", 'src/main/ext_res/'+ nlu + '/res', 'src/main/ext_appid/'+ app_id + '/res']
+        java.srcDirs = ["src/main/java", 'src/main/ext_src/' + nlu + '/java']
+    }
+}
+
 def getLayoutLibPath() {
     return "${android.getSdkDirectory().getAbsolutePath()}" + "/platforms/" +
             android.compileSdkVersion + "/data/layoutlib.jar"
@@ -27,4 +46,21 @@ dependencies {
 
     compile project(':allinone')
 
+    if(nlu=="gspeech"){
+        compile 'com.google.auth:google-auth-library-credentials:0.7.0'
+        compile('com.google.auth:google-auth-library-oauth2-http:0.7.0') {
+            exclude group: 'com.google.guava', module: 'guava-jdk5'
+            exclude group: 'com.google.guava', module: 'slice-guava-jdk5'
+        }
+        compile('com.google.api.grpc:grpc-google-cloud-speech-v1:0.1.11') {
+            exclude group: 'com.google.guava', module: 'guava-jdk5'
+        }
+        //compile 'com.google.guava:guava:20.0'
+        compile 'io.grpc:grpc-auth:1.0.2'
+        compile 'io.grpc:grpc-okhttp:1.0.2'
+        compile 'io.grpc:grpc-netty:1.0.2'
+        compile 'io.grpc:grpc-stub:1.0.2'
+        compile 'io.netty:netty-tcnative-boringssl-static:1.1.33.Fork23'
+        compile 'org.apache.commons:commons-pool2:2.4.2'
+    }
 }

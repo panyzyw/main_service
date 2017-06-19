@@ -9,7 +9,7 @@ import static com.zccl.ruiqianqi.config.RemoteProtocol.RET_FAILURE;
 
 public class LoginDown {
     // 0代表成功
-    // -1代表失败
+    // 非0代表失败
     private String ret = RET_FAILURE;
     // 时间戳
     private String now;

@@ -6,19 +6,31 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Bundle;
 
+import com.google.gson.Gson;
 import com.zccl.ruiqianqi.brain.R;
+import com.zccl.ruiqianqi.brain.eventbus.MindBusEvent;
 import com.zccl.ruiqianqi.config.MyConfig;
+import com.zccl.ruiqianqi.domain.model.Robot;
+import com.zccl.ruiqianqi.domain.model.dataup.LogCollectBack;
+import com.zccl.ruiqianqi.domain.model.dataup.ShutdownBack;
 import com.zccl.ruiqianqi.mind.eventbus.MainBusEvent;
+import com.zccl.ruiqianqi.presentation.presenter.StatePresenter;
+import com.zccl.ruiqianqi.tools.JsonUtils;
 import com.zccl.ruiqianqi.tools.MyAppUtils;
+import com.zccl.ruiqianqi.tools.StringUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.ACTION_PLAYER;
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.MUSIC_CONTROL;
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.PLAYER_CATEGORY_KEY;
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.PLAYER_RESULT_KEY;
 import static com.zccl.ruiqianqi.config.MyConfig.KEY_RESULT;
-import static com.zccl.ruiqianqi.config.MyConfig.KEY_VIDEO;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.B_LOG_COLLECT;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.B_PUSH_TIMED_SHUTDOWN;
 import static com.zccl.ruiqianqi.mind.receiver.system.SystemReceiver.ACT_RECYCLE_LISTEN;
 import static com.zccl.ruiqianqi.mind.receiver.system.SystemReceiver.ACT_STOP_LISTEN;
-import static com.zccl.ruiqianqi.mind.voice.iflytek.function.FuncIntent.INTENT_EMOTION_CHAT;
-import static com.zccl.ruiqianqi.mind.voice.iflytek.function.FuncType.FUNC_EMOTION_CHAT;
+import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncIntent.INTENT_EMOTION_CHAT;
 
 /**
  * Created by ruiqianqi on 2017/5/9 0009.
@@ -81,7 +93,7 @@ public class AppUtils {
     public static void sendStartListenEvent(String from, boolean isUseFloatVoice, boolean isUseExpression){
         MainBusEvent.ListenEvent listenEvent = new MainBusEvent.ListenEvent();
         listenEvent.setType(MainBusEvent.ListenEvent.RECYCLE_LISTEN);
-        listenEvent.setText(from);
+        listenEvent.setFrom(from);
         listenEvent.setUseVoiceFloat(isUseFloatVoice);
         listenEvent.setUseExpression(isUseExpression);
         // 通知进入监听
@@ -95,7 +107,7 @@ public class AppUtils {
     public static void sendStopListenEvent(String from){
         MainBusEvent.ListenEvent listenEvent = new MainBusEvent.ListenEvent();
         listenEvent.setType(MainBusEvent.ListenEvent.STOP_LISTEN);
-        listenEvent.setText(from);
+        listenEvent.setFrom(from);
         // 通知进入监听
         EventBus.getDefault().post(listenEvent);
     }
@@ -116,9 +128,16 @@ public class AppUtils {
      * @param context
      */
     public static void endEmotion(Context context){
+
         Bundle bundle = new Bundle();
         bundle.putString(KEY_RESULT, "finish");
         MyAppUtils.sendBroadcast(context, INTENT_EMOTION_CHAT, bundle);
+
+        // 结束大表情
+        /*
+        MindBusEvent.ExpressionEvent expressionEvent = new MindBusEvent.ExpressionEvent();
+        EventBus.getDefault().post(expressionEvent);
+        */
     }
 
 
@@ -176,4 +195,60 @@ public class AppUtils {
         boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
     }
 
+    /**
+     * 关掉自有播放器
+     * @param context
+     */
+    public static void exitMusicPlayer(Context context){
+        Bundle bundle = new Bundle();
+        bundle.putString(PLAYER_CATEGORY_KEY, MUSIC_CONTROL);
+        bundle.putString(PLAYER_RESULT_KEY, "退出");
+        MyAppUtils.sendBroadcast(context, ACTION_PLAYER, bundle);
+    }
+
+    /**
+     * 用户操作日志收集
+     * @param collect_result  json
+     * @param collect_from    来自哪里
+     * @param answer           对应的回答
+     */
+    public static void logCollectUp2Server(String collect_from, String collect_result, String answer){
+        LogCollectBack logCollectBack = new LogCollectBack();
+        LogCollectBack.LogCollect logCollect = JsonUtils.parseJson(collect_result, LogCollectBack.LogCollect.class);
+        if(null != logCollect) {
+            StatePresenter sp = StatePresenter.getInstance();
+            Robot robot = sp.getRobot();
+            if (null != robot) {
+                logCollect.setId(robot.getRid());
+            }
+            logCollect.setCmd(B_LOG_COLLECT);
+            logCollect.setFrom(collect_from);
+            if(!StringUtils.isEmpty(answer)){
+                logCollect.setAnswer(answer);
+            }
+            logCollectBack.setCommand(new Gson().toJson(logCollect));
+        }
+
+        MindBusEvent.ForwardSocketEvent forwardSocketEvent = new MindBusEvent.ForwardSocketEvent();
+        forwardSocketEvent.setCmd(B_LOG_COLLECT);
+        forwardSocketEvent.setText(new Gson().toJson(logCollectBack));
+        EventBus.getDefault().post(forwardSocketEvent);
+    }
+
+    /**
+     * 上行关机指令回调到手机端
+     * @param type
+     * @param countdownTime
+     */
+    public static void shutdownUp2Server(int type, int countdownTime){
+        ShutdownBack shutdownBack = new ShutdownBack();
+        ShutdownBack.Shutdown shutdown = new ShutdownBack.Shutdown();
+        shutdown.setType(type);
+        shutdown.setCountdownTime(countdownTime);
+        shutdownBack.setCommand(new Gson().toJson(shutdown));
+        MindBusEvent.ForwardSocketEvent forwardSocketEvent = new MindBusEvent.ForwardSocketEvent();
+        forwardSocketEvent.setCmd(B_PUSH_TIMED_SHUTDOWN);
+        forwardSocketEvent.setText(new Gson().toJson(shutdownBack));
+        EventBus.getDefault().post(forwardSocketEvent);
+    }
 }

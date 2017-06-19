@@ -125,6 +125,8 @@ public class MySecurity {
     }
 
     /**
+     * http://www.jianshu.com/p/7c1bc2daef8d
+     *
      * 证书管理器
      *
      * 要生成bks证书，需要bcprov-ext-jdk15on-151.jar（下载地址: http://www.bouncycastle.org/latest_releases.html）。
@@ -255,6 +257,8 @@ public class MySecurity {
 
         /*
          * Delegate to the default trust manager.
+         *
+         * do nothing的话，接受任意客户端证书
          */
         public void checkClientTrusted(X509Certificate[] chain, String authType)
                 throws CertificateException {
@@ -267,6 +271,8 @@ public class MySecurity {
 
         /*
          * Delegate to the default trust manager.
+         *
+         * do nothing的话，接受任意服务端证书
          */
         public void checkServerTrusted(X509Certificate[] chain, String authType)
                 throws CertificateException {
@@ -289,11 +295,13 @@ public class MySecurity {
     }
 
     /**
-     *
+     * 在握手期间，如果 URL 的主机名和服务器的标识主机名不匹配，则验证机制可以回调此接口的实现程序来
+     * 确定是否应该允许此连接。如果回调内实现不恰当，默认接受所有域名，则有安全风险。代码示例。
      */
     public static class TrustAnyHostnameVerifier implements HostnameVerifier {
         @Override
         public boolean verify(String hostname, SSLSession session) {
+            // Always return true，接受任意域名服务器
             return true;
         }
     }

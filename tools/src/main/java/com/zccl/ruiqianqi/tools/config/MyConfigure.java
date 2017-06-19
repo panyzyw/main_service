@@ -144,8 +144,8 @@ public class MyConfigure {
 	 * 根据配置选择配置文件
 	 * @param locale
 	 */
-	public static void loadSystemConfigure(Locale locale) {
-		if(locale==null){
+	private static void loadSystemConfigure(Locale locale) {
+		if(null == locale){
 			locale = Locale.getDefault();
 		}
 		if(locale.equals(Locale.CHINA)){
@@ -161,8 +161,8 @@ public class MyConfigure {
 	 * 加载用户配置文件
 	 * @param locale
      */
-	public static void loadClientConfigure(Locale locale) {
-		if(locale==null){
+	private static void loadClientConfigure(Locale locale) {
+		if(null == locale){
 			locale = Locale.getDefault();
 		}
 
@@ -178,7 +178,7 @@ public class MyConfigure {
 		}else{
 			is = FileUtils.getFileStream(null, "clientconfig_en_US.properties", ZERO_MYRES);
 		}
-		if(is!=null) {
+		if(null != is) {
 			try {
 				CLIENT_PROPERTIES.load(is);
 			} catch (IOException e) {
@@ -225,26 +225,26 @@ public class MyConfigure {
 	 *	locale = new Locale("en", "US");
 	 */
 	public static void chooseLanguage(Context context, Locale locale) {
-		if(locale==null){
+		if(null == locale){
 			locale = Locale.getDefault();
 		}
 		//locale = new Locale("zh", "CN");
 		//locale = new Locale("zh", "TW");
 		//locale = new Locale("en", "US");
-		//Locale.getDefault().getLanguage();  //语言:取到的比如中文为zh，英文为en，日文为ko；
-		//Locale.getDefault().toString();     //具体的类别:比如繁体为zh_TW，简体为zh_CN。英文中有en_GB；日文有ko_KR。
+		//Locale.getDefault().getLanguage();  // 语言:取到的比如中文为zh，英文为en，日文为ko；
+		//Locale.getDefault().toString();     // 具体的类别:比如繁体为zh_TW，简体为zh_CN。英文中有en_GB；日文有ko_KR。
 
 		/*
-		Resources resources = context.getResources();//获得res资源对象
-		Configuration config = resources.getConfiguration();//获得设置对象
-		DisplayMetrics dm = resources.getDisplayMetrics();//获得屏幕参数：主要是分辨率，像素等。
-		config.locale = locale; //语言
+		Resources resources = context.getResources();// 获得res资源对象
+		Configuration config = resources.getConfiguration();// 获得设置对象
+		DisplayMetrics dm = resources.getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
+		config.locale = locale; // 语言
 		resources.updateConfiguration(config, dm);
 		*/
 
-		//选择系统配置文件
+		// 选择系统配置文件
 		loadSystemConfigure(locale);
-		//选择用户配置文件
+		// 选择用户配置文件
 		loadClientConfigure(locale);
 	}
 
@@ -253,6 +253,7 @@ public class MyConfigure {
 	 * 中文为 zh，
 	 * 英文为 en，
 	 * 日文为 ko；
+	 *
 	 * Locale.getDefault().getCountry()
 	 * CN
 	 * TW

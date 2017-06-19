@@ -7,6 +7,7 @@
 
     <string name="sensor_touch">touch_head_wake</string>
     <string name="sensor_voice">voice_wake</string>
+    <string name="sensor_chin">touch_chin</string>
     <string name="sensor_left_arm">left_arm</string>
     <string name="sensor_right_arm">right_arm</string>
     <string name="sensor_dance">dance</string>

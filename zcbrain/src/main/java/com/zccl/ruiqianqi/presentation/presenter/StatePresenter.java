@@ -1,14 +1,14 @@
 package com.zccl.ruiqianqi.presentation.presenter;
 
-import com.zccl.ruiqianqi.brain.R;
-import com.zccl.ruiqianqi.presenter.base.BasePresenter;
 import com.zccl.ruiqianqi.domain.model.Robot;
+import com.zccl.ruiqianqi.presenter.base.BasePresenter;
+import com.zccl.ruiqianqi.storage.db.MyDbFlow;
+import com.zccl.ruiqianqi.storage.db.ServerBean;
 import com.zccl.ruiqianqi.tools.StringUtils;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_DEFAULT;
@@ -80,8 +80,32 @@ public class StatePresenter extends BasePresenter {
         return isInControl;
     }
 
-    public void setInControl(boolean inControl) {
+    public void setInControl(final boolean inControl) {
         isInControl = inControl;
+
+        // 更改数据库信息
+        MyDbFlow.queryServerBean(PersistPresenter.getInstance().getServerAddr(), new MyDbFlow.IQueryServerBeanCallback() {
+            @Override
+            public void OnQueryResult(ServerBean serverBean) {
+                serverBean.isInControl = inControl + "";
+            }
+
+            @Override
+            public void OnQueryListResult(List<ServerBean> serverBeanList) {
+
+            }
+
+            @Override
+            public void OnSuccess() {
+
+            }
+
+            @Override
+            public void OnFailure(Throwable error) {
+
+            }
+        });
+
     }
 
     public String getControlId() {

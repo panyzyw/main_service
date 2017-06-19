@@ -8,9 +8,8 @@ import android.widget.ToggleButton;
 
 import com.zccl.ruiqianqi.brain.R;
 import com.zccl.ruiqianqi.brain.eventbus.MindBusEvent;
-import com.zccl.ruiqianqi.brain.voice.RobotVoice;
+import com.zccl.ruiqianqi.brain.handler.FirstHandler;
 import com.zccl.ruiqianqi.domain.model.translate.TransInfoD;
-import com.zccl.ruiqianqi.mind.intent.MyIntent;
 import com.zccl.ruiqianqi.plugin.voice.AbstractVoice;
 import com.zccl.ruiqianqi.plugin.voice.Speaker;
 import com.zccl.ruiqianqi.presentation.presenter.TranslatePresenter;
@@ -32,10 +31,8 @@ import static com.zccl.ruiqianqi.brain.eventbus.MindBusEvent.TransEvent.TRANS_FA
 import static com.zccl.ruiqianqi.brain.receiver.MainReceiver.ROBOT_SCENE;
 import static com.zccl.ruiqianqi.brain.receiver.MainReceiver.SCENE_CURRENT_KEY;
 import static com.zccl.ruiqianqi.brain.receiver.MainReceiver.SCENE_STATUS_KEY;
-import static com.zccl.ruiqianqi.brain.voice.BaseHandler.SCENE_TRANS;
-import static com.zccl.ruiqianqi.mind.receiver.system.SystemReceiver.ACT_RECYCLE_LISTEN;
-import static com.zccl.ruiqianqi.mind.receiver.system.SystemReceiver.ACT_STOP_LISTEN;
-import static com.zccl.ruiqianqi.mind.voice.iflytek.Configuration.SPEAKER_NAME;
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_MY_TRANS;
+import static com.zccl.ruiqianqi.mind.voice.impl.Configuration.SPEAKER_NAME;
 import static com.zccl.ruiqianqi.plugin.voice.Speaker.OFF_LINE_SPEAKER;
 import static com.zccl.ruiqianqi.plugin.voice.Speaker.ON_LINE_SPEAKER;
 
@@ -179,7 +176,7 @@ public class TranslateActivity extends BaseCompatActivity implements TranslatePr
      */
     private void sceneStatus(boolean status){
         Bundle bundle = new Bundle();
-        bundle.putString(SCENE_CURRENT_KEY, SCENE_TRANS);
+        bundle.putString(SCENE_CURRENT_KEY, SCENE_MY_TRANS);
         bundle.putBoolean(SCENE_STATUS_KEY, status);
         MyAppUtils.sendBroadcast(getApplicationContext(), ROBOT_SCENE, bundle);
     }
@@ -202,7 +199,7 @@ public class TranslateActivity extends BaseCompatActivity implements TranslatePr
     /*********************************【事件总线】*************************************************/
     /**
      * 接收到网络变化事件，从
-     * {@link com.zccl.ruiqianqi.brain.voice.FirstHandler#handleAsr} 发过来的
+     * {@link FirstHandler#handleAsr} 发过来的
      * @param transEvent
      */
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 1)
@@ -278,24 +275,9 @@ public class TranslateActivity extends BaseCompatActivity implements TranslatePr
 
             trans_content_to.setText(transInfoD.getTranslation().get(0));
 
-            mRobotVoice.startTTS(transInfoD.getTranslation().get(0), null, new AbstractVoice.SynthesizerCallback() {
+            mRobotVoice.startTTS(transInfoD.getTranslation().get(0), new Runnable() {
                 @Override
-                public void OnBegin() {
-
-                }
-
-                @Override
-                public void OnPause() {
-
-                }
-
-                @Override
-                public void OnResume() {
-
-                }
-
-                @Override
-                public void OnComplete(Throwable throwable, String tag) {
+                public void run() {
                     startListen();
                 }
             });

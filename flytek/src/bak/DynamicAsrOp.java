@@ -3,7 +3,7 @@ package zcclres;
 import android.database.sqlite.SQLiteException;
 
 import com.zccl.ruiqianqi.tools.config.MyConfigure;
-import com.zccl.ruiqianqi.mind.voice.iflytek.VoiceRecognizer;
+import com.zccl.ruiqianqi.mind.voice.impl.VoiceRecognizer;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
 import com.zccl.ruiqianqi.tools.executor.rxutils.MyRxUtils;

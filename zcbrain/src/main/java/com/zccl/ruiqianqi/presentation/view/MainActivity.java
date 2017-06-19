@@ -3,8 +3,6 @@ package com.zccl.ruiqianqi.presentation.view;
 import android.os.Bundle;
 
 import com.zccl.ruiqianqi.brain.R;
-import com.zccl.ruiqianqi.mind.voice.iflytek.Configuration;
-import com.zccl.ruiqianqi.tools.MyAppUtils;
 import com.zccl.ruiqianqi.tools.SystemUtils;
 import com.zccl.ruiqianqi.view.activity.BaseCompatActivity;
 

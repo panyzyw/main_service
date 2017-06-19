@@ -32,12 +32,23 @@ ext {
     compileSdkVersion = 25
     // 目标版本
     targetSdkVersion = 22
-    supportVersion = '25.2.0'
-    appcompatVersion = '25.2.0'
-    preferenceVersion = '25.2.0'
-    preference14Version = '25.2.0'
-    annotationsVersion = '25.2.0'
-    designVersion = '25.2.0'
+    supportVersion = '25.3.1'
+    appcompatVersion = '25.3.1'
+    preferenceVersion = '25.3.1'
+    preference14Version = '25.3.1'
+    annotationsVersion = '25.3.1'
+    designVersion = '25.3.1'
+
+//    // 编译版本
+//    compileSdkVersion = 25
+//    // 目标版本
+//    targetSdkVersion = 22
+//    supportVersion = '25.2.0'
+//    appcompatVersion = '25.2.0'
+//    preferenceVersion = '25.2.0'
+//    preference14Version = '25.2.0'
+//    annotationsVersion = '25.2.0'
+//    designVersion = '25.2.0'
 
 //    // 编译版本
 //    compileSdkVersion = 25

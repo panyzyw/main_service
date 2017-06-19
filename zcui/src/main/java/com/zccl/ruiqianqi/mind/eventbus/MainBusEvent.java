@@ -235,7 +235,8 @@ public class MainBusEvent {
         public static final int STOP_LISTEN = 2;
 
         private int type;
-        private String text;
+        // 指令来自何处
+        private String from;
         // 用不用显示悬浮表情
         private boolean isUseVoiceFloat;
         // 用不用显示大表情
@@ -249,12 +250,12 @@ public class MainBusEvent {
             this.type = type;
         }
 
-        public String getText() {
-            return text;
+        public String getFrom() {
+            return from;
         }
 
-        public void setText(String text) {
-            this.text = text;
+        public void setFrom(String from) {
+            this.from = from;
         }
 
         public boolean isUseVoiceFloat() {
@@ -287,6 +288,22 @@ public class MainBusEvent {
 
         public void setText(String text) {
             this.text = text;
+        }
+    }
+
+    /**
+     * HDMI事件
+     */
+    public static class HdmiEvent{
+
+        private boolean state;
+
+        public boolean isState() {
+            return state;
+        }
+
+        public void setState(boolean state) {
+            this.state = state;
         }
     }
 }

@@ -61,13 +61,6 @@
             android:stopWithTask="false">
         </service>
 
-        <service
-            android:name=".service.TtsService"
-            android:enabled="true"
-            android:exported="true"
-            android:stopWithTask="false">
-        </service>
-
         <receiver
             android:name="com.zccl.ruiqianqi.brain.receiver.MainReceiver"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
@@ -97,10 +90,16 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receiver.MediaReceiver">
+        <receiver android:name=".receiver.OtherReceiver">
             <intent-filter android:priority="1000">
-                <!-- 往手机端发送多媒体命令 -->
+                <!-- 往手机端发送多媒体命令，这个其实是从其他应用接收 -->
                 <action android:name="com.yongyida.media.SEND"/>
+                <!-- 插拔HDMI线-->
+                <action android:name="android.intent.action.HDMI_PLUGGED" />
+                <!-- 收集操作信息，发给服务器-->
+                <action android:name="com.yongyida.robot.COLLECT" />
+                <!-- 其他应用发给主服务的数据及回调-->
+                <action android:name="com.yongyida.robot.MAIN_RECV" />
             </intent-filter>
         </receiver>
 

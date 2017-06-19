@@ -2,26 +2,30 @@ package com.zccl.ruiqianqi.domain.tasks.remotetask;
 
 import android.os.Bundle;
 
+import com.zccl.ruiqianqi.domain.model.datadown.PushContent;
+import com.zccl.ruiqianqi.domain.model.datadown.PushRemind;
 import com.zccl.ruiqianqi.presentation.presenter.MovePresenter;
 import com.zccl.ruiqianqi.presentation.presenter.PhotoPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.PushPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.RemindPresenter;
-import com.zccl.ruiqianqi.domain.model.datadown.PushContent;
-import com.zccl.ruiqianqi.domain.model.datadown.PushRemind;
 import com.zccl.ruiqianqi.tools.JsonUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.MyAppUtils;
+import com.zccl.ruiqianqi.tools.ShareUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.zccl.ruiqianqi.config.LocalProtocol.ACTION_MEDIA_RECV;
-import static com.zccl.ruiqianqi.config.LocalProtocol.MEDIA_RESULT;
+import static com.zccl.ruiqianqi.config.LocalProtocol.KEY_MEDIA_RESULT;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_CONTENT_PUSH;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_INSERT_UPDATE;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_MOVE;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_PHOTO_QUERY;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.B_PUSH_MUSIC;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.B_PUSH_MUSIC_CTRL;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.B_PUSH_TIMED_SHUTDOWN;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_REMIND_DELETE;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_REMIND_INSERT;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_REMIND_QUERY;
@@ -118,18 +122,61 @@ public class PushTask extends BaseTask {
                         }
                     }
                 }
+
                 // 手机端发送播放列表的命令
-                else if(cmd.startsWith("playAll")){
+                else if(B_PUSH_MUSIC.equals(cmd)){
                     Bundle bundle = new Bundle();
-                    bundle.putString(MEDIA_RESULT, command);
+                    bundle.putString(KEY_MEDIA_RESULT, command);
                     MyAppUtils.sendBroadcast(mContext, ACTION_MEDIA_RECV, bundle);
                 }
                 // 手机端发送控制播放命令
-                else if(cmd.startsWith("play_control")){
+                else if(B_PUSH_MUSIC_CTRL.equals(cmd)){
                     Bundle bundle = new Bundle();
-                    bundle.putString(MEDIA_RESULT, command);
+                    bundle.putString(KEY_MEDIA_RESULT, command);
                     MyAppUtils.sendBroadcast(mContext, ACTION_MEDIA_RECV, bundle);
                 }
+
+                // 定时关机
+                else if(B_PUSH_TIMED_SHUTDOWN.equals(cmd)){
+
+                    int countdownTime = jsonObj.optInt("countdownTime");
+                    if(countdownTime < 0){
+                        PushPresenter pp = new PushPresenter();
+                        int type = jsonObj.optInt("type");
+                        if (0 == type) {
+                            pp.chat("取消关机");
+                        } else {
+                            pp.chat("取消重启");
+                        }
+
+                    }else {
+                        int hh = countdownTime / 3600;
+                        int mm = (countdownTime % 3600) / 60;
+                        int ss = (countdownTime % 3600) % 60;
+                        StringBuffer time = new StringBuffer();
+                        if (hh > 0) {
+                            time.append(hh + "小时");
+                        }
+                        if (mm > 0) {
+                            time.append(mm + "分");
+                        }
+                        if (ss > 0) {
+                            time.append(ss + "秒");
+                        }
+                        if (time.length() > 0) {
+                            time.append("后");
+                        }
+
+                        PushPresenter pp = new PushPresenter();
+                        int type = jsonObj.optInt("type");
+                        if (0 == type) {
+                            pp.chat(time + "关机");
+                        } else {
+                            pp.chat(time + "重启");
+                        }
+                    }
+                }
+
             }
 
         }catch (JSONException e){

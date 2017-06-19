@@ -432,7 +432,7 @@ public class MyAppUtils {
     }
 
     /**
-     * 打开电池状态信息
+     * 打开电池状态信息，6.0用不了了
      * @param context
      */
     public static void startBatteryStatus(Context context){

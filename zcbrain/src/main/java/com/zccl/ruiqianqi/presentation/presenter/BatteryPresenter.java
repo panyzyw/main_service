@@ -76,9 +76,11 @@ public class BatteryPresenter extends BasePresenter {
      * @param batteryEvent
      */
     public void dealWithBattery(MainBusEvent.BatteryEvent batteryEvent){
+        /*
         LogUtils.e(TAG, "battery = " + batteryEvent.getBattery());
         LogUtils.e(TAG, "isConn = " + batteryEvent.isConn());
         LogUtils.e(TAG, "isPower = " + batteryEvent.isPower());
+        */
 
         // 工厂模式中不处理信号灯
         StatePresenter sp = StatePresenter.getInstance();

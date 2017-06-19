@@ -6,19 +6,22 @@ import android.content.Intent;
 
 import com.zccl.ruiqianqi.brain.R;
 import com.zccl.ruiqianqi.brain.eventbus.MindBusEvent;
+import com.zccl.ruiqianqi.brain.system.MainBean;
 import com.zccl.ruiqianqi.presentation.presenter.ReportPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.StatePresenter;
+import com.zccl.ruiqianqi.presentation.presenter.SystemPresenter;
 import com.zccl.ruiqianqi.tools.CheckUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
-import com.zccl.ruiqianqi.tools.StringUtils;
 import com.zccl.ruiqianqi.tools.SystemUtils;
 import com.zccl.ruiqianqi.utils.LedUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
 import static com.zccl.ruiqianqi.brain.eventbus.MindBusEvent.TransEvent.TRANS_EXIT;
-import static com.zccl.ruiqianqi.brain.voice.BaseHandler.SCENE_MUSIC;
-import static com.zccl.ruiqianqi.brain.voice.BaseHandler.SCENE_TRANS;
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_MY_MUSIC;
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_MY_TRANS;
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_XF_MUSIC;
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_XF_VIDEO;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_ACCOUNT_EXCEPTION;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_CONNECT_EXCEPTION;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_FAILURE;
@@ -33,6 +36,13 @@ public class ListenCheck {
 
     // 类标志
     private String TAG = ListenCheck.class.getSimpleName();
+    // 自有播放器
+    public static final String MY_MUSIC_PLAYER = "com.yongyida.robot.player";
+    // 讯飞音乐播放器
+    public static final String XF_MUSIC_PLAYER = "com.lz.smart.music";
+    // 讯飞视频播放器
+    public static final String XF_VIDEO_PLAYER = "com.zbmv";
+
     // 全局上下文
     private Context mContext;
     // 音频处理类
@@ -53,22 +63,22 @@ public class ListenCheck {
      * @return
      */
     public boolean isShowExpression(){
-        StatePresenter sp = StatePresenter.getInstance();
-        String scene = sp.getScene();
-
+        MainBean mainBean = SystemPresenter.getInstance().sendCommandSync(SystemPresenter.GET_CUR_PKG, null);
+        String currentPkg = null;
+        if(null != mainBean) {
+            currentPkg = mainBean.getMsg();
+        }
+        LogUtils.e(TAG, currentPkg + "");
         // 自产音乐播放器是否在运行
-        if(SCENE_MUSIC.equals(scene)){
+        if(MY_MUSIC_PLAYER.equals(currentPkg)){
             return false;
         }
-
-        // android:sharedUserId="android.uid.system"
-        String topApp = SystemUtils.getCurrentAppPkgName(mContext);
         // 讯飞音乐播放器是否在运行
-        if("com.lz.smart.music".equals(topApp)){
+        else if(XF_MUSIC_PLAYER.equals(currentPkg)){
             return false;
         }
-        // 自产音乐播放器是否在运行
-        else if("com.yongyida.robot.player".equals(topApp)){
+        // 讯飞视频播放器是否在运行
+        else if(XF_VIDEO_PLAYER.equals(currentPkg)){
             return false;
         }
 
@@ -83,7 +93,7 @@ public class ListenCheck {
         StatePresenter sp = StatePresenter.getInstance();
 
         // 翻译中【语音唤醒退出】
-        if(SCENE_TRANS.equals(sp.getScene())){
+        if(SCENE_MY_TRANS.equals(sp.getScene())){
             // 退出翻译
             MindBusEvent.TransEvent transEvent = new MindBusEvent.TransEvent();
             transEvent.setType(TRANS_EXIT);
@@ -189,28 +199,34 @@ public class ListenCheck {
 
         final int isGo = checkStatus(isTouchOrVoice);
         if(0 == isGo || -3 == isGo) {
+
+            // 说唤醒语
             if(welcome) {
                 String word = helloWords[CheckUtils.getRandom(helloWords.length)];
                 mRobotVoice.startTTS(word, new Runnable() {
                     @Override
                     public void run() {
+                        // 有网络，正常监听
                         if(0 == isGo) {
-                            mRobotVoice.startUnderstand();
+                            mRobotVoice.startListenOnline();
                         }
                         // 网络断开了，开启离线
                         else {
-                            mRobotVoice.firstAsr();
+                            mRobotVoice.startListenOffline();
                         }
                         startListenFace();
                     }
                 });
-            }else {
+            }
+            // 连续监听，不说唤醒语
+            else {
+                // 有网络，正常监听
                 if(0 == isGo) {
-                    mRobotVoice.startUnderstand();
+                    mRobotVoice.startListenOnline();
                 }
                 // 网络断开了，开启离线
                 else {
-                    mRobotVoice.firstAsr();
+                    mRobotVoice.startListenOffline();
                 }
                 startListenFace();
             }
@@ -218,14 +234,7 @@ public class ListenCheck {
             LogUtils.e(TAG, "isUseExpression = " + isUseExpression);
             // 触摸，露出笑脸
             if(isUseExpression){
-
                 // 开启大表情
-                /*
-                Intent intent = new Intent(mContext, ExpressionActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(intent);
-                */
-
                 Intent intent = new Intent();
                 ComponentName componentName = new ComponentName("com.yongyida.robot.lockscreen",
                         "com.yongyida.robot.lockscreen.presentation.view.ExpressionActivity");

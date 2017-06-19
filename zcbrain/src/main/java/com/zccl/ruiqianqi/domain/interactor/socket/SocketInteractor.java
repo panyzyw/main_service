@@ -2,9 +2,12 @@ package com.zccl.ruiqianqi.domain.interactor.socket;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.zccl.ruiqianqi.brain.eventbus.MindBusEvent;
 import com.zccl.ruiqianqi.config.MyConfig;
+import com.zccl.ruiqianqi.domain.model.Robot;
 import com.zccl.ruiqianqi.domain.model.ServerAddr;
+import com.zccl.ruiqianqi.domain.model.dataup.LogCollectBack;
 import com.zccl.ruiqianqi.domain.model.dataup.QueryBindUser;
 import com.zccl.ruiqianqi.domain.model.dataup.RobotMediaBack;
 import com.zccl.ruiqianqi.domain.repository.ISocketRepository;
@@ -19,6 +22,7 @@ import com.zccl.ruiqianqi.domain.model.robotup.FlushUpName;
 import com.zccl.ruiqianqi.domain.model.robotup.LoginUp;
 import com.zccl.ruiqianqi.domain.model.robotup.MediaForwardUp;
 import com.zccl.ruiqianqi.socket.remotesocket.NetworkTask;
+import com.zccl.ruiqianqi.tools.JsonUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.ShareUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
@@ -35,6 +39,7 @@ import static com.zccl.ruiqianqi.config.MyConfig.STATE_CONNECT_OFF;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_ING;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.A_BINDER_USER_DELETE;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.A_BINDER_USER_QUERY;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.B_LOG_COLLECT;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_ROBOT_MEDIA_CONTROL;
 import static com.zccl.ruiqianqi.presentation.presenter.PersistPresenter.KEY_ID;
 import static com.zccl.ruiqianqi.presentation.presenter.PersistPresenter.KEY_SID;
@@ -234,6 +239,10 @@ public class SocketInteractor extends BaseInteractor implements ISocketInteracto
                 e.printStackTrace();
             }
         }
+        // 用户操作日志收集
+        else if(B_LOG_COLLECT.equals(forwardSocketEvent.getCmd())){
+            byteBuf = RemoteProtocol.buildMsg2(forwardSocketEvent.getText());
+        }
 
         // 查询绑定用户列表，发给服务器
         else if(A_BINDER_USER_QUERY.equals(forwardSocketEvent.getCmd())){
@@ -242,6 +251,10 @@ public class SocketInteractor extends BaseInteractor implements ISocketInteracto
         }
         // 删除绑定用户
         else if(A_BINDER_USER_DELETE.equals(forwardSocketEvent.getCmd())){
+            byteBuf = RemoteProtocol.buildMsg2(forwardSocketEvent.getText());
+        }
+        // 其他的直接发送给服务器
+        else {
             byteBuf = RemoteProtocol.buildMsg2(forwardSocketEvent.getText());
         }
 

@@ -28,6 +28,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zccl.ruiqianqi.tools.config.MyConfigure;
+
 import java.io.File;
 import java.lang.reflect.Method;
 
@@ -599,14 +601,16 @@ public class MYUIUtils {
 
         //DisplayMetrics metrics = getMetrics(context);
         // 以屏幕左上角为原点，设置x、y初始值，相对于gravity
-        wmParams.x = dip2px(context, 5.0F);
-        wmParams.y = dip2px(context, 5.0F);
+        wmParams.x = dip2px(context, 4.0F);
+        wmParams.y = dip2px(context, 4.0F);
 
         // 设置悬浮窗口长宽数据
         // wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         // wmParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        wmParams.width =  dip2px(context, 100.0F);
-        wmParams.height =  dip2px(context, 100.0F);
+        //wmParams.width =  dip2px(context, 100.0F);
+        //wmParams.height =  dip2px(context, 100.0F);
+        wmParams.width = Integer.parseInt(MyConfigure.getValue("float_width"));
+        wmParams.height = Integer.parseInt(MyConfigure.getValue("float_height"));
 
         // 设置悬浮窗口长宽数据
         // wmParams.width = 200;

@@ -31,7 +31,7 @@ public class CmdRegex {
     /** 当前的指令 */
     private String currentKeyCmd;
 
-    private CmdRegex(Context context){
+    public CmdRegex(Context context){
         this.mContext = context.getApplicationContext();
     }
 
@@ -72,7 +72,7 @@ public class CmdRegex {
             mProperties = new Properties();
         }
         try {
-            InputStream is = FileUtils.getFileStream(mContext, regex + ".reg", MyConfigure.ONE_ASSETS);
+            InputStream is = FileUtils.getFileStream(mContext, regex + ".rule", MyConfigure.ONE_ASSETS);
             if(null != is) {
                 mProperties.load(is);
                 is.close();

@@ -74,7 +74,7 @@ public class BindUserPresenter extends BasePresenter {
             }
             // 失败了，要提示一下
             else {
-                voice.startTTS(mContext.getString(R.string.query_bind_user_error), null, null);
+                voice.startTTS(mContext.getString(R.string.query_bind_user_error), null);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -122,7 +122,7 @@ public class BindUserPresenter extends BasePresenter {
             }
             // 失败了，要提示一下
             else {
-                voice.startTTS(mContext.getString(R.string.delete_bind_user_error), null, null);
+                voice.startTTS(mContext.getString(R.string.delete_bind_user_error), null);
             }
         } catch (JSONException e) {
             e.printStackTrace();

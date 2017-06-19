@@ -9,8 +9,6 @@ import com.zccl.ruiqianqi.storage.db.MyDbFlow;
 import com.zccl.ruiqianqi.mind.app.BaseApplication;
 import com.zccl.ruiqianqi.presenter.impl.MindPresenter;
 import com.zccl.ruiqianqi.tools.LogUtils;
-import com.zccl.ruiqianqi.tools.MYUIUtils;
-import com.zccl.ruiqianqi.tools.SystemUtils;
 import com.zccl.ruiqianqi.tools.config.MyConfigure;
 
 /**
@@ -35,9 +33,9 @@ public class MyApplication extends BaseApplication {
         // 内存分析工具
         LeakCanary.install(this);
 
-        //参数1：上下文对象
-        //参数2：注册时申请的APPID
-        //参数3：是否开启debug模式，true表示打开debug模式，false表示关闭调试模式
+        // 参数1：上下文对象
+        // 参数2：注册时申请的APPID
+        // 参数3：是否开启debug模式，true表示打开debug模式，false表示关闭调试模式
         Bugly.init(getApplicationContext(), "5c3ac0f156", false);
 
         // 初始化语音服务

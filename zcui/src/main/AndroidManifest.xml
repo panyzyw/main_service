@@ -7,6 +7,22 @@
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
 
     <!--
+	android:installLocation="preferExternal"
+	最近在做真机测试的时候，经常出现Installation error: INSTAL L_FAILED_INSUFFICIENT_STORAGE这个问题，
+	导致apk没法安装到是手机上，在eclipse中运行Android程序默认是将程序安装到手机的Rom中，如果Rom空间不足，
+	就会提示这个错误。 android:installLocation="preferExternal" 直接安装到SD卡上 -->
+    <!--
+    android:configChanges="keyboardHidden|orientation|screenSize|locale|mcc|mnc|touchscreen|keyboard|navigation|orientation|screenLayout|fontScale"
+    android:allowBackup="true" 是否允许备份数据
+    android:persistent="true"  对应用不被杀掉有帮助，根据字面意思来理解就是说该应用是可持久的，
+    也即是常驻的应用。其实就是这么个理解，被android:persistent修饰的应用会在系统启动之后被AM启动。
+    android:allowClearUserData="false" 是否允许清除data下的私有数据
+    -->
+    <!-- 自定义数据值
+    <meta-data>节点可以包含在<application><activity><activity-alias><service><receiver>五个元素中，
+    	主要用来为组件提供额外的参数数据
+    -->
+    <!--
     windowSoftInputMode可取值的含义：
     【A】stateUnspecified：软键盘的状态并没有指定，系统将选择一个合适的状态或依赖于主题的设置
     【B】stateUnchanged：当这个activity出现时，软键盘将一直保持在上一个activity里的状态，无论是隐藏还是显示

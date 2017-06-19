@@ -2,9 +2,11 @@ package com.zccl.ruiqianqi.presentation.presenter;
 
 import android.provider.Settings;
 
-import com.zccl.ruiqianqi.mind.voice.iflytek.beans.GenericBean;
+import com.zccl.ruiqianqi.mind.voice.impl.beans.GenericBean;
 import com.zccl.ruiqianqi.presenter.base.BasePresenter;
+import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.MyAppUtils;
+import com.zccl.ruiqianqi.tools.http.Tls12SocketFactory;
 
 /**
  * Created by ruiqianqi on 2017/5/26 0026.
@@ -115,7 +117,7 @@ public class GenericPresenter extends BasePresenter{
      * @param function
      */
     public void genericOperator(String function){
-
+        LogUtils.e(TAG, function + "");
         // 游戏
         if(GAME.equals(function)){
             MyAppUtils.openApp(mContext, "com.yongyida.robot.game");
@@ -178,7 +180,8 @@ public class GenericPresenter extends BasePresenter{
         }
         // 电池电量
         else if(BATTERY.equals(function)) {
-            MyAppUtils.startBatteryStatus(mContext);
+            //MyAppUtils.startBatteryStatus(mContext);
+            MyAppUtils.startBatteryUsage(mContext);
         }
         // 耗电信息
         else if(BATTERY_USAGE.equals(function)) {

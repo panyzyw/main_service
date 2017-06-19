@@ -171,7 +171,7 @@ public class SystemReceiver extends BroadcastReceiver {
     private void sendStartListenEvent(String from, boolean isUseFloatVoice, boolean isUseExpression){
         MainBusEvent.ListenEvent listenEvent = new MainBusEvent.ListenEvent();
         listenEvent.setType(MainBusEvent.ListenEvent.RECYCLE_LISTEN);
-        listenEvent.setText(from);
+        listenEvent.setFrom(from);
         listenEvent.setUseVoiceFloat(isUseFloatVoice);
         listenEvent.setUseExpression(isUseExpression);
         // 通知进入监听
@@ -185,7 +185,7 @@ public class SystemReceiver extends BroadcastReceiver {
     private void sendStopListenEvent(String from){
         MainBusEvent.ListenEvent listenEvent = new MainBusEvent.ListenEvent();
         listenEvent.setType(MainBusEvent.ListenEvent.STOP_LISTEN);
-        listenEvent.setText(from);
+        listenEvent.setFrom(from);
         // 通知进入监听
         EventBus.getDefault().post(listenEvent);
     }

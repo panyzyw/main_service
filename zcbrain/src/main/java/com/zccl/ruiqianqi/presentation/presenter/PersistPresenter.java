@@ -116,9 +116,14 @@ public class PersistPresenter extends BasePresenter {
         MyRxUtils.doAsyncRun(new Runnable() {
             @Override
             public void run() {
+
+                // 初始化系统服务
+                SystemPresenter.getInstance();
+
                 // 初始化服务器地址
                 initServerAddr();
 
+                // 检测ID
                 mGetIdFuture = scheduleTask.executeAtFixedRate(new Runnable() {
                     @Override
                     public void run() {
@@ -126,6 +131,7 @@ public class PersistPresenter extends BasePresenter {
                         checkIdAndConnect();
                     }
                 }, 2, 10, TimeUnit.SECONDS);
+
             }
         });
 

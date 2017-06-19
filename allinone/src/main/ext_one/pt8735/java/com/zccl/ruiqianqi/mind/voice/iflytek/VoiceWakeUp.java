@@ -1,4 +1,4 @@
-package com.zccl.ruiqianqi.mind.voice.iflytek;
+package com.zccl.ruiqianqi.mind.voice.impl;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,9 +17,8 @@ import com.iflytek.cloud.WakeuperResult;
 import com.iflytek.cloud.util.FileDownloadListener;
 import com.iflytek.cloud.util.ResourceUtil;
 import com.zccl.ruiqianqi.mind.voice.allinone.R;
-import com.zccl.ruiqianqi.mind.voice.iflytek.beans.OneWakeUpInfo;
+import com.zccl.ruiqianqi.mind.voice.impl.beans.OneWakeUpInfo;
 import com.zccl.ruiqianqi.plugin.voice.AbstractVoice;
-import com.zccl.ruiqianqi.plugin.voice.ProxyVoice;
 import com.zccl.ruiqianqi.plugin.voice.WakeInfo;
 import com.zccl.ruiqianqi.tools.JsonUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;

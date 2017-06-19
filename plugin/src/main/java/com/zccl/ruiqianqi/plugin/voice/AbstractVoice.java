@@ -362,9 +362,11 @@ public abstract class AbstractVoice {
     // APP状态改变了
     public static final int APP_STATUS_CHANGE = 5;
     // 循环监听来了
-    public static final int RECYCLE_LISTEN = 6;
+    public static final int RECYCLE_LISTEN_CHANGE = 6;
     // 停止监听来了
-    public static final int STOP_LISTEN = 7;
+    public static final int STOP_LISTEN_CHANGE = 7;
+    // HDMI状态改变了
+    public static final int HDMI_CHANGE = 8;
 
     /**
      * 通知什么改变了

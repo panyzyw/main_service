@@ -33,57 +33,39 @@ public class Localization {
      * @param angle
      */
     protected void rotate(int angle){
-        String model = SystemProperties.get("ro.product.model", "");
+        String model = SystemProperties.get("ro.motor.version", "8163_20");
         if(!StringUtils.isEmpty(model)) {
-            model = model.toLowerCase();
-            if(model.toLowerCase().startsWith("y50")){
-                Y50(angle);
-            }else if(model.toLowerCase().startsWith("y20")) {
-                Y20AB(angle);
-            }else {
-                Y20C(angle);
+            if(model.startsWith("8735")){
+                if(model.contains("_20")){
+                    motor_8735_20(angle);
+                }else if(model.contains("_50")){
+                    motor_8735_50(angle);
+                }else if(model.contains("_128")){
+
+                }else if(model.contains("_150")){
+
+                }
+            }else if(model.startsWith("8163")){
+                if(model.contains("_20")){
+                    motor_8163_20(angle);
+                }else if(model.contains("_50")){
+                    motor_8163_50(angle);
+                }else if(model.contains("_128")){
+
+                }else if(model.contains("_150")){
+
+                }
             }
         }
     }
 
+    /*********************************【8735声源定位】*********************************************/
     /**
      * 20机型的声源定位
      * @param angle
      */
-    private void Y20C(int angle){
-        LogUtils.e(TAG, "Y20C localization");
-        try {
-            moveAction.setDriveType(MoveAction.DRIVE_BY_DISTANCE);
-            if(angle <= 90){
-                moveAction.setSpeed(40);
-                moveAction.left((int) ((3.5 * angle)) + angle / 4);
-            }else if(angle >90 && angle <=180){
-                moveAction.setSpeed(40);
-                moveAction.left((int) ((3.5 * angle) - angle / 4));
-            }else if (angle > 180 && angle <= 270){
-                angle = 360 - angle;
-                moveAction.setSpeed(40);
-                moveAction.right((int) ((3.5 * angle) - angle / 4));
-            }else if(angle > 270){
-                angle = 360 - angle;
-                moveAction.setSpeed(40);
-                moveAction.right((int) ((3.5 * angle) + angle / 4));
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (MoveException e) {
-            e.printStackTrace();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 20机型的声源定位
-     * @param angle
-     */
-    private void Y20AB(int angle){
-        LogUtils.e(TAG, "Y20AB localization");
+    private void motor_8735_20(int angle){
+        LogUtils.e(TAG, "motor_8735_20 localization");
         try {
             moveAction.setDriveType(MoveAction.DRIVE_BY_DISTANCE);
             if(angle < 180){
@@ -107,8 +89,8 @@ public class Localization {
      * 50机型的声源定位
      * @param angle
      */
-    private void Y50(int angle){
-        LogUtils.e(TAG, "Y50 localization");
+    private void motor_8735_50(int angle){
+        LogUtils.e(TAG, "motor_8735_50 localization");
         try {
             moveAction.headStop();
             moveAction.stop();
@@ -139,4 +121,47 @@ public class Localization {
             e.printStackTrace();
         }
     }
+
+    /*********************************【8163声源定位】*********************************************/
+    /**
+     * 20机型的声源定位
+     * @param angle
+     */
+    private void motor_8163_20(int angle){
+        LogUtils.e(TAG, "motor_8163_20 localization");
+        try {
+            moveAction.setDriveType(MoveAction.DRIVE_BY_DISTANCE);
+            if(angle <= 90){
+                moveAction.setSpeed(40);
+                moveAction.left((int) ((3.5 * angle)) + angle / 4);
+            }else if(angle >90 && angle <=180){
+                moveAction.setSpeed(40);
+                moveAction.left((int) ((3.5 * angle) - angle / 4));
+            }else if (angle > 180 && angle <= 270){
+                angle = 360 - angle;
+                moveAction.setSpeed(40);
+                moveAction.right((int) ((3.5 * angle) - angle / 4));
+            }else if(angle > 270){
+                angle = 360 - angle;
+                moveAction.setSpeed(40);
+                moveAction.right((int) ((3.5 * angle) + angle / 4));
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (MoveException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 50机型的声源定位
+     * @param angle
+     */
+    private void motor_8163_50(int angle){
+
+    }
+
+
 }
