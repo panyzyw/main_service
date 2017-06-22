@@ -83,9 +83,11 @@ public class BatteryPresenter extends BasePresenter {
         */
 
         // 工厂模式中不处理信号灯
+        /*
         StatePresenter sp = StatePresenter.getInstance();
         if(sp.isFactory())
             return;
+        */
 
         if(batteryEvent.isPowerUsed()){
             // 电源连接
