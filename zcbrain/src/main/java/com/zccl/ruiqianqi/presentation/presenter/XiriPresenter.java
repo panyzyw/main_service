@@ -2,8 +2,8 @@ package com.zccl.ruiqianqi.presentation.presenter;
 
 import android.content.Intent;
 
-import com.zccl.ruiqianqi.mind.voice.impl.beans.MusicBean;
-import com.zccl.ruiqianqi.mind.voice.impl.beans.VideoBean;
+import com.zccl.ruiqianqi.brain.semantic.flytek.MusicBean;
+import com.zccl.ruiqianqi.brain.semantic.flytek.VideoBean;
 import com.zccl.ruiqianqi.presenter.base.BasePresenter;
 import com.zccl.ruiqianqi.tools.JsonUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
@@ -13,9 +13,9 @@ import com.zccl.ruiqianqi.utils.LedUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_MUSIC;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_MUSIC_CTRL;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_VIDEO;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MUSIC;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MUSIC_CTRL;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_VIDEO;
 
 /**
  * Created by ruiqianqi on 2017/5/24 0024.

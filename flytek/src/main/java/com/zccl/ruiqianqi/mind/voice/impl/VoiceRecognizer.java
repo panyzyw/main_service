@@ -46,7 +46,7 @@ import static com.zccl.ruiqianqi.mind.voice.impl.Configuration.E_ASR_TYPE.TYPE_A
 /**
  * Created by ruiqianqi on 2016/8/10 0010.
  */
-public class VoiceRecognizer extends BaseVoice implements RecognizerListener {
+public final class VoiceRecognizer extends BaseVoice implements RecognizerListener {
     /**
      * 类日志标志
      */

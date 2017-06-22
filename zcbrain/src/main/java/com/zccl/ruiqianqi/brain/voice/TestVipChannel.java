@@ -19,8 +19,8 @@ import java.nio.charset.StandardCharsets;
 public class TestVipChannel {
     private Context mContext;
     private AbstractVoice mVoice;
-    protected final String startVip = "开启VIP测试";
-    protected final String endVip = "关闭VIP测试";
+    protected final String startVip = "开启通道测试";
+    protected final String endVip = "关闭通道测试";
     protected final String index = "request\tresponse\tdiff\tstatus\ttext\n";
     private FileOutputStream fos;
     private StringBuffer sb;
@@ -44,7 +44,7 @@ public class TestVipChannel {
             fos = new FileOutputStream(file);
             write(index);
             isTestVip = true;
-            mVoice.startTTS("VIP测试已开启", null);
+            mVoice.startTTS("通道测试已开启", null);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -98,7 +98,7 @@ public class TestVipChannel {
             try {
                 fos.close();
                 isTestVip = false;
-                mVoice.startTTS("VIP测试已关闭", null);
+                mVoice.startTTS("通道测试已关闭", null);
             } catch (IOException e) {
                 e.printStackTrace();
             }

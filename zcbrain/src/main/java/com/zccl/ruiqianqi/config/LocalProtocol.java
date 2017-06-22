@@ -39,6 +39,8 @@ public class LocalProtocol {
 
     // 其他应用发给主服务的数据及回调
     public static final String ACTION_MAIN_RECV = "com.yongyida.robot.MAIN_RECV";
+    // 发给电池应用的数据通知
+    public static final String ACTION_BATTERY_RECV = "com.yongyida.robot.BATTERY_RECV";
     // 来自何处
     public static final String KEY_MAIN_RECV_FROM = "from";
     // 是什么功能

@@ -2,15 +2,24 @@ package com.zccl.ruiqianqi.presentation.presenter;
 
 import android.os.RemoteException;
 
-import com.zccl.ruiqianqi.mind.voice.impl.slotsvalue.MoveSlots;
-import com.zccl.ruiqianqi.move.MoveAction;
-import com.zccl.ruiqianqi.move.MoveException;
-import com.zccl.ruiqianqi.presenter.base.BasePresenter;
-import com.zccl.ruiqianqi.config.RemoteProtocol;
 import com.zccl.ruiqianqi.domain.model.datadown.PushMove;
+import com.zccl.ruiqianqi.move.MoveAction;
+import com.zccl.ruiqianqi.presenter.base.BasePresenter;
 import com.zccl.ruiqianqi.tools.JsonUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.utils.AppUtils;
+
+import static com.zccl.ruiqianqi.config.RemoteProtocol.TYPE_HEAD_DOWN;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.TYPE_HEAD_LEFT;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.TYPE_HEAD_MIDDLE;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.TYPE_HEAD_RIGHT;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.TYPE_HEAD_STOP;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.TYPE_HEAD_UP;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.TYPE_MOVE_BACK;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.TYPE_MOVE_FORWARD;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.TYPE_MOVE_STOP;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.TYPE_MOVE_TURN_LEFT;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.TYPE_MOVE_TURN_RIGHT;
 
 /**
  * Created by ruiqianqi on 2017/3/20 0020.
@@ -72,52 +81,47 @@ public class MovePresenter extends BasePresenter {
                 try {
                     moveAction.setDriveType(MoveAction.DRIVE_BY_TIME);
 
-                    if(RemoteProtocol.TYPE_MOVE_FORWARD.equals(commandMove.getType())){
+                    if(TYPE_MOVE_FORWARD.equals(commandMove.getType())){
                         moveAction.setSpeed(30);
                         moveAction.forward(1500);
 
-                    }else if(RemoteProtocol.TYPE_MOVE_BACK.equals(commandMove.getType())){
+                    }else if(TYPE_MOVE_BACK.equals(commandMove.getType())){
                         moveAction.setSpeed(30);
                         moveAction.back(1500);
 
-                    }else if(RemoteProtocol.TYPE_MOVE_TURN_LEFT.equals(commandMove.getType())){
+                    }else if(TYPE_MOVE_TURN_LEFT.equals(commandMove.getType())){
                         moveAction.setSpeed(30);
                         moveAction.left(1500);
 
-                    }else if(RemoteProtocol.TYPE_MOVE_TURN_RIGHT.equals(commandMove.getType())){
+                    }else if(TYPE_MOVE_TURN_RIGHT.equals(commandMove.getType())){
                         moveAction.setSpeed(30);
                         moveAction.right(1500);
 
-                    }else if(RemoteProtocol.TYPE_MOVE_STOP.equals(commandMove.getType())){
+                    }else if(TYPE_MOVE_STOP.equals(commandMove.getType())){
                         moveAction.stop();
                         release();
 
-                    }else if(RemoteProtocol.TYPE_HEAD_UP.equals(commandMove.getType())){
+                    }else if(TYPE_HEAD_UP.equals(commandMove.getType())){
                         moveAction.setSpeed(30);
                         moveAction.headUp(1500);
 
-                    }else if(RemoteProtocol.TYPE_HEAD_DOWN.equals(commandMove.getType())){
+                    }else if(TYPE_HEAD_DOWN.equals(commandMove.getType())){
                         moveAction.setSpeed(30);
                         moveAction.headDown(1500);
 
-                    }else if(RemoteProtocol.TYPE_HEAD_LEFT.equals(commandMove.getType())){
+                    }else if(TYPE_HEAD_LEFT.equals(commandMove.getType())){
                         moveAction.setSpeed(30);
                         moveAction.headLeft(1500);
 
-                    }else if(RemoteProtocol.TYPE_HEAD_RIGHT.equals(commandMove.getType())){
+                    }else if(TYPE_HEAD_RIGHT.equals(commandMove.getType())){
                         moveAction.setSpeed(30);
                         moveAction.headRight(1500);
 
-                    }else if(RemoteProtocol.TYPE_HEAD_STOP.equals(commandMove.getType())){
+                    }else if(TYPE_HEAD_STOP.equals(commandMove.getType())){
                         moveAction.headStop();
                         release();
 
                     }
-
-                } catch (InterruptedException e) {
-                    LogUtils.e(TAG, "", e);
-                } catch (MoveException e) {
-                    LogUtils.e(TAG, "", e);
                 } catch (RemoteException e) {
                     LogUtils.e(TAG, "", e);
                 }
@@ -134,47 +138,43 @@ public class MovePresenter extends BasePresenter {
         try {
             moveAction.setDriveType(MoveAction.DRIVE_BY_TIME);
 
-            if(MoveSlots.TYPE_MOVE_FORWARD.equals(direct)){
+            if(TYPE_MOVE_FORWARD.equals(direct)){
                 moveAction.setSpeed(30);
                 moveAction.forward(3300);
                 delay = 3300 + 500;
-            }else if(MoveSlots.TYPE_MOVE_BACK.equals(direct)){
+            }else if(TYPE_MOVE_BACK.equals(direct)){
                 moveAction.setSpeed(30);
                 moveAction.back(3300);
                 delay = 3300 + 500;
-            }else if(MoveSlots.TYPE_MOVE_TURN_LEFT.equals(direct)){
+            }else if(TYPE_MOVE_TURN_LEFT.equals(direct)){
                 moveAction.setSpeed(30);
                 moveAction.left(1000);
                 delay = 1000 + 500;
-            }else if(MoveSlots.TYPE_MOVE_TURN_RIGHT.equals(direct)){
+            }else if(TYPE_MOVE_TURN_RIGHT.equals(direct)){
                 moveAction.setSpeed(30);
                 moveAction.right(1000);
                 delay = 1000 + 500;
-            }else if(MoveSlots.TYPE_HEAD_UP.equals(direct)){
+            }else if(TYPE_HEAD_UP.equals(direct)){
                 moveAction.setSpeed(30);
                 moveAction.headUp(1000);
                 delay = 1000 + 500;
-            }else if(MoveSlots.TYPE_HEAD_DOWN.equals(direct)){
+            }else if(TYPE_HEAD_DOWN.equals(direct)){
                 moveAction.setSpeed(30);
                 moveAction.headDown(1000);
                 delay = 1000 + 500;
-            }else if(MoveSlots.TYPE_HEAD_LEFT.equals(direct)){
+            }else if(TYPE_HEAD_LEFT.equals(direct)){
                 moveAction.setSpeed(30);
                 moveAction.headLeft(1000);
                 delay = 1000 + 500;
-            }else if(MoveSlots.TYPE_HEAD_RIGHT.equals(direct)){
+            }else if(TYPE_HEAD_RIGHT.equals(direct)){
                 moveAction.setSpeed(30);
                 moveAction.headRight(1000);
                 delay = 1000 + 500;
-            }else if(MoveSlots.TYPE_HEAD_MIDDLE.equals(direct)){
+            }else if(TYPE_HEAD_MIDDLE.equals(direct)){
                 moveAction.setSpeed(40);
                 moveAction.headLeftTurnMid();
                 delay = 1000 + 500;
             }
-        } catch (InterruptedException e) {
-            LogUtils.e(TAG, "", e);
-        } catch (MoveException e) {
-            LogUtils.e(TAG, "", e);
         } catch (RemoteException e) {
             LogUtils.e(TAG, "", e);
         }

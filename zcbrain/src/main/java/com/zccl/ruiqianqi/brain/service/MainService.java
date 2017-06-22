@@ -10,7 +10,7 @@ import com.zccl.ruiqianqi.brain.R;
 import com.zccl.ruiqianqi.brain.eventbus.MindBusEvent;
 import com.zccl.ruiqianqi.brain.service.observer.NameObserver;
 import com.zccl.ruiqianqi.brain.service.observer.VideoObserver;
-import com.zccl.ruiqianqi.eventbus.MicBusEvent;
+//import com.zccl.ruiqianqi.eventbus.MicBusEvent;
 import com.zccl.ruiqianqi.mind.eventbus.MainBusEvent;
 import com.zccl.ruiqianqi.mind.service.SystemService;
 import com.zccl.ruiqianqi.presentation.presenter.PersistPresenter;
@@ -165,6 +165,7 @@ public class MainService extends SystemService {
      * 打开和关闭五麦事件
      * @param operator5MicEvent
      */
+    /*
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 10)
     public void On5MICEvent(MicBusEvent.Operator5MicEvent operator5MicEvent){
         LogUtils.e(TAG, "5MicEvent = " + operator5MicEvent.getStatus());
@@ -181,5 +182,6 @@ public class MainService extends SystemService {
             EventBus.getDefault().post(sensorEvent);
         }
     }
+    */
 
 }

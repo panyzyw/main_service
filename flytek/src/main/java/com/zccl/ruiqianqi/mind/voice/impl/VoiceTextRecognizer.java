@@ -15,7 +15,7 @@ import com.zccl.ruiqianqi.tools.LogUtils;
  * Created by ruiqianqi on 2016/9/27 0027.
  */
 
-public class VoiceTextRecognizer extends BaseVoice implements TextUnderstanderListener {
+public final class VoiceTextRecognizer extends BaseVoice implements TextUnderstanderListener {
     /**
      * 类标志
      */

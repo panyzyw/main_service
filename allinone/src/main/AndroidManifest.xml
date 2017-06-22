@@ -5,6 +5,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
 
+        <activity android:name="com.zccl.ruiqianqi.presentation.mictest.MicTestActivity">
+        </activity>
+
+        <receiver
+            android:name="com.zccl.ruiqianqi.presentation.mictest.MicTestReceiver"
+            android:exported="true">
+            <intent-filter>
+                <!-- 测试机器人五麦 -->
+                <action android:name="com.yydrobot.MICTEST"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -22,6 +22,9 @@ public class VoiceManager extends AbstractVoice {
     // 网络连接发生异常
     public static final int NO_NET = 10212;
 
+    // 默认发音人
+    public static final String DEFAULT_SPEAKER = Configuration.SPEAKER_NAME;
+
     /** 全局上下文 */
     protected Context mContext;
     // 主线程的Handler

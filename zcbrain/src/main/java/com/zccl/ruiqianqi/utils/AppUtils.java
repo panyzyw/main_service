@@ -25,12 +25,12 @@ import static com.zccl.ruiqianqi.brain.handler.BaseHandler.ACTION_PLAYER;
 import static com.zccl.ruiqianqi.brain.handler.BaseHandler.MUSIC_CONTROL;
 import static com.zccl.ruiqianqi.brain.handler.BaseHandler.PLAYER_CATEGORY_KEY;
 import static com.zccl.ruiqianqi.brain.handler.BaseHandler.PLAYER_RESULT_KEY;
+import static com.zccl.ruiqianqi.brain.semantic.FuncIntent.INTENT_EMOTION_CHAT;
 import static com.zccl.ruiqianqi.config.MyConfig.KEY_RESULT;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_LOG_COLLECT;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_PUSH_TIMED_SHUTDOWN;
 import static com.zccl.ruiqianqi.mind.receiver.system.SystemReceiver.ACT_RECYCLE_LISTEN;
 import static com.zccl.ruiqianqi.mind.receiver.system.SystemReceiver.ACT_STOP_LISTEN;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncIntent.INTENT_EMOTION_CHAT;
 
 /**
  * Created by ruiqianqi on 2017/5/9 0009.

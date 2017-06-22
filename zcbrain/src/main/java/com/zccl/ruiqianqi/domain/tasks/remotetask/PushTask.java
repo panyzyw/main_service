@@ -17,7 +17,11 @@ import com.zccl.ruiqianqi.tools.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.zccl.ruiqianqi.config.LocalProtocol.ACTION_BATTERY_RECV;
 import static com.zccl.ruiqianqi.config.LocalProtocol.ACTION_MEDIA_RECV;
+import static com.zccl.ruiqianqi.config.LocalProtocol.KEY_MAIN_RECV_FROM;
+import static com.zccl.ruiqianqi.config.LocalProtocol.KEY_MAIN_RECV_FUNCTION;
+import static com.zccl.ruiqianqi.config.LocalProtocol.KEY_MAIN_RECV_RESULT;
 import static com.zccl.ruiqianqi.config.LocalProtocol.KEY_MEDIA_RESULT;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_CONTENT_PUSH;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_INSERT_UPDATE;
@@ -143,13 +147,25 @@ public class PushTask extends BaseTask {
                     if(countdownTime < 0){
                         PushPresenter pp = new PushPresenter();
                         int type = jsonObj.optInt("type");
-                        if (0 == type) {
-                            pp.chat("取消关机");
-                        } else {
-                            pp.chat("取消重启");
+                        // 查询关机状态
+                        if(-2 == countdownTime){
+                            Bundle bundle = new Bundle();
+                            bundle.putString(KEY_MAIN_RECV_FROM, mContext.getPackageName());
+                            bundle.putString(KEY_MAIN_RECV_FUNCTION, "shutdown");
+                            bundle.putString(KEY_MAIN_RECV_RESULT, "-2");
+                            MyAppUtils.sendBroadcast(mContext, ACTION_BATTERY_RECV, bundle);
                         }
-
-                    }else {
+                        // 取消关机
+                        else if(-1 == countdownTime){
+                            if (0 == type) {
+                                pp.chat("取消关机");
+                            } else {
+                                pp.chat("取消重启");
+                            }
+                        }
+                    }
+                    // 执行关机
+                    else {
                         int hh = countdownTime / 3600;
                         int mm = (countdownTime % 3600) / 60;
                         int ss = (countdownTime % 3600) % 60;

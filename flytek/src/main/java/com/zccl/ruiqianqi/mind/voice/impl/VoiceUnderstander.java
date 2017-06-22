@@ -24,7 +24,7 @@ import com.zccl.ruiqianqi.mind.voice.R;
 /**
  * Created by ruiqianqi on 2016/7/20 0020.
  */
-public class VoiceUnderstander extends BaseVoice implements SpeechUnderstanderListener {
+public final class VoiceUnderstander extends BaseVoice implements SpeechUnderstanderListener {
 
     // 类日志标志
     private static String TAG = VoiceUnderstander.class.getSimpleName();

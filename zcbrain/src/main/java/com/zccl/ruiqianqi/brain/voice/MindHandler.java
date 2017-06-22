@@ -9,16 +9,16 @@ import com.zccl.ruiqianqi.brain.handler.BaseHandler;
 import com.zccl.ruiqianqi.brain.handler.FirstHandler;
 import com.zccl.ruiqianqi.brain.handler.OtherHandler;
 import com.zccl.ruiqianqi.brain.handler.SecondHandler;
+import com.zccl.ruiqianqi.brain.semantic.flytek.BaseInfo;
 import com.zccl.ruiqianqi.brain.service.FloatListen;
 import com.zccl.ruiqianqi.brain.service.MainService;
 import com.zccl.ruiqianqi.mind.eventbus.MainBusEvent;
-import com.zccl.ruiqianqi.mind.voice.impl.beans.BaseInfo;
+import com.zccl.ruiqianqi.move.MoveAction;
 import com.zccl.ruiqianqi.presentation.presenter.BatteryPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.ReportPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.StatePresenter;
 import com.zccl.ruiqianqi.tools.JsonUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
-import com.zccl.ruiqianqi.tools.MYUIUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
 import com.zccl.ruiqianqi.tools.media.MyMediaPlayer;
 import com.zccl.ruiqianqi.utils.AppUtils;
@@ -27,52 +27,35 @@ import com.zccl.ruiqianqi.utils.LedUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_APP;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_ARITHMETIC;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_BAI_KE;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_BATTERY;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_CALL;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_CHAT;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_COOKBOOK;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_DANCE;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_DATETIME;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_DICT;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_DISPLAY;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_FACE;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_FAQ;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_GAME;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_GENERIC;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_HABIT;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_HEALTH;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_MAP;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_MOVE;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_MOVIE_INFO;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_MUSIC;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_MUSIC_CTRL;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_MUTE;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_OPEN_QA;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_OPERA;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_QUSETION;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_SCHEDULE;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_SHUTDOWN;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_SINOLOGY;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_SMART_HOME;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_SMS;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_SOUND;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_SQUARE_DANCE;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_STOCK;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_STORY;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_STUDY;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_SWITCH;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_TRANSLATE;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_TRANSLATE_;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_TV_CONTROL;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_VIDEO;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_VIDEO_CTRL;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_WATCH_TV;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_WEATHER;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_YYD_CAHT;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_YYD_CHAT;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_APP;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_CALL;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_DICT;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_DISPLAY;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_FACE;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_GAME;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_GENERIC;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_HABIT;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_HEALTH;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MOVE;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MOVIE_INFO;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MUSIC;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MUSIC_CTRL;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MUTE;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_OPERA;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SMART_HOME;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SMS;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SOUND;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SQUARE_DANCE;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_STORY;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SWITCH;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_TRANSLATE;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_TRANSLATE_;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_TV_CONTROL;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_VIDEO;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_VIDEO_CTRL;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_WATCH_TV;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_YYD_CAHT;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_YYD_CHAT;
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.APP_STATUS_CHANGE;
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.BATTERY_CHANGE;
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.HDMI_CHANGE;
@@ -112,6 +95,9 @@ public class MindHandler {
     private boolean isHdmiPlugged;
     // 需要在主服务处理日志上传的
     private List<String> logList;
+
+    // 头是不是朝向右边
+    private boolean isHeadRight = false;
 
     public MindHandler(Context context, RobotVoice robotVoice) {
         this.mContext = context;
@@ -401,17 +387,30 @@ public class MindHandler {
                     mRobotVoice.handlerVoiceEntry(mContext.getString(R.string.sensor_touch), true, mRobotVoice.isUseExpression());
 
                 }
-                // 摸下巴
+                // 摸下巴，头部回正
                 else if(text.equals(mContext.getString(R.string.sensor_chin))){
-
+                    MoveAction.getInstance(mContext).setDriveType(MoveAction.DRIVE_BY_TIME);
+                    MoveAction.getInstance(mContext).setSpeed(60);
+                    if(isHeadRight){
+                        MoveAction.getInstance(mContext).headRightTurnMid();
+                    }else {
+                        MoveAction.getInstance(mContext).headLeftTurnMid();
+                    }
                 }
+
                 // 左胳膊
                 else if(text.equals(mContext.getString(R.string.sensor_left_arm))){
-
+                    isHeadRight = false;
+                    MoveAction.getInstance(mContext).setDriveType(MoveAction.DRIVE_BY_TIME);
+                    MoveAction.getInstance(mContext).setSpeed(60);
+                    MoveAction.getInstance(mContext).headLeftEnd();
                 }
-                // 在胳膊
+                // 右胳膊
                 else if(text.equals(mContext.getString(R.string.sensor_right_arm))){
-
+                    isHeadRight = true;
+                    MoveAction.getInstance(mContext).setDriveType(MoveAction.DRIVE_BY_TIME);
+                    MoveAction.getInstance(mContext).setSpeed(60);
+                    MoveAction.getInstance(mContext).headRightEnd();
                 }
                 // 摸双肩
                 else if(text.equals(mContext.getString(R.string.sensor_dance))){

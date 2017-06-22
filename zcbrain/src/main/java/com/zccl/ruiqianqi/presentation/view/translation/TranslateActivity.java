@@ -28,11 +28,11 @@ import butterknife.OnClick;
 
 import static com.zccl.ruiqianqi.brain.eventbus.MindBusEvent.TransEvent.TRANS_EXIT;
 import static com.zccl.ruiqianqi.brain.eventbus.MindBusEvent.TransEvent.TRANS_FAILURE;
-import static com.zccl.ruiqianqi.brain.receiver.MainReceiver.ROBOT_SCENE;
-import static com.zccl.ruiqianqi.brain.receiver.MainReceiver.SCENE_CURRENT_KEY;
-import static com.zccl.ruiqianqi.brain.receiver.MainReceiver.SCENE_STATUS_KEY;
 import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_MY_TRANS;
-import static com.zccl.ruiqianqi.mind.voice.impl.Configuration.SPEAKER_NAME;
+import static com.zccl.ruiqianqi.brain.receiver.MainReceiver.KEY_SCENE_NAME;
+import static com.zccl.ruiqianqi.brain.receiver.MainReceiver.KEY_SCENE_STATUS;
+import static com.zccl.ruiqianqi.brain.receiver.MainReceiver.ROBOT_SCENE;
+import static com.zccl.ruiqianqi.mind.voice.impl.VoiceManager.DEFAULT_SPEAKER;
 import static com.zccl.ruiqianqi.plugin.voice.Speaker.OFF_LINE_SPEAKER;
 import static com.zccl.ruiqianqi.plugin.voice.Speaker.ON_LINE_SPEAKER;
 
@@ -136,7 +136,7 @@ public class TranslateActivity extends BaseCompatActivity implements TranslatePr
         // 设置回离线发音人jiajia
         Speaker speaker = new Speaker();
         speaker.setOffOnType(OFF_LINE_SPEAKER);
-        speaker.setSpeakerName(SPEAKER_NAME);
+        speaker.setSpeakerName(DEFAULT_SPEAKER);
         mRobotVoice.setTtsParams(speaker);
 
         // 退出音乐场景
@@ -176,8 +176,8 @@ public class TranslateActivity extends BaseCompatActivity implements TranslatePr
      */
     private void sceneStatus(boolean status){
         Bundle bundle = new Bundle();
-        bundle.putString(SCENE_CURRENT_KEY, SCENE_MY_TRANS);
-        bundle.putBoolean(SCENE_STATUS_KEY, status);
+        bundle.putString(KEY_SCENE_NAME, SCENE_MY_TRANS);
+        bundle.putBoolean(KEY_SCENE_STATUS, status);
         MyAppUtils.sendBroadcast(getApplicationContext(), ROBOT_SCENE, bundle);
     }
 
@@ -239,7 +239,7 @@ public class TranslateActivity extends BaseCompatActivity implements TranslatePr
         // 结束当前监听
         stopListen();
 
-        // 翻译英文
+        // 翻译英文，识别英文，设置成中文发音人
         if(trans_switch_language.isChecked()){
             trans_iv_from.setImageResource(R.drawable.trans_en_quote);
             trans_iv_to.setImageResource(R.drawable.trans_en_result);
@@ -250,7 +250,7 @@ public class TranslateActivity extends BaseCompatActivity implements TranslatePr
             speaker.setSpeakerName("aisxa");
             mRobotVoice.setTtsParams(speaker);
         }
-        // 翻译中文
+        // 翻译中文，识别是文，设置成英文发音人
         else{
             trans_iv_from.setImageResource(R.drawable.trans_cn_quote);
             trans_iv_to.setImageResource(R.drawable.trans_cn_result);

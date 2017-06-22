@@ -7,8 +7,6 @@ import android.os.Bundle;
 import com.yongyida.robot.entity.Notice;
 import com.zccl.ruiqianqi.mind.receiver.system.SystemReceiver;
 import com.zccl.ruiqianqi.plugin.voice.AbstractVoice;
-import com.zccl.ruiqianqi.presentation.mictest.MicTestActivity;
-import com.zccl.ruiqianqi.presentation.mictest.SavePcmAudio;
 import com.zccl.ruiqianqi.presentation.presenter.BindUserPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.PersistPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.RemindPresenter;
@@ -38,14 +36,14 @@ public class MainReceiver extends SystemReceiver {
     // 机器人当前应用场景
     public static final String ROBOT_SCENE = "com.yongyida.robot.SCENE";
     // 当前场景【String】
-    public static final String SCENE_CURRENT_KEY = "scene_current_key";
+    public static final String KEY_SCENE_NAME = "key_scene_current";
     // 当前场景状态【boolean】
-    public static final String SCENE_STATUS_KEY = "scene_status_key";
+    public static final String KEY_SCENE_STATUS = "key_scene_status";
 
     // 五麦测试
-    public static final String FIVE_MIC_TEST = "com.yydrobot.MICTEST";
+    //public static final String FIVE_MIC_TEST = "com.yydrobot.MICTEST";
     // 五麦测试携带数据的KEY
-    public static final String MIC_DATA_KEY = "data";
+    //public static final String MIC_DATA_KEY = "data";
 
     // 科大讯飞声源定位与唤醒状态
     public static final String ACTION_FLYTEK_VOICE = "com.yongyida.robot.VOICE";
@@ -118,10 +116,12 @@ public class MainReceiver extends SystemReceiver {
             Bundle bundle = intent.getExtras();
             if(null == bundle)
                 return;
-            String scene = bundle.getString(SCENE_CURRENT_KEY);
-            boolean status = bundle.getBoolean(SCENE_STATUS_KEY);
+            String scene = bundle.getString(KEY_SCENE_NAME);
+            boolean status = bundle.getBoolean(KEY_SCENE_STATUS);
             StatePresenter.getInstance().handleScene(scene, status);
         }
+
+        /*
         // 五麦测试
         else if(FIVE_MIC_TEST.equals(intent.getAction())) {
             Bundle bundle = intent.getExtras();
@@ -129,6 +129,8 @@ public class MainReceiver extends SystemReceiver {
                 return;
             micTest(context, bundle.getString(MIC_DATA_KEY));
         }
+        */
+
         // 科大讯飞声源定位与唤醒状态
         else if(ACTION_FLYTEK_VOICE.equals(intent.getAction())) {
             Bundle bundle = intent.getExtras();
@@ -136,6 +138,8 @@ public class MainReceiver extends SystemReceiver {
                 return;
             voiceLocalization(context, bundle);
         }
+
+        /*
         // 给其他应用发音用的
         else if(ACTION_TTS.equals(intent.getAction())){
             AbstractVoice voiceDevice = MindPresenter.getInstance().getVoiceDevice();
@@ -148,6 +152,7 @@ public class MainReceiver extends SystemReceiver {
                 voiceDevice.stopTTS();
             }
         }
+        */
 
     }
 
@@ -155,6 +160,7 @@ public class MainReceiver extends SystemReceiver {
     /**
      * 麦克测试
      */
+    /*
     private void micTest(Context context, String data) {
         SavePcmAudio mSavePcmAudio = new SavePcmAudio();
         if("startSavePcm".equals(data)){
@@ -169,6 +175,7 @@ public class MainReceiver extends SystemReceiver {
             context.startActivity(intent);
         }
     }
+    */
 
     /**
      * 声源定位与唤醒阀值相关设置与查询

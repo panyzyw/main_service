@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- boolean 是不是使用讯飞音乐，用的话：自有播放器就不处理音乐，不用的话：自有播放器就要处理音乐 -->
     <string name="is_use_xiri">persist.music.usexiri</string>
+    <!-- boolean 是小勇ID的话，就直接用离线功能发音，否则就用AIDL到小勇ID的工程进行离线发音 -->
     <string name="is_xiaoyong">persist.appid.xiaoyong</string>
+    <!-- string 马达驱动版本 -->
+    <string name="motor_version">ro.motor.version</string>
 </resources>

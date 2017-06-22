@@ -121,6 +121,8 @@ public class RemoteProtocol {
     public static final String TYPE_HEAD_LEFT = "head_left";
     // 头向右转【三级指令】
     public static final String TYPE_HEAD_RIGHT = "head_right";
+    // 头部回正【三级指令】
+    public static final String TYPE_HEAD_MIDDLE = "head_middle";
     // 停止头部转动【三级指令】
     public static final String TYPE_HEAD_STOP = "head_stop";
 

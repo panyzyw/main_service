@@ -8,14 +8,14 @@ import android.text.TextUtils;
 
 import com.zccl.ruiqianqi.brain.R;
 import com.zccl.ruiqianqi.brain.eventbus.MindBusEvent;
+import com.zccl.ruiqianqi.brain.semantic.flytek.BaseInfo;
+import com.zccl.ruiqianqi.brain.semantic.flytek.DisplayBean;
+import com.zccl.ruiqianqi.brain.semantic.flytek.GenericBean;
+import com.zccl.ruiqianqi.brain.semantic.flytek.MoveBean;
+import com.zccl.ruiqianqi.brain.semantic.flytek.SwitchBean;
 import com.zccl.ruiqianqi.brain.system.MainBean;
 import com.zccl.ruiqianqi.brain.voice.RobotVoice;
 import com.zccl.ruiqianqi.domain.model.Robot;
-import com.zccl.ruiqianqi.mind.voice.impl.beans.BaseInfo;
-import com.zccl.ruiqianqi.mind.voice.impl.beans.DisplayBean;
-import com.zccl.ruiqianqi.mind.voice.impl.beans.GenericBean;
-import com.zccl.ruiqianqi.mind.voice.impl.beans.MoveBean;
-import com.zccl.ruiqianqi.mind.voice.impl.beans.SwitchBean;
 import com.zccl.ruiqianqi.presentation.presenter.GenericPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.HttpReqPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.MovePresenter;
@@ -42,6 +42,34 @@ import java.util.regex.Pattern;
 
 import static com.zccl.ruiqianqi.brain.eventbus.MindBusEvent.TransEvent.TRANS_FAILURE;
 import static com.zccl.ruiqianqi.brain.eventbus.MindBusEvent.TransEvent.TRANS_SUCCESS;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_CHAT;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_DICT;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_DISPLAY;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_FAQ;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_GAME;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_GENERIC;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_HABIT;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_HEALTH;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MOVE;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MOVIE_INFO;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MUSIC;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MUSIC_CTRL;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MUTE;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_OPEN_QA;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_OPERA;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SMART_HOME;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SMS;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SQUARE_DANCE;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_STORY;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SWITCH;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_TRANSLATE;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_TRANSLATE_;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_TV_CONTROL;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_VIDEO;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_VIDEO_CTRL;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_WATCH_TV;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_YYD_CAHT;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.RESULT_ZERO;
 import static com.zccl.ruiqianqi.brain.voice.ListenCheck.MY_MUSIC_PLAYER;
 import static com.zccl.ruiqianqi.brain.voice.ListenCheck.XF_MUSIC_PLAYER;
 import static com.zccl.ruiqianqi.brain.voice.ListenCheck.XF_VIDEO_PLAYER;
@@ -61,38 +89,7 @@ import static com.zccl.ruiqianqi.config.MyConfig.OFF_LINE_UPDATE_WORDS;
 import static com.zccl.ruiqianqi.config.MyConfig.OFF_LINE_VIDEO;
 import static com.zccl.ruiqianqi.config.MyConfig.OFF_LINE_VOICE_DOWN;
 import static com.zccl.ruiqianqi.config.MyConfig.OFF_LINE_VOICE_UP;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_APP;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_ARITHMETIC;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_BAI_KE;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_CHAT;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_DATETIME;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_DICT;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_DISPLAY;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_FAQ;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_GAME;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_GENERIC;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_HABIT;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_HEALTH;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_MOVE;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_MOVIE_INFO;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_MUSIC;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_MUSIC_CTRL;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_MUTE;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_OPEN_QA;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_OPERA;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_SMART_HOME;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_SMS;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_SQUARE_DANCE;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_STORY;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_SWITCH;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_TRANSLATE;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_TRANSLATE_;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_TV_CONTROL;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_VIDEO;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_VIDEO_CTRL;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_WATCH_TV;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.FUNC_YYD_CAHT;
-import static com.zccl.ruiqianqi.mind.voice.impl.function.FuncType.RESULT_ZERO;
+
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.RecognizerCallback.OFFLINE_WORD;
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.UnderstandCallback.UNDERSTAND_SUCCESS;
 
@@ -324,7 +321,8 @@ public class FirstHandler extends BaseHandler {
                         MyAppUtils.sendBroadcast(mContext, ACTION_PLAYER, bundle);
                         return true;
                     }else {
-                        return false;
+                        // 其他的不处理，但是还要改
+                        return true;
                     }
                 }
             }
@@ -411,6 +409,8 @@ public class FirstHandler extends BaseHandler {
             bundle.putString(PLAYER_CATEGORY_KEY, MUSIC_PLAY);
             bundle.putString(PLAYER_RESULT_KEY, json);
             MyAppUtils.sendBroadcast(mContext, ACTION_PLAYER, bundle);
+            // 关掉其他功能
+            mRobotVoice.stopOtherAppFunc("MusicPresenter");
             return true;
         }
 

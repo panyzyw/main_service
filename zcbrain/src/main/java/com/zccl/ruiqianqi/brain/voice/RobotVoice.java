@@ -777,6 +777,7 @@ public class RobotVoice extends VoiceManager {
 
         @Override
         public void onResult(String result) {
+            LogUtils.e(TAG, "TextUnder: onResult = " + result);
             mMindHandler.parseMindData(result, UNDERSTAND_SUCCESS);
         }
 

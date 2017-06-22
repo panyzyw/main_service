@@ -81,15 +81,20 @@ public class OtherReceiver extends BroadcastReceiver {
             String main_recv_function = intent.getStringExtra(KEY_MAIN_RECV_FUNCTION);
             LogUtils.e(TAG, "main_recv_from = " + main_recv_from);
             LogUtils.e(TAG, "main_recv_function = " + main_recv_function);
-            if(StringUtils.isEmpty(main_recv_from) || StringUtils.isEmpty(main_recv_from))
+            if(StringUtils.isEmpty(main_recv_from) || StringUtils.isEmpty(main_recv_function))
                 return;
 
             // 关机的回调
             if("shutdown".equals(main_recv_function)){
                 int main_recv_result = intent.getIntExtra(KEY_MAIN_RECV_RESULT, 0);
                 LogUtils.e(TAG, "shutdown_result = " + main_recv_result);
+                // 定时关机【包含查询】
                 if(main_recv_result > 0){
                     AppUtils.shutdownUp2Server(ACTION_SHUTDOWN, main_recv_result);
+                }
+                // 取消定时关机
+                else if(-1 == main_recv_result){
+                    AppUtils.shutdownUp2Server(ACTION_SHUTDOWN, -1);
                 }
             }
 

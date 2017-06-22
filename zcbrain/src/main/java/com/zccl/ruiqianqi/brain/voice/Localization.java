@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.RemoteException;
 import android.os.SystemProperties;
 
+import com.zccl.ruiqianqi.brain.R;
 import com.zccl.ruiqianqi.move.MoveAction;
-import com.zccl.ruiqianqi.move.MoveException;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
 
@@ -21,10 +21,13 @@ public class Localization {
     private Context mContext;
     // 运动服务
     private MoveAction moveAction;
+    // 马达驱动版本
+    private String motorVersionKey;
 
     public Localization(Context context){
         this.mContext = context;
         moveAction = MoveAction.getInstance(mContext);
+        motorVersionKey = mContext.getString(R.string.motor_version);
     }
 
     /**
@@ -33,7 +36,7 @@ public class Localization {
      * @param angle
      */
     protected void rotate(int angle){
-        String model = SystemProperties.get("ro.motor.version", "8163_20");
+        String model = SystemProperties.get(motorVersionKey, "8163_20");
         if(!StringUtils.isEmpty(model)) {
             if(model.startsWith("8735")){
                 if(model.contains("_20")){
@@ -76,10 +79,6 @@ public class Localization {
                 moveAction.setSpeed(40);
                 moveAction.right(19 * angle);
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (MoveException e) {
-            e.printStackTrace();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -115,10 +114,6 @@ public class Localization {
             }
         } catch (RemoteException e) {
             e.printStackTrace();
-        } catch (MoveException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
@@ -146,10 +141,6 @@ public class Localization {
                 moveAction.setSpeed(40);
                 moveAction.right((int) ((3.5 * angle) + angle / 4));
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (MoveException e) {
-            e.printStackTrace();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -160,7 +151,32 @@ public class Localization {
      * @param angle
      */
     private void motor_8163_50(int angle){
-
+        LogUtils.e(TAG, "motor_8163_50 localization");
+        try {
+            moveAction.headStop();
+            moveAction.stop();
+            if(angle <= 60){
+                moveAction.setDriveType(MoveAction.DRIVE_BY_TIME);
+                moveAction.setSpeed(53);
+                moveAction.headLeft(12 * angle + angle / 2);
+            }else if(angle >= 300){
+                angle = 360 - angle;
+                moveAction.setDriveType(MoveAction.DRIVE_BY_TIME);
+                moveAction.setSpeed(53);
+                moveAction.headRight(11 * angle + angle);
+            }else if(angle > 60 && angle < 180){
+                moveAction.setDriveType(MoveAction.DRIVE_BY_DISTANCE);
+                moveAction.setSpeed(53);
+                moveAction.left(5 * angle);
+            }else if(angle >= 180 && angle < 300){
+                angle = 360 - angle;
+                moveAction.setDriveType(MoveAction.DRIVE_BY_DISTANCE);
+                moveAction.setSpeed(53);
+                moveAction.right(5 * angle - angle / 4);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 

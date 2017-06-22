@@ -36,8 +36,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.zccl.ruiqianqi.presentation.mictest.MicTestActivity">
-        </activity>
+        <!--<activity android:name="com.zccl.ruiqianqi.presentation.mictest.MicTestActivity">-->
+        <!--</activity>-->
         <activity
             android:name="com.zccl.ruiqianqi.presentation.view.translation.TranslateActivity">
             <intent-filter>
@@ -81,11 +81,11 @@
                 <!-- 机器人当前应用场景 -->
                 <action android:name="com.yongyida.robot.SCENE" />
                 <!-- 测试机器人五麦 -->
-                <action android:name="com.yydrobot.MICTEST"/>
+                <!--<action android:name="com.yydrobot.MICTEST"/>-->
                 <!-- 科大讯飞声源定位与唤醒状态 -->
                 <action android:name="com.yongyida.robot.VOICE"/>
                 <!-- 给其他应用发音用的 -->
-                <action android:name="com.yongyida.robot.TTS"/>
+                <!--<action android:name="com.yongyida.robot.TTS"/>-->
 
             </intent-filter>
         </receiver>
@@ -100,6 +100,7 @@
                 <action android:name="com.yongyida.robot.COLLECT" />
                 <!-- 其他应用发给主服务的数据及回调-->
                 <action android:name="com.yongyida.robot.MAIN_RECV" />
+
             </intent-filter>
         </receiver>
 

@@ -91,15 +91,21 @@ public class SensorReceiver extends BroadcastReceiver {
                     sendSensorEvent(context.getString(R.string.sensor_chin));
 
                 }
-                // 右胳膊
+                // 右胳膊【20】
                 else if (TOUCH_RIGHT_ARM_VALUE.equals(touchValue)) {
                     sendSensorEvent(context.getString(R.string.sensor_right_arm));
-
                 }
-                // 左胳膊
+                // 左胳膊【20】
                 else if (TOUCH_LEFT_ARM_VALUE.equals(touchValue)) {
                     sendSensorEvent(context.getString(R.string.sensor_left_arm));
-
+                }
+                // 右胳膊【50】
+                else if ("t_right".equals(touchValue)) {
+                    sendSensorEvent(context.getString(R.string.sensor_right_arm));
+                }
+                // 左胳膊【50】
+                else if ("t_left".equals(touchValue)) {
+                    sendSensorEvent(context.getString(R.string.sensor_left_arm));
                 }
                 // 摸肩跳舞
                 else if (TOUCH_DANCE.equals(touchValue)) {

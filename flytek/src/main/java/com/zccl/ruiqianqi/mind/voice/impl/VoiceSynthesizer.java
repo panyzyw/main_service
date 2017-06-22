@@ -119,7 +119,7 @@ import static com.zccl.ruiqianqi.plugin.voice.Speaker.ON_LINE_SPEAKER;
  * 另外，在应用退出后，所有应用相关的资源会被销毁。因为销毁引擎后，重新启动引擎的时间要比 直接更换资源长（会使首次会话的时间变长），
  * 所以如果仅是短暂的停止使用，建议不需要销毁资源。
  */
-public class VoiceSynthesizer extends BaseVoice implements SynthesizerListener {
+public final class VoiceSynthesizer extends BaseVoice implements SynthesizerListener {
 
     /**
      * 类日志标志
@@ -561,8 +561,8 @@ public class VoiceSynthesizer extends BaseVoice implements SynthesizerListener {
             start(null, null, null);
         } else {
             // 不能在这儿把这个置为空，如果是连着说话，在上一句的回调里，说下一句话。
-            // 在OnComplete调用start()之后，集合就空了，紧接着就执行了mTtsInfo = null;
-            // mTtsInfo也指向了集合中最后一个对象，而此时，在这儿把对象置空，就没法回调了，就报空指针了
+            // 在OnComplete调用start()之后，集合就空了，异步继续TTS，紧接着就执行了mTtsInfo = null;
+            // mTtsInfo在这里是：指向了集合中最后一个对象，而此时，在这儿把对象置空，就没法回调了，就报空指针了
             // mTtsInfo = null;
         }
 

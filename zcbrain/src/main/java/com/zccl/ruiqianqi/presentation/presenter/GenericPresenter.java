@@ -2,11 +2,10 @@ package com.zccl.ruiqianqi.presentation.presenter;
 
 import android.provider.Settings;
 
-import com.zccl.ruiqianqi.mind.voice.impl.beans.GenericBean;
+import com.zccl.ruiqianqi.brain.semantic.flytek.GenericBean;
 import com.zccl.ruiqianqi.presenter.base.BasePresenter;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.MyAppUtils;
-import com.zccl.ruiqianqi.tools.http.Tls12SocketFactory;
 
 /**
  * Created by ruiqianqi on 2017/5/26 0026.
