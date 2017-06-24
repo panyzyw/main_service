@@ -70,9 +70,6 @@ import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_VIDEO_CTRL;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_WATCH_TV;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_YYD_CAHT;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.RESULT_ZERO;
-import static com.zccl.ruiqianqi.brain.voice.ListenCheck.MY_MUSIC_PLAYER;
-import static com.zccl.ruiqianqi.brain.voice.ListenCheck.XF_MUSIC_PLAYER;
-import static com.zccl.ruiqianqi.brain.voice.ListenCheck.XF_VIDEO_PLAYER;
 import static com.zccl.ruiqianqi.config.MyConfig.OFF_LINE_CAMERA;
 import static com.zccl.ruiqianqi.config.MyConfig.OFF_LINE_GAME;
 import static com.zccl.ruiqianqi.config.MyConfig.OFF_LINE_HOME;
@@ -89,7 +86,6 @@ import static com.zccl.ruiqianqi.config.MyConfig.OFF_LINE_UPDATE_WORDS;
 import static com.zccl.ruiqianqi.config.MyConfig.OFF_LINE_VIDEO;
 import static com.zccl.ruiqianqi.config.MyConfig.OFF_LINE_VOICE_DOWN;
 import static com.zccl.ruiqianqi.config.MyConfig.OFF_LINE_VOICE_UP;
-
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.RecognizerCallback.OFFLINE_WORD;
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.UnderstandCallback.UNDERSTAND_SUCCESS;
 
@@ -189,32 +185,32 @@ public class FirstHandler extends BaseHandler {
 
         // 记录的是这个场景，但实际上不是，因为非正常退出
         if(SCENE_MY_MUSIC.equals(scene)){
-            if(!MY_MUSIC_PLAYER.equals(currentPkg)){
+            if(!mContext.getString(R.string.my_music_player).equals(currentPkg)){
                 sp.handleScene(SCENE_MY_MUSIC, false);
             }
         }
         else if(SCENE_XF_MUSIC.equals(scene)){
-            if(!XF_MUSIC_PLAYER.equals(currentPkg)){
+            if(!mContext.getString(R.string.xf_music_player).equals(currentPkg)){
                 sp.handleScene(SCENE_XF_MUSIC, false);
             }
         }
         else if(SCENE_XF_VIDEO.equals(scene)){
-            if(!XF_VIDEO_PLAYER.equals(currentPkg)){
+            if(!mContext.getString(R.string.xf_video_player).equals(currentPkg)){
                 sp.handleScene(SCENE_XF_VIDEO, false);
             }
         }
 
         // 记录当前场景
         // 播放器
-        if(MY_MUSIC_PLAYER.equals(currentPkg)){
+        if(mContext.getString(R.string.my_music_player).equals(currentPkg)){
             sp.handleScene(SCENE_MY_MUSIC, true);
         }
         // 讯飞音乐
-        else if(XF_MUSIC_PLAYER.equals(currentPkg)){
+        else if(mContext.getString(R.string.xf_music_player).equals(currentPkg)){
             sp.handleScene(SCENE_XF_MUSIC, true);
         }
         // 讯飞视频
-        else if(XF_VIDEO_PLAYER.equals(currentPkg)){
+        else if(mContext.getString(R.string.xf_video_player).equals(currentPkg)){
             sp.handleScene(SCENE_XF_VIDEO, true);
         }
         scene = sp.getScene();
@@ -464,6 +460,7 @@ public class FirstHandler extends BaseHandler {
             mRobotVoice.startTTS(word, new Runnable() {
                 @Override
                 public void run() {
+                    // 结束发音
                     mRobotVoice.stopTTS();
                 }
             });

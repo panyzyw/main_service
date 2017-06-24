@@ -155,24 +155,28 @@ public class Localization {
         try {
             moveAction.headStop();
             moveAction.stop();
+            moveAction.setDriveType(MoveAction.DRIVE_BY_TIME);
             if(angle <= 60){
-                moveAction.setDriveType(MoveAction.DRIVE_BY_TIME);
-                moveAction.setSpeed(53);
-                moveAction.headLeft(12 * angle + angle / 2);
+                moveAction.setSpeed(30);
+                moveAction.headLeft(7 * angle);
             }else if(angle >= 300){
                 angle = 360 - angle;
-                moveAction.setDriveType(MoveAction.DRIVE_BY_TIME);
-                moveAction.setSpeed(53);
-                moveAction.headRight(11 * angle + angle);
-            }else if(angle > 60 && angle < 180){
-                moveAction.setDriveType(MoveAction.DRIVE_BY_DISTANCE);
-                moveAction.setSpeed(53);
-                moveAction.left(5 * angle);
-            }else if(angle >= 180 && angle < 300){
+                moveAction.setSpeed(30);
+                moveAction.headRight(7 * angle);
+            }else if(angle > 60 && angle < 120){
+                moveAction.setSpeed(27);
+                moveAction.left(13 * angle - angle / 2);
+            }else if(angle >= 120 && angle < 180){
+                moveAction.setSpeed(27);
+                moveAction.left(11 * angle );
+            }else if(angle >= 180 && angle< 240) {
                 angle = 360 - angle;
-                moveAction.setDriveType(MoveAction.DRIVE_BY_DISTANCE);
-                moveAction.setSpeed(53);
-                moveAction.right(5 * angle - angle / 4);
+                moveAction.setSpeed(27);
+                moveAction.right(11 * angle);
+            } else if(angle >= 240 && angle < 300){
+                angle = 360 - angle;
+                moveAction.setSpeed(27);
+                moveAction.right(13 * angle - angle / 2);
             }
         } catch (RemoteException e) {
             e.printStackTrace();

@@ -95,7 +95,7 @@ public class TCPClientHandler extends SimpleChannelHandler {
 
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        LogUtils.e(TAG, "messageReceived");
+        //LogUtils.e(TAG, "messageReceived");
         Object object = e.getMessage();
         if (null == object)
             return;
@@ -107,7 +107,7 @@ public class TCPClientHandler extends SimpleChannelHandler {
 
     @Override
     public void writeRequested(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        LogUtils.e(TAG, "writeRequested");
+        //LogUtils.e(TAG, "writeRequested");
         //super.writeRequested(ctx, e);
 
         Object object = e.getMessage();

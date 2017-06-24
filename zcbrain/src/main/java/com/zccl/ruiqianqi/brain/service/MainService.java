@@ -3,6 +3,9 @@ package com.zccl.ruiqianqi.brain.service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.IBinder;
+import android.os.RemoteException;
+import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import android.widget.Button;
 
@@ -11,10 +14,14 @@ import com.zccl.ruiqianqi.brain.eventbus.MindBusEvent;
 import com.zccl.ruiqianqi.brain.service.observer.NameObserver;
 import com.zccl.ruiqianqi.brain.service.observer.VideoObserver;
 //import com.zccl.ruiqianqi.eventbus.MicBusEvent;
+import com.zccl.ruiqianqi.brain.system.ISDKCallback;
+import com.zccl.ruiqianqi.brain.system.ISDKService;
+import com.zccl.ruiqianqi.brain.voice.RobotVoice;
 import com.zccl.ruiqianqi.mind.eventbus.MainBusEvent;
 import com.zccl.ruiqianqi.mind.service.SystemService;
 import com.zccl.ruiqianqi.presentation.presenter.PersistPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.LocalPresenter;
+import com.zccl.ruiqianqi.presenter.impl.MindPresenter;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.MYUIUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
@@ -184,4 +191,23 @@ public class MainService extends SystemService {
     }
     */
 
+
+    /**
+     * 这个是服务体，是服务具体实现的地方，在这边没有通讯相关的了，通讯已经过来了
+     */
+    private final ISDKService.Stub mBinder = new ISDKService.Stub() {
+        @Override
+        public void setCallback(ISDKCallback callback) throws RemoteException {
+            RobotVoice robotVoice = (RobotVoice) MindPresenter.getInstance().getVoiceDevice();
+            if(null != robotVoice){
+                robotVoice.setSDKCallback(callback);
+            }
+        }
+    };
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
 }

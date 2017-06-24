@@ -31,11 +31,8 @@ public class NetChangedReceiver extends BroadcastReceiver {
 
     /** 类标志 */
     private static String TAG = NetChangedReceiver.class.getSimpleName();
+    // 网络状态存储
     public static final String NET_STATUS_KEY = "net_status";
-    public static final String WIFI = "无线局域网";
-    public static final String N2G = "二机网络";
-    public static final String N3G = "三机网络";
-    public static final String N4G = "四机网络";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -142,19 +139,19 @@ public class NetChangedReceiver extends BroadcastReceiver {
             int mNetType = PhoneUtils.getNetType(context);
             if(TYPE_WIFI == mNetType){
                 netEvent.setConn(true);
-                netEvent.setText(WIFI);
+                netEvent.setText(context.getString(R.string.net_wifi));
             }
             else if(TYPE_MOBILE == mNetType || NET_TYPE_WAP == mNetType){
                 int subNetType = PhoneUtils.getSubNetType(context);
                 if(SUB_NET_TYPE_2G==subNetType){
                     netEvent.setConn(true);
-                    netEvent.setText(N2G);
+                    netEvent.setText(context.getString(R.string.net_2g));
                 }else if(SUB_NET_TYPE_3G==subNetType){
                     netEvent.setConn(true);
-                    netEvent.setText(N3G);
+                    netEvent.setText(context.getString(R.string.net_3g));
                 }else if(SUB_NET_TYPE_4G==subNetType){
                     netEvent.setConn(true);
-                    netEvent.setText(N4G);
+                    netEvent.setText(context.getString(R.string.net_4g));
                 }else if(SUB_NET_TYPE_RESERVED==subNetType){
                     netEvent.setConn(true);
                     netEvent.setText(context.getString(R.string.net_unknown_mobile));

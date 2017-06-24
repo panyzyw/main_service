@@ -14,14 +14,14 @@ android{
     sourceSets.main {
         //aidl.srcDirs = ['src/main/aidl']
         java.srcDirs = ["src/main/java",
-                        "src/main/ext_src/" + platform + "/" + robot_ver + "/control/java",
-                        "src/main/ext_src/" + platform + "/" +  robot_ver + "/move/java"]
+                        "src/main/ext_src/" + platform + "/motor/java",
+                        "src/main/ext_src/" + platform + "/control/" + robot_ver + "/java" ]
         res.srcDir "src/main/res"
         //disable automatic ndk-build call
         jni.srcDirs = []
         jniLibs.srcDirs = ['src/main/libs',
-                           'src/main/ext_src/' + platform + "/" + robot_ver + '/control/libs',
-                           'src/main/ext_src/' + platform + "/" + robot_ver + '/move/libs']
+                           'src/main/ext_src/' + platform + '/motor/libs',
+                           'src/main/ext_src/' + platform + "/control/" + robot_ver + '/libs' ]
         manifest.srcFile "src/main/AndroidManifest.xml"
         assets.srcDir "src/main/assets"
         resources.srcDirs = ['src/main/resources/']
@@ -37,8 +37,8 @@ def getLayoutLibPath() {
 dependencies {
     provided files(getLayoutLibPath())
     compile fileTree(include: ['*.jar'], dir: 'src/main/libs')
-    compile fileTree(dir: "src/main/ext_src/" + platform + "/" + robot_ver + "/control/libs", include: ['*.jar'])
-    compile fileTree(dir: "src/main/ext_src/" + platform + "/" + robot_ver + "/move/libs", include: ['*.jar'])
+    compile fileTree(dir: "src/main/ext_src/" + platform + "/motor/libs", include: ['*.jar'])
+    compile fileTree(dir: "src/main/ext_src/" + platform + "/control/" + robot_ver + "/libs", include: ['*.jar'])
 
     def presentationTest = rootProject.ext.presentationTest
     androidTestCompile(presentationTest.espresso, {

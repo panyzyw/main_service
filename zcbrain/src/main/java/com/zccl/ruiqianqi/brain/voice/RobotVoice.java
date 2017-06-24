@@ -7,6 +7,8 @@ import android.os.SystemProperties;
 
 import com.iflytek.cloud.SpeechError;
 import com.zccl.ruiqianqi.brain.R;
+import com.zccl.ruiqianqi.brain.handler.SDKHandler;
+import com.zccl.ruiqianqi.brain.system.ISDKCallback;
 import com.zccl.ruiqianqi.mind.voice.impl.VoiceManager;
 import com.zccl.ruiqianqi.plugin.voice.AbstractVoice;
 import com.zccl.ruiqianqi.plugin.voice.WakeInfo;
@@ -47,6 +49,8 @@ public class RobotVoice extends VoiceManager {
     private Localization mLocalization;
     // 处理类
     private MindHandler mMindHandler;
+    // SDK处理类
+    private SDKHandler sdkHandler;
 
     // 端点检测开始时间
     private long beginTime = 0;
@@ -106,6 +110,7 @@ public class RobotVoice extends VoiceManager {
         mListenCheck = new ListenCheck(mContext, this);
         mLocalization = new Localization(mContext);
         mMindHandler = new MindHandler(mContext, this);
+        sdkHandler = new SDKHandler(mContext, this);
 
         rawDataS = new LinkedBlockingQueue<>();
         noVoices = mContext.getResources().getStringArray(R.array.no_audio_input);
@@ -179,6 +184,11 @@ public class RobotVoice extends VoiceManager {
 
         LogUtils.e(TAG, "fromWhere = " + fromWhere);
 
+        // 有SDK，就进行SDK处理，下面就不处理了
+        if(null != sdkHandler.getSDKCallback()){
+            return;
+        }
+
         boolean isShow = mListenCheck.isShowExpression();
         isUseExpression = isShow == false ? isShow : isUseExpression;
 
@@ -188,7 +198,10 @@ public class RobotVoice extends VoiceManager {
         // 唤醒之后立即取消当前会话
         cancelListen();
 
+        // 完美结束
         prettyEnd();
+
+        // 结束发音
         stopTTS();
 
         mErrorCount = 0;
@@ -341,6 +354,11 @@ public class RobotVoice extends VoiceManager {
     }
 
     /**
+     * 讯飞音乐及影视
+     * 自有播放器
+     * 安静
+     * 锁屏
+     * 循环监听
      *
      * 监听，调用
      * 安静，调用
@@ -431,15 +449,18 @@ public class RobotVoice extends VoiceManager {
                     }
                 }
 
-                setTouchWake(false);
-                setUseExpression(true);
-                handlerVoiceEntry(mContext.getString(R.string.sensor_voice), true, isUseExpression());
-
                 // 唤醒之后，进行人脸识别
                 Intent intent = new Intent("com.yongyida.robot.VoiceLocalization");
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
                 intent.putExtra("angle", wakeInfo.getAngle());
                 mContext.sendBroadcast(intent);
+
+
+                // 非触摸、有表情、唤醒
+                setTouchWake(false);
+                setUseExpression(true);
+                handlerVoiceEntry(mContext.getString(R.string.sensor_voice), true, isUseExpression());
+
 
             }else {
                 wakeFailure(new Throwable(mContext.getString(R.string.wakeup_invalid)));
@@ -457,14 +478,19 @@ public class RobotVoice extends VoiceManager {
         @Override
         public void onAudio(byte[] audio, int audioLen) {
 
-            // 原始语音音频生产者，监听期间一直BAK
-            if(isSessionGoing){
-                rawDataS.offer(audio);
-            }
+            if(sdkHandler.onAudio(audio, audioLen)){
+                // 处理了SDK音频数据
 
-            // 如果是正常模式，则直接消费音频数据
-            if(!isProducerConsumer){
-                writeData(audio);
+            }else {
+                // 原始语音音频生产者，监听期间一直BAK
+                if(isSessionGoing){
+                    rawDataS.offer(audio);
+                }
+
+                // 如果是正常模式，则直接消费音频数据
+                if(!isProducerConsumer){
+                    writeData(audio);
+                }
             }
         }
 
@@ -907,6 +933,15 @@ public class RobotVoice extends VoiceManager {
         }
     }
 
+    /**
+     * 现在结束发音，统一由这里处理
+     *
+     * 安静
+     * 取消监听
+     * 开始监听
+     * 语音推送
+     *
+     */
     @Override
     public void stopTTS() {
         boolean isUseAppIdXiaoYong = SystemProperties.getBoolean(isAppIdXiaoYong, false);
@@ -944,4 +979,23 @@ public class RobotVoice extends VoiceManager {
     public void setUseExpression(boolean useExpression) {
         isUseExpression = useExpression;
     }
+
+    /**********************************【SDK相关方法】*********************************************/
+    /**
+     * 设置SDK的回调接口
+     * @param SDKCallback
+     */
+    public void setSDKCallback(ISDKCallback SDKCallback) {
+        this.sdkHandler.setSDKCallback(SDKCallback);
+    }
+
+    /**
+     * 相关动作节点，回调SDK客户端
+     * @param cmd
+     * @param msg
+     */
+    public void onSDKReceive(int cmd, String msg){
+        sdkHandler.onReceive(cmd, msg);
+    }
+
 }

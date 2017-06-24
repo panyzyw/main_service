@@ -1,5 +1,14 @@
 <resources>
-    <string name="app_name">MainService</string>
+    <string name="app_name">主服务</string>
+
+    <string-array name="no_audio_input">
+        <item>我没听见哪！</item>
+        <item>你怎么不说话！</item>
+        <item>你能大点声吗？</item>
+        <item>我没听清楚！</item>
+    </string-array>
+    <string name="no_net_use">网络开小差了！</string>
+    <string name="who_is_speaking">谁在说话？</string>
 
     <string-array name="hello_words">
         <item>什么事?</item>
@@ -41,4 +50,7 @@
 
     <string name="query_bind_user_error">被控制状态不能查询用户信息</string>
     <string name="delete_bind_user_error">被控制状态不能删除用户信息</string>
+
+    <string name="answer_move">机器人已执行命令</string>
+    <string name="answer_trans">翻译界面已打开</string>
 </resources>

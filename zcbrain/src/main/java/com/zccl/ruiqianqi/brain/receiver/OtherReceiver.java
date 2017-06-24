@@ -72,7 +72,7 @@ public class OtherReceiver extends BroadcastReceiver {
             if(StringUtils.isEmpty(collect_from) || StringUtils.isEmpty(collect_result))
                 return;
 
-            AppUtils.logCollectUp2Server(collect_from, collect_result, null);
+            AppUtils.logCollectUp2Server(collect_result, collect_from, null);
         }
 
         // 其他应用发给主服务的数据及回调

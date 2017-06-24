@@ -161,7 +161,7 @@ public class SocketPresenter extends BasePresenter {
                 return;
             }
             */
-            LogUtils.e(TAG, "battery = " + battery);
+            //LogUtils.e(TAG, "battery = " + battery);
             battery = batteryEvent.getBattery() + "";
             mSocketInteractor.flushBattery(battery);
         }

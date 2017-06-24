@@ -1,4 +1,10 @@
 <resources>
     <!-- 英业达 -->
     <string name="yingyeda">com.besta.bestaword.speech</string>
+    <!-- 自有播放器 -->
+    <string name="my_music_player">com.yongyida.robot.player</string>
+    <!-- 讯飞音乐播放器 -->
+    <string name="xf_music_player">com.lz.smart.music</string>
+    <!-- 讯飞视频播放器 -->
+    <string name="xf_video_player">com.zbmv</string>
 </resources>

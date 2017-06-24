@@ -3,15 +3,20 @@ package com.zccl.ruiqianqi.brain.voice;
 import android.content.Context;
 import android.media.MediaPlayer;
 
+import com.google.gson.Gson;
 import com.zccl.ruiqianqi.beans.ReportBean;
 import com.zccl.ruiqianqi.brain.R;
 import com.zccl.ruiqianqi.brain.handler.BaseHandler;
 import com.zccl.ruiqianqi.brain.handler.FirstHandler;
+import com.zccl.ruiqianqi.brain.handler.LogHandler;
 import com.zccl.ruiqianqi.brain.handler.OtherHandler;
+import com.zccl.ruiqianqi.brain.handler.SDKHandler;
 import com.zccl.ruiqianqi.brain.handler.SecondHandler;
 import com.zccl.ruiqianqi.brain.semantic.flytek.BaseInfo;
+import com.zccl.ruiqianqi.brain.semantic.flytek.ExpressionBean;
 import com.zccl.ruiqianqi.brain.service.FloatListen;
 import com.zccl.ruiqianqi.brain.service.MainService;
+import com.zccl.ruiqianqi.domain.model.dataup.LogCollectBack;
 import com.zccl.ruiqianqi.mind.eventbus.MainBusEvent;
 import com.zccl.ruiqianqi.move.MoveAction;
 import com.zccl.ruiqianqi.presentation.presenter.BatteryPresenter;
@@ -24,13 +29,18 @@ import com.zccl.ruiqianqi.tools.media.MyMediaPlayer;
 import com.zccl.ruiqianqi.utils.AppUtils;
 import com.zccl.ruiqianqi.utils.LedUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_APP;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_CALL;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_CHAT;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_DICT;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_DISPLAY;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_EMOTION_CHAT;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_FACE;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_GAME;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_GENERIC;
@@ -56,6 +66,7 @@ import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_VIDEO_CTRL;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_WATCH_TV;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_YYD_CAHT;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_YYD_CHAT;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.OP_EMOTION_CHAT;
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.APP_STATUS_CHANGE;
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.BATTERY_CHANGE;
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.HDMI_CHANGE;
@@ -93,8 +104,7 @@ public class MindHandler {
     private MyMediaPlayer.IPlayerListener playerListener;
     // HDMI是否已挂载
     private boolean isHdmiPlugged;
-    // 需要在主服务处理日志上传的
-    private List<String> logList;
+
 
     // 头是不是朝向右边
     private boolean isHeadRight = false;
@@ -141,64 +151,6 @@ public class MindHandler {
             }
         };
 
-        initLog();
-    }
-
-    /**
-     * 需要在主服务处理日志上传的
-     */
-    private void initLog(){
-        logList = new ArrayList<>();
-        logList.add(FUNC_CALL);
-        //logList.add(FUNC_MAP);
-        logList.add(FUNC_TRANSLATE_);
-        logList.add(FUNC_TV_CONTROL);
-        logList.add(FUNC_SMS);
-        logList.add(FUNC_TRANSLATE);
-        //logList.add(FUNC_SCHEDULE);
-        //logList.add(FUNC_COOKBOOK);
-        //logList.add(FUNC_WEATHER);
-        //logList.add(FUNC_STOCK);
-        logList.add(FUNC_MUSIC);
-        logList.add(FUNC_MUSIC_CTRL);
-        logList.add(FUNC_VIDEO);
-        logList.add(FUNC_VIDEO_CTRL);
-        logList.add(FUNC_SQUARE_DANCE);
-        //logList.add(FUNC_STUDY);
-        //logList.add(FUNC_SINOLOGY);
-
-        logList.add(FUNC_MOVIE_INFO);
-        logList.add(FUNC_OPERA);
-        logList.add(FUNC_HEALTH);
-        logList.add(FUNC_SOUND);
-        logList.add(FUNC_STORY);
-        //logList.add(FUNC_DANCE);
-        logList.add(FUNC_HABIT);
-        //logList.add(FUNC_BATTERY);
-        logList.add(FUNC_DICT);
-
-        //logList.add(FUNC_ARITHMETIC);
-        //logList.add(FUNC_BAI_KE);
-        //logList.add(FUNC_DATETIME);
-        //logList.add(FUNC_FAQ);
-        //logList.add(FUNC_OPEN_QA);
-
-        //logList.add(FUNC_CHAT);
-        logList.add(FUNC_GENERIC);
-
-        logList.add(FUNC_SMART_HOME);
-        //logList.add(FUNC_SHUTDOWN);
-        logList.add(FUNC_FACE);
-        //logList.add(FUNC_QUSETION);
-        logList.add(FUNC_MOVE);
-        logList.add(FUNC_SWITCH);
-        logList.add(FUNC_DISPLAY);
-        logList.add(FUNC_MUTE);
-        logList.add(FUNC_WATCH_TV);
-        logList.add(FUNC_APP);
-        logList.add(FUNC_GAME);
-        logList.add(FUNC_YYD_CHAT);
-        logList.add(FUNC_YYD_CAHT);
     }
 
     /**********************************************************************************************/
@@ -246,17 +198,13 @@ public class MindHandler {
 
         }
 
-        // 日志上传处理
-        BaseInfo baseInfo = JsonUtils.parseJson(json, BaseInfo.class);
-        if (null == baseInfo) {
-            return;
-        }
-        String funcType = baseInfo.getServiceType();
-        if(logList.contains(funcType)){
-            AppUtils.logCollectUp2Server(json, MainService.TAG, null);
-        }
-
+        // 上传用户操作日志
+        LogHandler.logUpdate(mContext, json);
     }
+
+
+
+
 
     /**
      * 语音识别解析
@@ -386,7 +334,10 @@ public class MindHandler {
                     mRobotVoice.setUseExpression(true);
                     mRobotVoice.handlerVoiceEntry(mContext.getString(R.string.sensor_touch), true, mRobotVoice.isUseExpression());
 
+                    // SDK处理
+                    mRobotVoice.onSDKReceive(SDKHandler.SENSOR_HEADER, null);
                 }
+
                 // 摸下巴，头部回正
                 else if(text.equals(mContext.getString(R.string.sensor_chin))){
                     MoveAction.getInstance(mContext).setDriveType(MoveAction.DRIVE_BY_TIME);
@@ -396,6 +347,9 @@ public class MindHandler {
                     }else {
                         MoveAction.getInstance(mContext).headLeftTurnMid();
                     }
+
+                    // SDK处理
+                    mRobotVoice.onSDKReceive(SDKHandler.SENSOR_CHIN, null);
                 }
 
                 // 左胳膊
@@ -404,17 +358,28 @@ public class MindHandler {
                     MoveAction.getInstance(mContext).setDriveType(MoveAction.DRIVE_BY_TIME);
                     MoveAction.getInstance(mContext).setSpeed(60);
                     MoveAction.getInstance(mContext).headLeftEnd();
+
+                    // SDK处理
+                    mRobotVoice.onSDKReceive(SDKHandler.SENSOR_LEFT_ARM, null);
                 }
+
                 // 右胳膊
                 else if(text.equals(mContext.getString(R.string.sensor_right_arm))){
                     isHeadRight = true;
                     MoveAction.getInstance(mContext).setDriveType(MoveAction.DRIVE_BY_TIME);
                     MoveAction.getInstance(mContext).setSpeed(60);
                     MoveAction.getInstance(mContext).headRightEnd();
+
+                    // SDK处理
+                    mRobotVoice.onSDKReceive(SDKHandler.SENSOR_RIGHT_ARM, null);
                 }
+
                 // 摸双肩
                 else if(text.equals(mContext.getString(R.string.sensor_dance))){
                     handlerFunc(mContext.getString(R.string.sensor_dance));
+
+                    // SDK处理
+                    mRobotVoice.onSDKReceive(SDKHandler.SENSOR_LEFT_RIGHT_ARM, null);
                 }
 
                 // 打开五麦

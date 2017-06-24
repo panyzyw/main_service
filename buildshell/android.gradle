@@ -153,19 +153,17 @@ android {
             // signingConfig signingConfigs.release
         }
 
-        /*
         P_armall{
             applicationId 'com.zccl.ruiqianqi'
             ndk {
-                abiFilters "armeabi"
                 abiFilters "armeabi-v7a"
                 abiFilters "arm64-v8a"
             }
             // 这个没什么用
             // signingConfig signingConfigs.zcrelease
         }
-        */
 
+        /*
         P_x86{
             applicationId 'com.zccl.ruiqianqi'
             ndk {
@@ -173,6 +171,7 @@ android {
                 //abiFilters "x86_64"
             }
         }
+        */
 
         /*
         P_zhshr{

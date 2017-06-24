@@ -212,7 +212,7 @@ public class AppUtils {
      * @param collect_from    来自哪里
      * @param answer           对应的回答
      */
-    public static void logCollectUp2Server(String collect_from, String collect_result, String answer){
+    public static void logCollectUp2Server(String collect_result, String collect_from, String answer){
         LogCollectBack logCollectBack = new LogCollectBack();
         LogCollectBack.LogCollect logCollect = JsonUtils.parseJson(collect_result, LogCollectBack.LogCollect.class);
         if(null != logCollect) {
@@ -226,8 +226,8 @@ public class AppUtils {
             if(!StringUtils.isEmpty(answer)){
                 logCollect.setAnswer(answer);
             }
-            logCollectBack.setCommand(new Gson().toJson(logCollect));
         }
+        logCollectBack.setCommand(new Gson().toJson(logCollect));
 
         MindBusEvent.ForwardSocketEvent forwardSocketEvent = new MindBusEvent.ForwardSocketEvent();
         forwardSocketEvent.setCmd(B_LOG_COLLECT);

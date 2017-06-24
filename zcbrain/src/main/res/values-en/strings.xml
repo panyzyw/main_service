@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MainService</string>
+
+    <string-array name="no_audio_input">
+        <item>I can\'t hear you</item>
+        <item>Why do you keep silence</item>
+        <item>speak loudly</item>
+        <item>I didn\'t follow you</item>
+    </string-array>
+    <string name="no_net_use">The network is bad</string>
+    <string name="who_is_speaking">who is speaking</string>
+
+    <string-array name="hello_words">
+        <item>What\'s up?</item>
+        <item>What\'s the matter?</item>
+        <item>I\'m here!</item>
+        <item>What can I do for you?</item>
+        <item>Just say it!</item>
+    </string-array>
+
+    <string-array name="mute_words">
+        <item>okay</item>
+        <item>yeah</item>
+        <item>don\'t talk to me any more</item>
+        <item>Now, please call me quiet</item>
+    </string-array>
+
+    <string name="have_net">The network is connected. The current network is</string>
+    <string name="no_net">The network is disconnected</string>
+    <string name="have_no_net">The network has been disconnected</string>
+    <string name="connect_server_failure">Connect to server failed</string>
+    <string name="login_server_failure">Login to server failed</string>
+    <string name="login_server_no_success">not successful login state</string>
+    <string name="is_making_a_call">I am calling a phone</string>
+    <string name="is_in_factory_mode">I am in factory mode</string>
+    <string name="is_in_video">I am in video communication</string>
+    <string name="is_in_control">owner, I have been in control</string>
+    <string name="is_in_trans">in translation, please quit and try</string>
+    <string name="no_match_listen">Does not satisfy listening condition</string>
+    <string name="error_account_id">Robot account exception</string>
+    <string name="okay_account_id">Robot account normal</string>
+    <string name="login_is_going">connect successfully, begin to login in</string>
+    <string name="login_server_success">login successfully, enjoy yourself</string>
+
+    <string name="control_is_on">The control is on</string>
+    <string name="control_is_off">The control is off</string>
+
+    <string name="under_error">语义理解出错</string>
+    <string name="parse_under_error">解析讯飞数据出错</string>
+
+    <string name="query_bind_user_error">in control, can not query user information</string>
+    <string name="delete_bind_user_error">in control, can not delete user information</string>
+</resources>

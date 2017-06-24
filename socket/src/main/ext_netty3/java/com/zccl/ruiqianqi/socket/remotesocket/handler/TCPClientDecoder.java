@@ -78,7 +78,7 @@ public class TCPClientDecoder extends FrameDecoder {
 
         // 拷贝数据到全局缓存
         mGlobalBuf.writeBytes(msg);
-        LogUtils.e(TAG, "GlobalBuf.readableBytes = " + mGlobalBuf.readableBytes());
+        //LogUtils.e(TAG, "GlobalBuf.readableBytes = " + mGlobalBuf.readableBytes());
 
         List<SocketBusEvent.SocketCarrier> list = new ArrayList<>();
         SocketBusEvent.SocketCarrier socketCarrier;

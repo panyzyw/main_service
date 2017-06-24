@@ -13,6 +13,7 @@ import com.zccl.ruiqianqi.presentation.presenter.SystemPresenter;
 import com.zccl.ruiqianqi.tools.CheckUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.SystemUtils;
+import com.zccl.ruiqianqi.tools.config.MyConfigure;
 import com.zccl.ruiqianqi.utils.LedUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,12 +37,6 @@ public class ListenCheck {
 
     // 类标志
     private String TAG = ListenCheck.class.getSimpleName();
-    // 自有播放器
-    public static final String MY_MUSIC_PLAYER = "com.yongyida.robot.player";
-    // 讯飞音乐播放器
-    public static final String XF_MUSIC_PLAYER = "com.lz.smart.music";
-    // 讯飞视频播放器
-    public static final String XF_VIDEO_PLAYER = "com.zbmv";
 
     // 全局上下文
     private Context mContext;
@@ -70,15 +65,15 @@ public class ListenCheck {
         }
         LogUtils.e(TAG, currentPkg + "");
         // 自产音乐播放器是否在运行
-        if(MY_MUSIC_PLAYER.equals(currentPkg)){
+        if(mContext.getString(R.string.my_music_player).equals(currentPkg)){
             return false;
         }
         // 讯飞音乐播放器是否在运行
-        else if(XF_MUSIC_PLAYER.equals(currentPkg)){
+        else if(mContext.getString(R.string.xf_music_player).equals(currentPkg)){
             return false;
         }
         // 讯飞视频播放器是否在运行
-        else if(XF_VIDEO_PLAYER.equals(currentPkg)){
+        else if(mContext.getString(R.string.xf_video_player).equals(currentPkg)){
             return false;
         }
 
@@ -199,6 +194,15 @@ public class ListenCheck {
 
         final int isGo = checkStatus(isTouchOrVoice);
         if(0 == isGo || -3 == isGo) {
+
+            if(-3 == isGo){
+                boolean isOfflineFunc = Boolean.parseBoolean(MyConfigure.getValue("off_line_func"));
+                if(!isOfflineFunc) {
+                    // 提示需要联网
+                    mRobotVoice.startTTS(mContext.getString(R.string.please_online), null);
+                    return;
+                }
+            }
 
             // 说唤醒语
             if(welcome) {

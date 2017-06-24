@@ -2,14 +2,6 @@
 <resources>
     <string name="app_name">GoogleSpeech</string>
 
-    <string name="error_result_is_null">error, result is null</string>
-    <string-array name="no_audio_input">
-        <item>我没听见哪！</item>
-        <item>你怎么不说话！</item>
-        <item>你能大点声吗？</item>
-        <item>我没听清楚！</item>
-    </string-array>
-    <string name="no_net_use">我去开小差了！</string>
-    <string name="who_is_speaking">谁在说话？</string>
+    <string name="please_online">please connect to the Internet and experience more</string>
 
 </resources>

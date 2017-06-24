@@ -27,6 +27,7 @@ public class PushPresenter extends BasePresenter {
             return;
         if(null != voice){
             voice.startText(question);
+            voice.stopTTS();
         }
     }
 

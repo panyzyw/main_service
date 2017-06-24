@@ -36,7 +36,7 @@ public class SystemPresenter extends BasePresenter {
     /**
      * 连接远程服务
      */
-    public ServiceConnection systemConn = new ServiceConnection() {
+    public ServiceConnection mainConn = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -87,13 +87,13 @@ public class SystemPresenter extends BasePresenter {
      * 绑定服务，这个过程竟然要10多秒
      */
     private void bindSystemService(){
-        if(null == mainService) {
+        if(null != mContext && null == mainService) {
             ComponentName componentName = new ComponentName("com.yongyida.robot.system", "com.zccl.ruiqianqi.brain.system.MainService");
             Intent intent = new Intent();
             intent.setComponent(componentName);
             //intent.setPackage("");
             //intent.setAction("");
-            mContext.bindService(intent, systemConn, Context.BIND_AUTO_CREATE);
+            mContext.bindService(intent, mainConn, Context.BIND_AUTO_CREATE);
             LogUtils.e(TAG, "bindSystemService");
         }
     }
@@ -102,8 +102,8 @@ public class SystemPresenter extends BasePresenter {
      * 解绑服务
      */
     public void unbindSystemService(){
-        if(null != mainService) {
-            mContext.unbindService(systemConn);
+        if(null != mContext && null != mainService) {
+            mContext.unbindService(mainConn);
         }
     }
 
@@ -274,6 +274,7 @@ public class SystemPresenter extends BasePresenter {
      * @return
      */
     public boolean isSpeaking() {
+        bindSystemService();
         if(null != mainService){
             try {
                 return mainService.isSpeaking();
