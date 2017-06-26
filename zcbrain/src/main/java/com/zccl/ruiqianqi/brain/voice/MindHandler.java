@@ -344,8 +344,10 @@ public class MindHandler {
                     MoveAction.getInstance(mContext).setSpeed(60);
                     if(isHeadRight){
                         MoveAction.getInstance(mContext).headRightTurnMid();
+                        LogUtils.e(TAG, "headRightTurnMid");
                     }else {
                         MoveAction.getInstance(mContext).headLeftTurnMid();
+                        LogUtils.e(TAG, "headLeftTurnMid");
                     }
 
                     // SDK处理

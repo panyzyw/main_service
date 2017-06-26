@@ -83,6 +83,10 @@ public class StatePresenter extends BasePresenter {
     public void setInControl(final boolean inControl) {
         isInControl = inControl;
 
+        ServerBean serverBean = MyDbFlow.queryServerBean(PersistPresenter.getInstance().getServerAddr());
+        serverBean.isInControl = inControl + "";
+
+        /*
         // 更改数据库信息
         MyDbFlow.queryServerBean(PersistPresenter.getInstance().getServerAddr(), new MyDbFlow.IQueryServerBeanCallback() {
             @Override
@@ -105,6 +109,7 @@ public class StatePresenter extends BasePresenter {
 
             }
         });
+        */
 
     }
 

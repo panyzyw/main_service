@@ -130,11 +130,6 @@ public class SecondHandler extends BaseHandler {
         init();
     }
 
-    @Override
-    public boolean handlerScene(String json, int type) {
-        return false;
-    }
-
     /**
      * 初始化
      */
@@ -219,6 +214,11 @@ public class SecondHandler extends BaseHandler {
 
         // 表情聊天
         intentMap.put(FUNC_EMOTION_CHAT, INTENT_EMOTION_CHAT);
+    }
+
+    @Override
+    public boolean handlerScene(String json, int type) {
+        return false;
     }
 
     /**

@@ -32,5 +32,5 @@ public class ServerBean extends BaseModel {
     @Column
     public String rid;
     @Column
-    public String isInControl;
+    public String isInControl = "false";
 }

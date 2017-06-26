@@ -357,8 +357,10 @@ public class FirstHandler extends BaseHandler {
         if(StringUtils.isEmpty(json))
             return false;
 
+        /*
         if(StringUtils.isEmpty(funcType))
             return false;
+        */
 
         BaseInfo baseInfo = JsonUtils.parseJson(json, BaseInfo.class);
         if (null == baseInfo) {
