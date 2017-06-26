@@ -182,7 +182,7 @@ public class RobotVoice extends VoiceManager {
      */
     public void handlerVoiceEntry(String fromWhere, boolean isUseVoiceFloat, boolean isUseExpression){
 
-        LogUtils.e(TAG, "fromWhere = " + fromWhere);
+        LogUtils.e(TAG, "fromWhere = " + fromWhere + " - " + sdkHandler.getSDKCallback());
 
         // 有SDK，就进行SDK处理，下面就不处理了
         if(null != sdkHandler.getSDKCallback()){
@@ -425,22 +425,31 @@ public class RobotVoice extends VoiceManager {
                 if(0 != wakeInfo.getAngle()){
                     StatePresenter sp = StatePresenter.getInstance();
                     boolean canLocal = true;
+
+                    /*
                     // 机器人在电话中
                     if(sp.isCalling()){
-                        canLocal = false;
-                    }
-                    // 机器人正在工厂模式中
-                    else if(sp.isFactory()){
                         canLocal = false;
                     }
                     // 机器人正在视频中
                     else if(sp.isVideoing()){
                         canLocal = false;
                     }
+                    // 机器人正在工厂模式中
+                    else
+                    */
+                    if(sp.isFactory()){
+                        canLocal = false;
+                        LogUtils.e(TAG, "isFactory");
+                    }
                     // 机器人在控制中
                     else if(sp.isInControl()){
                         canLocal = false;
+                        LogUtils.e(TAG, "isInControl");
                     }
+
+                    LogUtils.e(TAG, canLocal + " - localization - " + cp.isLocalization());
+
                     // 声源定位在哪唤醒，拾音波束就在哪，如果进行声源定位了，就要进行波束重置
                     // 如果没有进行声源定位，拾音波束就是上一次唤醒的波束
                     if(canLocal && cp.isLocalization()){

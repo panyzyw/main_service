@@ -4,6 +4,7 @@ import com.zccl.ruiqianqi.domain.model.Robot;
 import com.zccl.ruiqianqi.presenter.base.BasePresenter;
 import com.zccl.ruiqianqi.storage.db.MyDbFlow;
 import com.zccl.ruiqianqi.storage.db.ServerBean;
+import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
 
 import java.util.Iterator;
@@ -20,6 +21,8 @@ import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_DEFAULT;
  */
 
 public class StatePresenter extends BasePresenter {
+
+    private static String TAG = StatePresenter.class.getSimpleName();
 
     // 登录后下行的信息，运行时要保存的
     private Robot mRobot;
@@ -85,6 +88,18 @@ public class StatePresenter extends BasePresenter {
 
         ServerBean serverBean = MyDbFlow.queryServerBean(PersistPresenter.getInstance().getServerAddr());
         serverBean.isInControl = inControl + "";
+
+        MyDbFlow.operateServerBean(MyDbFlow.OP.UPDATE, MyDbFlow.ASYNC, serverBean, new MyDbFlow.DbCallback() {
+            @Override
+            public void OnSuccess() {
+                LogUtils.e(TAG, "update InControl success");
+            }
+
+            @Override
+            public void OnFailure(Throwable error) {
+                LogUtils.e(TAG, "update InControl failure", error);
+            }
+        });
 
         /*
         // 更改数据库信息
