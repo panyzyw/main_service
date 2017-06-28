@@ -3,6 +3,7 @@ package com.zccl.ruiqianqi.brain.system;
 import com.zccl.ruiqianqi.brain.system.MainBean;
 import com.zccl.ruiqianqi.brain.system.IMainCallback;
 import com.zccl.ruiqianqi.brain.system.ITtsCallback;
+import com.zccl.ruiqianqi.brain.system.IAllTtsCallback;
 
 interface IMainService {
     /**
@@ -17,13 +18,16 @@ interface IMainService {
     MainBean sendCommandSync(int cmd, String msg);
 
     // 开始发音
-    void startTTS(String words, String tag, ITtsCallback callback);
+    void startTTS(String words, String from, ITtsCallback callback);
     // 暂停发音
     void pauseTTS();
     // 恢复发音
     void resumeTTS();
     // 停止发音，并清空队列
-    void stopTTS();
+    void stopTTS(String from);
     // 是否正在发音
     boolean isSpeaking();
+
+    // 发音的回调
+    void setAllTTSCallback(IAllTtsCallback callback);
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemProperties;
 
+import com.google.gson.Gson;
 import com.iflytek.cloud.SpeechError;
 import com.zccl.ruiqianqi.brain.R;
 import com.zccl.ruiqianqi.brain.handler.SDKHandler;
@@ -30,6 +31,7 @@ import rx.Subscription;
 
 import static com.zccl.ruiqianqi.config.MyConfig.INTENT_ACTION_STOP;
 import static com.zccl.ruiqianqi.config.MyConfig.KEY_STOP_FROM;
+import static com.zccl.ruiqianqi.config.MyConfig.TTS_NOT_DEAL_RESPONSE;
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.UnderstandCallback.UNDERSTAND_FAILURE;
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.UnderstandCallback.UNDERSTAND_SUCCESS;
 
@@ -450,12 +452,14 @@ public class RobotVoice extends VoiceManager {
 
                     LogUtils.e(TAG, canLocal + " - localization - " + cp.isLocalization());
 
+                    cp.setLocalization(true);
                     // 声源定位在哪唤醒，拾音波束就在哪，如果进行声源定位了，就要进行波束重置
                     // 如果没有进行声源定位，拾音波束就是上一次唤醒的波束
                     if(canLocal && cp.isLocalization()){
                         mLocalization.rotate(wakeInfo.getAngle());
                         setRealBeam(0);
                     }
+
                 }
 
                 // 唤醒之后，进行人脸识别
@@ -464,12 +468,13 @@ public class RobotVoice extends VoiceManager {
                 intent.putExtra("angle", wakeInfo.getAngle());
                 mContext.sendBroadcast(intent);
 
-
                 // 非触摸、有表情、唤醒
                 setTouchWake(false);
                 setUseExpression(true);
                 handlerVoiceEntry(mContext.getString(R.string.sensor_voice), true, isUseExpression());
 
+                // 唤醒后的SDK回调
+                sdkHandler.onReceive(SDKHandler.RECV_WAKE_UP, new Gson().toJson(wakeInfo));
 
             }else {
                 wakeFailure(new Throwable(mContext.getString(R.string.wakeup_invalid)));
@@ -825,12 +830,12 @@ public class RobotVoice extends VoiceManager {
     /******************【重载发音方法，目地就是说话的时候闪蓝色呼吸灯】****************************/
     /**
      * 发音方法重载
-     * @param words
-     * @param tag
+     * @param words ---------------- 发音要读的文字
+     * @param from  ---------------- 携带的标志
      * @param synthesizerCallback
      */
-    public void startTTS_(String words, String tag, final SynthesizerCallback synthesizerCallback) {
-        super.startTTS(words, tag, new SynthesizerCallback() {
+    public void startTTS_(String words, String from, final SynthesizerCallback synthesizerCallback) {
+        super.startTTS(words, from, new SynthesizerCallback() {
             @Override
             public void OnBegin() {
                 LedUtils.startSpeakLed(mContext);
@@ -868,8 +873,8 @@ public class RobotVoice extends VoiceManager {
      * @param words  -------------------- 发音要读的文字
      * @param runnable ------------------ 操作完之后的回调
      */
-    public void startTTS_(final String words, final Runnable runnable) {
-        super.startTTS(words, null, new SynthesizerCallback() {
+    public void startTTS_(final String words, String from, final Runnable runnable) {
+        super.startTTS(words, from, new SynthesizerCallback() {
             @Override
             public void OnBegin() {
                 if(!StringUtils.isEmpty(words)) {
@@ -901,45 +906,91 @@ public class RobotVoice extends VoiceManager {
         });
     }
 
-    @Override
-    public void startTTS(String words, String tag, final SynthesizerCallback synthesizerCallback) {
-        boolean isUseAppIdXiaoYong = SystemProperties.getBoolean(isAppIdXiaoYong, false);
-        if(isUseAppIdXiaoYong){
-            startTTS_(words, tag, synthesizerCallback);
-        }else {
-            SystemPresenter.getInstance().startTTS(words, tag, synthesizerCallback);
-        }
+    /**
+     * 发音方法重载
+     * @param words  -------------------- 发音要读的文字
+     * @param runnable ------------------ 操作完之后的回调
+     */
+    public void startTTS_(String words, Runnable runnable) {
+        startTTS_(words, null, runnable);
     }
 
+    /**********************************************************************************************/
+    /**
+     * 发音方法重载
+     * @param words ---------------- 发音要读的文字
+     * @param from ---------------- 携带的标志
+     * @param synthesizerCallback
+     */
     @Override
-    public void startTTS(final String words, final Runnable runnable) {
+    public void startTTS(String words, String from, final SynthesizerCallback synthesizerCallback) {
+        /*
+        boolean isUseAppIdXiaoYong = SystemProperties.getBoolean(isAppIdXiaoYong, false);
+        if(isUseAppIdXiaoYong){
+            startTTS_(words, from, synthesizerCallback);
+        }else {
+        }
+        */
+        SystemPresenter.getInstance().startTTS(words, from, synthesizerCallback);
+    }
+
+    /**
+     * 发音方法重载
+     * @param words  -------------------- 发音要读的文字
+     * @param from ---------------- 携带的标志
+     * @param runnable
+     */
+    @Override
+    public void startTTS(String words, String from, Runnable runnable) {
+        /*
+        boolean isUseAppIdXiaoYong = SystemProperties.getBoolean(isAppIdXiaoYong, false);
+        if(isUseAppIdXiaoYong){
+            startTTS_(words, from, runnable);
+        }else {
+        }
+        */
+        SystemPresenter.getInstance().startTTS(words, from, runnable);
+    }
+
+    /**
+     * 发音方法重载【默认不处理，语音的回调逻辑】
+     * @param words  -------------------- 发音要读的文字
+     * @param runnable
+     */
+    @Override
+    public void startTTS(String words, Runnable runnable) {
+        /*
         boolean isUseAppIdXiaoYong = SystemProperties.getBoolean(isAppIdXiaoYong, false);
         if(isUseAppIdXiaoYong){
             startTTS_(words, runnable);
         }else {
-            SystemPresenter.getInstance().startTTS(words, runnable);
         }
-
+        */
+        SystemPresenter.getInstance().startTTS(words, TTS_NOT_DEAL_RESPONSE, runnable);
     }
 
     @Override
     public void pauseTTS()  {
+        /*
         boolean isUseAppIdXiaoYong = SystemProperties.getBoolean(isAppIdXiaoYong, false);
         if(isUseAppIdXiaoYong){
             super.pauseTTS();
         }else {
-            SystemPresenter.getInstance().pauseTTS();
         }
+        */
+        SystemPresenter.getInstance().pauseTTS();
     }
 
     @Override
     public void resumeTTS() {
+        /*
         boolean isUseAppIdXiaoYong = SystemProperties.getBoolean(isAppIdXiaoYong, false);
         if(isUseAppIdXiaoYong){
             super.resumeTTS();
         }else {
-            SystemPresenter.getInstance().resumeTTS();
         }
+        */
+        SystemPresenter.getInstance().resumeTTS();
     }
 
     /**
@@ -953,22 +1004,26 @@ public class RobotVoice extends VoiceManager {
      */
     @Override
     public void stopTTS() {
+        /*
         boolean isUseAppIdXiaoYong = SystemProperties.getBoolean(isAppIdXiaoYong, false);
         if(isUseAppIdXiaoYong){
             super.stopTTS();
         }else {
-            SystemPresenter.getInstance().stopTTS();
         }
+        */
+        SystemPresenter.getInstance().stopTTS();
     }
 
     @Override
     public boolean isSpeaking() {
+        /*
         boolean isUseAppIdXiaoYong = SystemProperties.getBoolean(isAppIdXiaoYong, false);
         if(isUseAppIdXiaoYong){
             return super.isSpeaking();
         }else {
-            return SystemPresenter.getInstance().isSpeaking();
         }
+        */
+        return SystemPresenter.getInstance().isSpeaking();
     }
 
 
@@ -987,6 +1042,14 @@ public class RobotVoice extends VoiceManager {
 
     public void setUseExpression(boolean useExpression) {
         isUseExpression = useExpression;
+    }
+
+    /**
+     * 是不是继续循环监听
+     * @return
+     */
+    public boolean isContinueListen(){
+        return mListenCheck.isContinueListen();
     }
 
     /**********************************【SDK相关方法】*********************************************/

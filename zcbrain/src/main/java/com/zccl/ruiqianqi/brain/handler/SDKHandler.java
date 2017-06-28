@@ -18,15 +18,19 @@ public class SDKHandler {
     private static String TAG = SDKHandler.class.getSimpleName();
 
     // 触摸头
-    public static final int SENSOR_HEADER = 0;
+    public static final int RECV_SENSOR_HEADER = 0;
     // 触摸左肩
-    public static final int SENSOR_LEFT_ARM = 1;
+    public static final int RECV_SENSOR_LEFT_ARM = 1;
     // 触摸右肩
-    public static final int SENSOR_RIGHT_ARM = 2;
+    public static final int RECV_SENSOR_RIGHT_ARM = 2;
     // 触摸下巴
-    public static final int SENSOR_CHIN = 3;
+    public static final int RECV_SENSOR_CHIN = 3;
     // 同时触摸双肩
-    public static final int SENSOR_LEFT_RIGHT_ARM = 4;
+    public static final int RECV_SENSOR_LEFT_RIGHT_ARM = 4;
+    // 人脸识别结果的回调
+    public static final int RECV_FACE_DETECT = 5;
+    // 唤醒结果的回调
+    public static final int RECV_WAKE_UP = 6;
 
     // 全局上下文
     protected Context mContext;

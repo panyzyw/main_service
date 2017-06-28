@@ -4,9 +4,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import com.zccl.ruiqianqi.brain.service.MainService;
+import com.zccl.ruiqianqi.brain.system.IAllTtsCallback;
 import com.zccl.ruiqianqi.brain.system.IMainCallback;
 import com.zccl.ruiqianqi.brain.system.IMainService;
 import com.zccl.ruiqianqi.brain.system.ITtsCallback;
@@ -14,7 +17,16 @@ import com.zccl.ruiqianqi.brain.system.MainBean;
 import com.zccl.ruiqianqi.plugin.voice.AbstractVoice;
 import com.zccl.ruiqianqi.presenter.base.BasePresenter;
 import com.zccl.ruiqianqi.tools.LogUtils;
+import com.zccl.ruiqianqi.tools.MyAppUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
+
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.ACTION_PLAYER;
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.MUSIC_CONTROL;
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.PLAYER_CATEGORY_KEY;
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.PLAYER_RESULT_KEY;
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_MY_MUSIC;
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_XF_MUSIC;
+import static com.zccl.ruiqianqi.config.MyConfig.TTS_NOT_DEAL_RESPONSE;
 
 /**
  * Created by ruiqianqi on 2017/6/12 0012.
@@ -27,6 +39,17 @@ public class SystemPresenter extends BasePresenter {
 
     // 获得当前应用名称
     public static final int GET_CUR_PKG = 1;
+
+    // 开始
+    private static String TTS_BEGIN = "begin";
+    // 暂停
+    private static String TTS_PAUSE = "pause";
+    // 恢复
+    private static String TTS_RESUME = "resume";
+    // 停止
+    private static String TTS_STOP = "stop";
+    // 完成
+    private static String TTS_COMPLETE = "complete";
 
     // 单例引用
     private static SystemPresenter instance;
@@ -41,6 +64,7 @@ public class SystemPresenter extends BasePresenter {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mainService = IMainService.Stub.asInterface(service);
+            setAllTtsCallback();
         }
 
         @Override
@@ -79,14 +103,14 @@ public class SystemPresenter extends BasePresenter {
      * 初始化
      */
     private void init(){
-        bindSystemService();
+        bindMainService();
     }
 
     /**********************************************************************************************/
     /**
      * 绑定服务，这个过程竟然要10多秒
      */
-    private void bindSystemService(){
+    private void bindMainService(){
         if(null != mContext && null == mainService) {
             ComponentName componentName = new ComponentName("com.yongyida.robot.system", "com.zccl.ruiqianqi.brain.system.MainService");
             Intent intent = new Intent();
@@ -107,6 +131,7 @@ public class SystemPresenter extends BasePresenter {
         }
     }
 
+    /**********************************************************************************************/
     /**
      * 异步回调
      * @param cmd
@@ -114,7 +139,7 @@ public class SystemPresenter extends BasePresenter {
      * @param callback
      */
     public void sendCommand(int cmd, String msg, IMainCallback callback){
-        bindSystemService();
+        bindMainService();
         if(null != mainService){
             try {
                 mainService.sendCommand(cmd, msg, callback);
@@ -131,7 +156,7 @@ public class SystemPresenter extends BasePresenter {
      * @return
      */
     public MainBean sendCommandSync(int cmd, String msg){
-        bindSystemService();
+        bindMainService();
         if(null != mainService){
             try {
                 return mainService.sendCommandSync(cmd, msg);
@@ -144,14 +169,14 @@ public class SystemPresenter extends BasePresenter {
 
     /**
      * 发音过程回调
-     * @param words
-     * @param tag
+     * @param words -------------- 要发音的文字
+     * @param from  -------------- 携带的标志
      * @param synthesizerCallback
      */
-    public void startTTS(String words, String tag, final AbstractVoice.SynthesizerCallback synthesizerCallback) {
-        bindSystemService();
+    public void startTTS(String words, String from, final AbstractVoice.SynthesizerCallback synthesizerCallback) {
+        bindMainService();
         try {
-            mainService.startTTS(words, tag, new ITtsCallback.Stub() {
+            mainService.startTTS(words, from, new ITtsCallback.Stub() {
                 @Override
                 public void OnBegin() throws RemoteException {
                     if(null != synthesizerCallback){
@@ -191,14 +216,15 @@ public class SystemPresenter extends BasePresenter {
 
     /**
      * 发音结束回调
-     * @param words
+     * @param words -------------- 要发音的文字
+     * @param from --------------- 携带的标志
      * @param runnable
      */
-    public void startTTS(final String words, final Runnable runnable) {
-        bindSystemService();
+    public void startTTS(final String words, String from, final Runnable runnable) {
+        bindMainService();
         if(null != mainService){
             try {
-                mainService.startTTS(words, null, new ITtsCallback.Stub() {
+                mainService.startTTS(words, from, new ITtsCallback.Stub() {
                     @Override
                     public void OnBegin() throws RemoteException {
 
@@ -228,10 +254,19 @@ public class SystemPresenter extends BasePresenter {
     }
 
     /**
+     * 发音结束回调
+     * @param words -------------- 要发音的文字
+     * @param runnable
+     */
+    public void startTTS(String words, Runnable runnable) {
+        startTTS(words, null, runnable);
+    }
+
+    /**
      * 暂停
      */
     public void pauseTTS()  {
-        bindSystemService();
+        bindMainService();
         if(null != mainService){
             try {
                 mainService.pauseTTS();
@@ -245,7 +280,7 @@ public class SystemPresenter extends BasePresenter {
      * 恢复
      */
     public void resumeTTS() {
-        bindSystemService();
+        bindMainService();
         if(null != mainService){
             try {
                 mainService.resumeTTS();
@@ -259,10 +294,10 @@ public class SystemPresenter extends BasePresenter {
      * 停止
      */
     public void stopTTS() {
-        bindSystemService();
+        bindMainService();
         if(null != mainService){
             try {
-                mainService.stopTTS();
+                mainService.stopTTS(MainService.TAG);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -274,7 +309,7 @@ public class SystemPresenter extends BasePresenter {
      * @return
      */
     public boolean isSpeaking() {
-        bindSystemService();
+        bindMainService();
         if(null != mainService){
             try {
                 return mainService.isSpeaking();
@@ -283,6 +318,64 @@ public class SystemPresenter extends BasePresenter {
             }
         }
         return false;
+    }
+
+    /**
+     * 设置所有TTS相关的回调
+     */
+    private void setAllTtsCallback(){
+        if(null != mainService){
+            try {
+                mainService.setAllTTSCallback(new IAllTtsCallback.Stub() {
+                    @Override
+                    public void OnProgress(String from, String state) throws RemoteException {
+                        dealWithMusic(from, state);
+                    }
+                });
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 如果音乐在最上层，则处理当前音乐
+     * @param from
+     * @param state
+     */
+    private void dealWithMusic(String from, String state){
+        StatePresenter sp = StatePresenter.getInstance();
+        String scene = sp.getScene();
+
+        LogUtils.e(TAG, "TTS_STATE = " + state);
+        if(TTS_NOT_DEAL_RESPONSE.equals(from)){
+            return;
+        }
+
+        // 音乐播放器
+        if(SCENE_MY_MUSIC.equals(scene)){
+            Bundle bundle = new Bundle();
+            bundle.putString(PLAYER_CATEGORY_KEY, MUSIC_CONTROL);
+            if(TTS_BEGIN.equals(state)){
+                bundle.putString(PLAYER_RESULT_KEY, "pause");
+                MyAppUtils.sendBroadcast(mContext, ACTION_PLAYER, bundle);
+            }
+            else if(TTS_COMPLETE.equals(state)){
+                bundle.putString(PLAYER_RESULT_KEY, "play");
+                MyAppUtils.sendBroadcast(mContext, ACTION_PLAYER, bundle);
+            }
+        }
+        // 讯飞音乐
+        else if(SCENE_XF_MUSIC.equals(scene)){
+            if(TTS_BEGIN.equals(state)){
+                XiriPresenter xiriPresenter = new XiriPresenter();
+                xiriPresenter.xfMusicAction("pause", null);
+            }
+            else if(TTS_COMPLETE.equals(state)){
+                XiriPresenter xiriPresenter = new XiriPresenter();
+                xiriPresenter.xfMusicAction("continue", null);
+            }
+        }
     }
 }
 

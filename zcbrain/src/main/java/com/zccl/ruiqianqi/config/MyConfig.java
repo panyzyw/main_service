@@ -15,6 +15,8 @@ public class MyConfig {
     // 机器人默认RID，运行时服务器分配的机器人ID
     public static final String STATE_DEFAULT_RID = "123456";
 
+    // 使用这个TAG的话，我就不处理语音的回调逻辑
+    public static final String TTS_NOT_DEAL_RESPONSE = "tts_not_deal_response";
 
     // 默认状态，无任何动作
     public final static String STATE_LOGIN_DEFAULT = "DEFAULT";

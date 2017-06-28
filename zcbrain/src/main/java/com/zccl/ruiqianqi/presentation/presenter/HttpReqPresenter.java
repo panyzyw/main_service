@@ -66,7 +66,7 @@ public class HttpReqPresenter extends BasePresenter {
                 BoYanDown boYanDown = (BoYanDown) t;
                 if(null != boYanDown){
                     if(!StringUtils.isEmpty(boYanDown.getAnswer())){
-                        voice.startTTS(boYanDown.getAnswer(), new Runnable() {
+                        voice.startTTS(boYanDown.getAnswer(), null, new Runnable() {
                             @Override
                             public void run() {
                                 // 说话说完了开始监听

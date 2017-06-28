@@ -295,6 +295,15 @@ public abstract class AbstractVoice {
     /**
      * 开始语音合成
      * @param words  -------------------- 发音要读的文字
+     * @param tag    -------------------- 随军携带的标志
+     * @param runnable
+     */
+    public void startTTS(String words, String tag, Runnable runnable){
+    }
+
+    /**
+     * 开始语音合成
+     * @param words  -------------------- 发音要读的文字
      * @param runnable
      */
     public void startTTS(String words, Runnable runnable){

@@ -476,6 +476,7 @@ public final class VoiceSynthesizer extends BaseVoice implements SynthesizerList
      */
     public void stop() {
         if (speechSynthesizer != null) {
+            LogUtils.e(TAG, "stopSpeaking");
             speechSynthesizer.stopSpeaking();
         }
         if (ttsInfoLinkedList != null) {
@@ -497,6 +498,7 @@ public final class VoiceSynthesizer extends BaseVoice implements SynthesizerList
      */
     @Override
     public void onSpeakBegin() {
+        LogUtils.e(TAG, "OnBegin");
         if (mTtsInfo != null && mTtsInfo.getSynthesizerCallback() != null) {
             mTtsInfo.getSynthesizerCallback().OnBegin();
         }
@@ -549,6 +551,8 @@ public final class VoiceSynthesizer extends BaseVoice implements SynthesizerList
     @Override
     public void onCompleted(SpeechError speechError) {
         LogUtils.e(TAG, "onCompleted");
+
+        // 回调使用者
         if (mTtsInfo != null && mTtsInfo.getSynthesizerCallback() != null) {
             if (speechError == null) {
                 mTtsInfo.getSynthesizerCallback().OnComplete(null, mTtsInfo.getTag());
@@ -557,6 +561,7 @@ public final class VoiceSynthesizer extends BaseVoice implements SynthesizerList
             }
         }
 
+        // 继续下个TTS
         if (!ttsInfoLinkedList.isEmpty()) {
             start(null, null, null);
         } else {

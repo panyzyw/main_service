@@ -69,6 +69,7 @@ import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_VIDEO;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_VIDEO_CTRL;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_WATCH_TV;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_YYD_CAHT;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.OP_SHUT_UP;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.RESULT_ZERO;
 import static com.zccl.ruiqianqi.config.MyConfig.OFF_LINE_CAMERA;
 import static com.zccl.ruiqianqi.config.MyConfig.OFF_LINE_GAME;
@@ -213,9 +214,10 @@ public class FirstHandler extends BaseHandler {
         else if(mContext.getString(R.string.xf_video_player).equals(currentPkg)){
             sp.handleScene(SCENE_XF_VIDEO, true);
         }
+
+
         scene = sp.getScene();
         LogUtils.e(TAG, "handlerScene2 = " + scene);
-
         if(UNDERSTAND_SUCCESS == type){
             BaseInfo baseInfo = JsonUtils.parseJson(json, BaseInfo.class);
             if (null == baseInfo) {
@@ -258,6 +260,7 @@ public class FirstHandler extends BaseHandler {
                         xiriPresenter.xfMusicAction(command, words);
                         return true;
                     }else {
+                        // 其他功能也要处理
                         return false;
                     }
                 }
@@ -317,8 +320,8 @@ public class FirstHandler extends BaseHandler {
                         MyAppUtils.sendBroadcast(mContext, ACTION_PLAYER, bundle);
                         return true;
                     }else {
-                        // 其他的不处理，但是还要改
-                        return true;
+                        // 其他功能暂时不处理，但是还要改
+                        return false;
                     }
                 }
             }
@@ -356,11 +359,6 @@ public class FirstHandler extends BaseHandler {
 
         if(StringUtils.isEmpty(json))
             return false;
-
-        /*
-        if(StringUtils.isEmpty(funcType))
-            return false;
-        */
 
         BaseInfo baseInfo = JsonUtils.parseJson(json, BaseInfo.class);
         if (null == baseInfo) {
@@ -412,8 +410,16 @@ public class FirstHandler extends BaseHandler {
             return true;
         }
 
+        // 如果是聊天
+        if(FUNC_CHAT.equals(funcType)) {
+            // 如果是闭嘴
+            if (OP_SHUT_UP.equals(baseInfo.getOperation())) {
+                funcType = FUNC_MUTE;
+            }
+        }
+
         // 机器人移动
-        else if(FUNC_MOVE.equals(funcType)){
+        if(FUNC_MOVE.equals(funcType)){
             MoveBean moveBean = JsonUtils.parseJson(json, MoveBean.class);
             if(null != moveBean && null != moveBean.semantic && null != moveBean.semantic.slots){
                 MovePresenter.getInstance().parseFlytekData(moveBean.semantic.slots.direct);

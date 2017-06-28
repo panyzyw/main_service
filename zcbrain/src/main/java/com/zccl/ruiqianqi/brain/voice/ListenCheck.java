@@ -12,7 +12,6 @@ import com.zccl.ruiqianqi.presentation.presenter.StatePresenter;
 import com.zccl.ruiqianqi.presentation.presenter.SystemPresenter;
 import com.zccl.ruiqianqi.tools.CheckUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
-import com.zccl.ruiqianqi.tools.SystemUtils;
 import com.zccl.ruiqianqi.tools.config.MyConfigure;
 import com.zccl.ruiqianqi.utils.LedUtils;
 
@@ -28,6 +27,7 @@ import static com.zccl.ruiqianqi.config.MyConfig.STATE_CONNECT_EXCEPTION;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_FAILURE;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_ING;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_SUCCESS;
+import static com.zccl.ruiqianqi.config.MyConfig.TTS_NOT_DEAL_RESPONSE;
 
 /**
  * Created by ruiqianqi on 2017/3/27 0027.
@@ -77,6 +77,25 @@ public class ListenCheck {
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * 要不要循环监听
+     * @return
+     */
+    public boolean isContinueListen(){
+        StatePresenter sp = StatePresenter.getInstance();
+        String scene = sp.getScene();
+        if(SCENE_MY_MUSIC.equals(scene)){
+            return false;
+        }
+        else if(SCENE_XF_MUSIC.equals(scene)){
+            return false;
+        }
+        else if(SCENE_XF_VIDEO.equals(scene)){
+            return false;
+        }
         return true;
     }
 

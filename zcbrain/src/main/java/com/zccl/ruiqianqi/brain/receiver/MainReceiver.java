@@ -40,24 +40,8 @@ public class MainReceiver extends SystemReceiver {
     // 当前场景状态【boolean】
     public static final String KEY_SCENE_STATUS = "key_scene_status";
 
-    // 五麦测试
-    //public static final String FIVE_MIC_TEST = "com.yydrobot.MICTEST";
-    // 五麦测试携带数据的KEY
-    //public static final String MIC_DATA_KEY = "data";
-
     // 科大讯飞声源定位与唤醒状态
     public static final String ACTION_FLYTEK_VOICE = "com.yongyida.robot.VOICE";
-
-    // 给其他应用发音用的
-    public static final String ACTION_TTS = "com.yongyida.robot.TTS";
-    // 开始发音，还是停止发音
-    public static final String TTS_ACTION_KEY = "tts_action";
-    // 开始发音
-    public static final String TTS_ACTION_VALUE_START = "start";
-    // 停止发音
-    public static final String TTS_ACTION_VALUE_STOP = "stop";
-    // 开始发音的文字
-    public static final String TTS_TEXT_KEY = "tts_text";
 
     public MainReceiver() {
 
@@ -121,16 +105,6 @@ public class MainReceiver extends SystemReceiver {
             StatePresenter.getInstance().handleScene(scene, status);
         }
 
-        /*
-        // 五麦测试
-        else if(FIVE_MIC_TEST.equals(intent.getAction())) {
-            Bundle bundle = intent.getExtras();
-            if(null == bundle)
-                return;
-            micTest(context, bundle.getString(MIC_DATA_KEY));
-        }
-        */
-
         // 科大讯飞声源定位与唤醒状态
         else if(ACTION_FLYTEK_VOICE.equals(intent.getAction())) {
             Bundle bundle = intent.getExtras();
@@ -139,44 +113,9 @@ public class MainReceiver extends SystemReceiver {
             voiceLocalization(context, bundle);
         }
 
-        /*
-        // 给其他应用发音用的
-        else if(ACTION_TTS.equals(intent.getAction())){
-            AbstractVoice voiceDevice = MindPresenter.getInstance().getVoiceDevice();
-            if(TTS_ACTION_VALUE_START.equals(intent.getStringExtra(TTS_ACTION_KEY))){
-                String text = intent.getStringExtra(TTS_TEXT_KEY);
-                if(StringUtils.isEmpty(text))
-                    return;
-                voiceDevice.startTTS(text, null);
-            }else if(TTS_ACTION_VALUE_STOP.equals(intent.getStringExtra(TTS_ACTION_KEY))){
-                voiceDevice.stopTTS();
-            }
-        }
-        */
-
     }
 
     /***********************************【私有实现方法】*******************************************/
-    /**
-     * 麦克测试
-     */
-    /*
-    private void micTest(Context context, String data) {
-        SavePcmAudio mSavePcmAudio = new SavePcmAudio();
-        if("startSavePcm".equals(data)){
-            mSavePcmAudio.setIsSave(true);
-        }
-        else if("stopSavePcm".equals(data)){
-            mSavePcmAudio.setIsSave(false);
-        }
-        else if("startMicTest".equals(data)){
-            Intent intent = new Intent(context, MicTestActivity.class);
-            intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        }
-    }
-    */
-
     /**
      * 声源定位与唤醒阀值相关设置与查询
      * @param bundle

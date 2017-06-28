@@ -300,8 +300,8 @@ public class VoiceManager extends AbstractVoice {
      * @param runnable
      */
     @Override
-    public void startTTS(String words, final Runnable runnable) {
-        voiceSynthesizer.start(words, null, new SynthesizerCallback() {
+    public void startTTS(String words, String tag, final Runnable runnable) {
+        voiceSynthesizer.start(words, tag, new SynthesizerCallback() {
             @Override
             public void OnBegin() {
 
@@ -324,6 +324,16 @@ public class VoiceManager extends AbstractVoice {
                 }
             }
         });
+    }
+
+    /**
+     * 开始语音合成
+     * @param words  -------------------- 发音要读的文字
+     * @param runnable
+     */
+    @Override
+    public void startTTS(String words, Runnable runnable) {
+        startTTS(words, null, runnable);
     }
 
     /**

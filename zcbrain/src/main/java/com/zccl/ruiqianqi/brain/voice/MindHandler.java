@@ -335,7 +335,7 @@ public class MindHandler {
                     mRobotVoice.handlerVoiceEntry(mContext.getString(R.string.sensor_touch), true, mRobotVoice.isUseExpression());
 
                     // SDK处理
-                    mRobotVoice.onSDKReceive(SDKHandler.SENSOR_HEADER, null);
+                    mRobotVoice.onSDKReceive(SDKHandler.RECV_SENSOR_HEADER, null);
                 }
 
                 // 摸下巴，头部回正
@@ -351,7 +351,7 @@ public class MindHandler {
                     }
 
                     // SDK处理
-                    mRobotVoice.onSDKReceive(SDKHandler.SENSOR_CHIN, null);
+                    mRobotVoice.onSDKReceive(SDKHandler.RECV_SENSOR_CHIN, null);
                 }
 
                 // 左胳膊
@@ -362,7 +362,7 @@ public class MindHandler {
                     MoveAction.getInstance(mContext).headLeftEnd();
 
                     // SDK处理
-                    mRobotVoice.onSDKReceive(SDKHandler.SENSOR_LEFT_ARM, null);
+                    mRobotVoice.onSDKReceive(SDKHandler.RECV_SENSOR_LEFT_ARM, null);
                 }
 
                 // 右胳膊
@@ -373,7 +373,7 @@ public class MindHandler {
                     MoveAction.getInstance(mContext).headRightEnd();
 
                     // SDK处理
-                    mRobotVoice.onSDKReceive(SDKHandler.SENSOR_RIGHT_ARM, null);
+                    mRobotVoice.onSDKReceive(SDKHandler.RECV_SENSOR_RIGHT_ARM, null);
                 }
 
                 // 摸双肩
@@ -381,7 +381,7 @@ public class MindHandler {
                     handlerFunc(mContext.getString(R.string.sensor_dance));
 
                     // SDK处理
-                    mRobotVoice.onSDKReceive(SDKHandler.SENSOR_LEFT_RIGHT_ARM, null);
+                    mRobotVoice.onSDKReceive(SDKHandler.RECV_SENSOR_LEFT_RIGHT_ARM, null);
                 }
 
                 // 打开五麦
@@ -488,6 +488,11 @@ public class MindHandler {
                 StatePresenter sp = StatePresenter.getInstance();
                 // 屏幕灭了， 循环监听就不响应
                 if(sp.isScreenOff()){
+                    return;
+                }
+
+                // 某些界面不要循环监听
+                if(!mRobotVoice.isContinueListen()){
                     return;
                 }
 
