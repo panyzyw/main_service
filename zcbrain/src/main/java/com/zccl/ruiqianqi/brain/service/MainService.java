@@ -237,9 +237,12 @@ public class MainService extends SystemService {
      */
     private final ISDKService.Stub mBinder = new ISDKService.Stub() {
         @Override
-        public void setCallback(ISDKCallback callback) throws RemoteException {
+        public void setCallback(ISDKCallback callback, boolean isUseSDK) throws RemoteException {
             RobotVoice robotVoice = (RobotVoice) MindPresenter.getInstance().getVoiceDevice();
             if(null != robotVoice){
+                if(!isUseSDK) {
+                    callback = null;
+                }
                 mSDKCallback = callback;
                 robotVoice.setSDKCallback(callback);
             }

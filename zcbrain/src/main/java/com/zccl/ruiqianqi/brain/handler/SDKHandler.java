@@ -30,7 +30,7 @@ public class SDKHandler {
     // 人脸识别结果的回调
     public static final int RECV_FACE_DETECT = 5;
     // 唤醒结果的回调
-    public static final int RECV_WAKE_UP = 6;
+    public static final int RECV_VOICE_WAKE_UP = 6;
 
     // 全局上下文
     protected Context mContext;

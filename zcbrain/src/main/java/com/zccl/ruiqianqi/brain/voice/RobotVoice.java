@@ -474,7 +474,7 @@ public class RobotVoice extends VoiceManager {
                 handlerVoiceEntry(mContext.getString(R.string.sensor_voice), true, isUseExpression());
 
                 // 唤醒后的SDK回调
-                sdkHandler.onReceive(SDKHandler.RECV_WAKE_UP, new Gson().toJson(wakeInfo));
+                sdkHandler.onReceive(SDKHandler.RECV_VOICE_WAKE_UP, new Gson().toJson(wakeInfo));
 
             }else {
                 wakeFailure(new Throwable(mContext.getString(R.string.wakeup_invalid)));

@@ -6,7 +6,7 @@ import com.zccl.ruiqianqi.brain.system.ISDKCallback;
 
 interface ISDKService {
     // 异步通知
-    void setCallback(ISDKCallback callback);
+    void setCallback(ISDKCallback callback, boolean isUseSDK);
     // 获取机器人ID
     String getRobotID();
 }
