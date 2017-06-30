@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 
@@ -17,15 +16,10 @@ import com.zccl.ruiqianqi.brain.system.MainBean;
 import com.zccl.ruiqianqi.plugin.voice.AbstractVoice;
 import com.zccl.ruiqianqi.presenter.base.BasePresenter;
 import com.zccl.ruiqianqi.tools.LogUtils;
-import com.zccl.ruiqianqi.tools.MyAppUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
+import com.zccl.ruiqianqi.utils.AppUtils;
 
-import static com.zccl.ruiqianqi.brain.handler.BaseHandler.ACTION_PLAYER;
-import static com.zccl.ruiqianqi.brain.handler.BaseHandler.MUSIC_CONTROL;
-import static com.zccl.ruiqianqi.brain.handler.BaseHandler.PLAYER_CATEGORY_KEY;
-import static com.zccl.ruiqianqi.brain.handler.BaseHandler.PLAYER_RESULT_KEY;
 import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_MY_MUSIC;
-import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_XF_MUSIC;
 import static com.zccl.ruiqianqi.config.MyConfig.TTS_NOT_DEAL_RESPONSE;
 
 /**
@@ -175,42 +169,44 @@ public class SystemPresenter extends BasePresenter {
      */
     public void startTTS(String words, String from, final AbstractVoice.SynthesizerCallback synthesizerCallback) {
         bindMainService();
-        try {
-            mainService.startTTS(words, from, new ITtsCallback.Stub() {
-                @Override
-                public void OnBegin() throws RemoteException {
-                    if(null != synthesizerCallback){
-                        synthesizerCallback.OnBegin();
-                    }
-                }
-
-                @Override
-                public void OnPause() throws RemoteException {
-                    if(null != synthesizerCallback){
-                        synthesizerCallback.OnPause();
-                    }
-                }
-
-                @Override
-                public void OnResume() throws RemoteException {
-                    if(null != synthesizerCallback){
-                        synthesizerCallback.OnResume();
-                    }
-                }
-
-                @Override
-                public void OnComplete(String error, String tag) throws RemoteException {
-                    if(null != synthesizerCallback){
-                        if(StringUtils.isEmpty(error)){
-                            synthesizerCallback.OnComplete(null, tag);
-                        }else {
-                            synthesizerCallback.OnComplete(new Throwable(error), tag);
+        if(null != mainService) {
+            try {
+                mainService.startTTS(words, from, new ITtsCallback.Stub() {
+                    @Override
+                    public void OnBegin() throws RemoteException {
+                        if (null != synthesizerCallback) {
+                            synthesizerCallback.OnBegin();
                         }
                     }
-                }
-            });
-        } catch (RemoteException e) {
-            e.printStackTrace();
+
+                    @Override
+                    public void OnPause() throws RemoteException {
+                        if (null != synthesizerCallback) {
+                            synthesizerCallback.OnPause();
+                        }
+                    }
+
+                    @Override
+                    public void OnResume() throws RemoteException {
+                        if (null != synthesizerCallback) {
+                            synthesizerCallback.OnResume();
+                        }
+                    }
+
+                    @Override
+                    public void OnComplete(String error, String tag) throws RemoteException {
+                        if (null != synthesizerCallback) {
+                            if (StringUtils.isEmpty(error)) {
+                                synthesizerCallback.OnComplete(null, tag);
+                            } else {
+                                synthesizerCallback.OnComplete(new Throwable(error), tag);
+                            }
+                        }
+                    }
+                });
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -324,6 +320,7 @@ public class SystemPresenter extends BasePresenter {
      * 设置所有TTS相关的回调
      */
     private void setAllTtsCallback(){
+        bindMainService();
         if(null != mainService){
             try {
                 mainService.setAllTTSCallback(new IAllTtsCallback.Stub() {
@@ -347,24 +344,22 @@ public class SystemPresenter extends BasePresenter {
         StatePresenter sp = StatePresenter.getInstance();
         String scene = sp.getScene();
 
-        LogUtils.e(TAG, "TTS_STATE = " + state);
+        LogUtils.e(TAG, "TTS_STATE = " + state + "; from = " + from);
         if(TTS_NOT_DEAL_RESPONSE.equals(from)){
             return;
         }
 
         // 音乐播放器
         if(SCENE_MY_MUSIC.equals(scene)){
-            Bundle bundle = new Bundle();
-            bundle.putString(PLAYER_CATEGORY_KEY, MUSIC_CONTROL);
             if(TTS_BEGIN.equals(state)){
-                bundle.putString(PLAYER_RESULT_KEY, "pause");
-                MyAppUtils.sendBroadcast(mContext, ACTION_PLAYER, bundle);
+                AppUtils.controlMusicPlayer(mContext, "pause");
             }
             else if(TTS_COMPLETE.equals(state)){
-                bundle.putString(PLAYER_RESULT_KEY, "play");
-                MyAppUtils.sendBroadcast(mContext, ACTION_PLAYER, bundle);
+                AppUtils.controlMusicPlayer(mContext, "play");
             }
         }
+
+        /*
         // 讯飞音乐
         else if(SCENE_XF_MUSIC.equals(scene)){
             if(TTS_BEGIN.equals(state)){
@@ -376,6 +371,7 @@ public class SystemPresenter extends BasePresenter {
                 xiriPresenter.xfMusicAction("continue", null);
             }
         }
+        */
     }
 }
 

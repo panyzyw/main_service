@@ -13,6 +13,7 @@ import com.zccl.ruiqianqi.presentation.presenter.SystemPresenter;
 import com.zccl.ruiqianqi.tools.CheckUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.config.MyConfigure;
+import com.zccl.ruiqianqi.utils.AppUtils;
 import com.zccl.ruiqianqi.utils.LedUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,12 +23,13 @@ import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_MY_MUSIC;
 import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_MY_TRANS;
 import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_XF_MUSIC;
 import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_XF_VIDEO;
+import static com.zccl.ruiqianqi.brain.semantic.FuncIntent.INTENT_EMOTION_CHAT;
+import static com.zccl.ruiqianqi.config.MyConfig.KEY_RESULT;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_ACCOUNT_EXCEPTION;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_CONNECT_EXCEPTION;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_FAILURE;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_ING;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_SUCCESS;
-import static com.zccl.ruiqianqi.config.MyConfig.TTS_NOT_DEAL_RESPONSE;
 
 /**
  * Created by ruiqianqi on 2017/3/27 0027.
@@ -58,22 +60,47 @@ public class ListenCheck {
      * @return
      */
     public boolean isShowExpression(){
+        StatePresenter sp = StatePresenter.getInstance();
+        String scene = sp.getScene();
+        LogUtils.e(TAG, "currentScene1 = " + scene);
+
         MainBean mainBean = SystemPresenter.getInstance().sendCommandSync(SystemPresenter.GET_CUR_PKG, null);
         String currentPkg = null;
         if(null != mainBean) {
             currentPkg = mainBean.getMsg();
         }
-        LogUtils.e(TAG, currentPkg + "");
-        // 自产音乐播放器是否在运行
+        LogUtils.e(TAG, "currentPkg = " + currentPkg);
+
+        // 记录的是这个场景，但实际上不是，因为非正常退出
+        if(SCENE_MY_MUSIC.equals(scene)){
+            if(!mContext.getString(R.string.my_music_player).equals(currentPkg)){
+                sp.handleScene(SCENE_MY_MUSIC, false);
+            }
+        }
+        else if(SCENE_XF_MUSIC.equals(scene)){
+            if(!mContext.getString(R.string.xf_music_player).equals(currentPkg)){
+                sp.handleScene(SCENE_XF_MUSIC, false);
+            }
+        }
+        else if(SCENE_XF_VIDEO.equals(scene)){
+            if(!mContext.getString(R.string.xf_video_player).equals(currentPkg)){
+                sp.handleScene(SCENE_XF_VIDEO, false);
+            }
+        }
+
+        // 音乐播放器是否在运行
         if(mContext.getString(R.string.my_music_player).equals(currentPkg)){
+            sp.handleScene(SCENE_MY_MUSIC, true);
             return false;
         }
         // 讯飞音乐播放器是否在运行
         else if(mContext.getString(R.string.xf_music_player).equals(currentPkg)){
+            sp.handleScene(SCENE_XF_MUSIC, true);
             return false;
         }
         // 讯飞视频播放器是否在运行
         else if(mContext.getString(R.string.xf_video_player).equals(currentPkg)){
+            sp.handleScene(SCENE_XF_VIDEO, true);
             return false;
         }
 
@@ -82,23 +109,32 @@ public class ListenCheck {
 
     /**
      * 要不要循环监听
+     * @param from 来自哪里
      * @return
      */
-    public boolean isContinueListen(){
+    public boolean isContinueListen(String from){
         StatePresenter sp = StatePresenter.getInstance();
         String scene = sp.getScene();
+        boolean recycleListen = true;
         if(SCENE_MY_MUSIC.equals(scene)){
-            return false;
+            recycleListen = false;
         }
         else if(SCENE_XF_MUSIC.equals(scene)){
-            return false;
+            recycleListen = false;
         }
         else if(SCENE_XF_VIDEO.equals(scene)){
-            return false;
+            recycleListen = false;
         }
-        return true;
+        if(!recycleListen){
+            if("expression".equals(from)){
+                AppUtils.endEmotion(mContext);
+            }
+        }
+        return recycleListen;
     }
 
+
+    /******************************【机器人状态检测】**********************************************/
     /**
      * 检查机器人当前状态
      * @param isTouchOrVoice true触摸和唤醒，false循环监听
@@ -255,22 +291,8 @@ public class ListenCheck {
             }
 
             LogUtils.e(TAG, "isUseExpression = " + isUseExpression);
-            // 触摸，露出笑脸
             if(isUseExpression){
-                // 开启大表情
-                Intent intent = new Intent();
-                ComponentName componentName = new ComponentName("com.yongyida.robot.lockscreen",
-                        "com.yongyida.robot.lockscreen.presentation.view.ExpressionActivity");
-                // 待机表情，眨眼
-                intent.putExtra("action", "init");
-                intent.setComponent(componentName);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                try {
-                    mContext.startActivity(intent);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
+                startListenExpression();
             }
 
         }else {
@@ -314,6 +336,22 @@ public class ListenCheck {
     }
 
     /**
+     * 结束监听表情
+     */
+    protected void endListenFace(){
+
+        // 结束监听
+        LedUtils.endMonitorLed(mContext);
+
+        if(!isUseVoiceFloat)
+            return;
+
+        MindBusEvent.VoiceFloatEvent voiceFloatEvent = new MindBusEvent.VoiceFloatEvent();
+        voiceFloatEvent.setType(MindBusEvent.VoiceFloatEvent.END);
+        EventBus.getDefault().post(voiceFloatEvent);
+    }
+
+    /**
      * 广播音量【0~30】
      * @param volume
      */
@@ -328,19 +366,23 @@ public class ListenCheck {
     }
 
     /**
-     * 结束监听表情
+     * 开启监听大表情
+     * 触摸，露出笑脸
      */
-    protected void endListenFace(){
-
-        // 结束监听
-        LedUtils.endMonitorLed(mContext);
-
-        if(!isUseVoiceFloat)
-            return;
-
-        MindBusEvent.VoiceFloatEvent voiceFloatEvent = new MindBusEvent.VoiceFloatEvent();
-        voiceFloatEvent.setType(MindBusEvent.VoiceFloatEvent.END);
-        EventBus.getDefault().post(voiceFloatEvent);
+    private void startListenExpression(){
+        // 开启大表情
+        Intent intent = new Intent();
+        ComponentName componentName = new ComponentName("com.yongyida.robot.lockscreen",
+                "com.yongyida.robot.lockscreen.presentation.view.ExpressionActivity");
+        // 待机表情，眨眼
+        intent.putExtra("action", "init");
+        intent.setComponent(componentName);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            mContext.startActivity(intent);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }

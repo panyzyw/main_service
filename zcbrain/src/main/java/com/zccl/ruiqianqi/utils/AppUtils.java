@@ -195,14 +195,26 @@ public class AppUtils {
         boolean acCharge = chargePlug == BatteryManager.BATTERY_PLUGGED_AC;
     }
 
+
     /**
-     * 关掉自有播放器
+     * 控制音乐播放器
      * @param context
+     * @param cmd
+     * play
+     * pause
+     * pre
+     * next
+     * stop
+     * exit
+     * soundMax
+     * soundMin
+     * soundUp
+     * soundDown
      */
-    public static void exitMusicPlayer(Context context){
+    public static void controlMusicPlayer(Context context, String cmd){
         Bundle bundle = new Bundle();
         bundle.putString(PLAYER_CATEGORY_KEY, MUSIC_CONTROL);
-        bundle.putString(PLAYER_RESULT_KEY, "退出");
+        bundle.putString(PLAYER_RESULT_KEY, cmd);
         MyAppUtils.sendBroadcast(context, ACTION_PLAYER, bundle);
     }
 

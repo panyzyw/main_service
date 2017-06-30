@@ -32,7 +32,9 @@ import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.MYUIUtils;
 import com.zccl.ruiqianqi.tools.MyAppUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
+import com.zccl.ruiqianqi.tools.config.MyConfigure;
 import com.zccl.ruiqianqi.tools.regex.CmdRegex;
+import com.zccl.ruiqianqi.utils.AppUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -108,6 +110,9 @@ public class FirstHandler extends BaseHandler {
     // 自有播放器正则匹配
     private CmdRegex mMyMusicRegex;
 
+    // 音乐的时候进不进行其他功能
+    private boolean isMusicWithFunc;
+
     public FirstHandler(Context context, RobotVoice robotVoice){
         super(context, robotVoice);
         muteWords = mContext.getResources().getStringArray(R.array.mute_words);
@@ -117,6 +122,8 @@ public class FirstHandler extends BaseHandler {
 
         mXfMusicRegex.load("xf_music");
         mMyMusicRegex.load("my_music");
+
+        isMusicWithFunc = Boolean.parseBoolean(MyConfigure.getValue("music_with_func"));
     }
 
     /**
@@ -172,52 +179,10 @@ public class FirstHandler extends BaseHandler {
      */
     @Override
     public boolean handlerScene(String json, int type){
-
         StatePresenter sp = StatePresenter.getInstance();
         String scene = sp.getScene();
-        LogUtils.e(TAG, "handlerScene1 = " + scene);
+        LogUtils.e(TAG, "currentScene2 = " + scene);
 
-        MainBean mainBean = SystemPresenter.getInstance().sendCommandSync(SystemPresenter.GET_CUR_PKG, null);
-        String currentPkg = null;
-        if(null != mainBean) {
-            currentPkg = mainBean.getMsg();
-        }
-        LogUtils.e(TAG, "currentPkg = " + currentPkg);
-
-        // 记录的是这个场景，但实际上不是，因为非正常退出
-        if(SCENE_MY_MUSIC.equals(scene)){
-            if(!mContext.getString(R.string.my_music_player).equals(currentPkg)){
-                sp.handleScene(SCENE_MY_MUSIC, false);
-            }
-        }
-        else if(SCENE_XF_MUSIC.equals(scene)){
-            if(!mContext.getString(R.string.xf_music_player).equals(currentPkg)){
-                sp.handleScene(SCENE_XF_MUSIC, false);
-            }
-        }
-        else if(SCENE_XF_VIDEO.equals(scene)){
-            if(!mContext.getString(R.string.xf_video_player).equals(currentPkg)){
-                sp.handleScene(SCENE_XF_VIDEO, false);
-            }
-        }
-
-        // 记录当前场景
-        // 播放器
-        if(mContext.getString(R.string.my_music_player).equals(currentPkg)){
-            sp.handleScene(SCENE_MY_MUSIC, true);
-        }
-        // 讯飞音乐
-        else if(mContext.getString(R.string.xf_music_player).equals(currentPkg)){
-            sp.handleScene(SCENE_XF_MUSIC, true);
-        }
-        // 讯飞视频
-        else if(mContext.getString(R.string.xf_video_player).equals(currentPkg)){
-            sp.handleScene(SCENE_XF_VIDEO, true);
-        }
-
-
-        scene = sp.getScene();
-        LogUtils.e(TAG, "handlerScene2 = " + scene);
         if(UNDERSTAND_SUCCESS == type){
             BaseInfo baseInfo = JsonUtils.parseJson(json, BaseInfo.class);
             if (null == baseInfo) {
@@ -246,48 +211,6 @@ public class FirstHandler extends BaseHandler {
                 return true;
             }
 
-            // 讯飞音乐
-            else if(SCENE_XF_MUSIC.equals(scene)){
-
-                if(FUNC_MUSIC.equals(funcType) || FUNC_MUSIC_CTRL.equals(funcType)){
-                    XiriPresenter xiriPresenter = new XiriPresenter();
-                    xiriPresenter.flyTekYuDian(json, FUNC_MUSIC);
-                    return true;
-                }else {
-                    String command = mXfMusicRegex.filter(words);
-                    if(!StringUtils.isEmpty(command)){
-                        XiriPresenter xiriPresenter = new XiriPresenter();
-                        xiriPresenter.xfMusicAction(command, words);
-                        return true;
-                    }else {
-                        // 其他功能也要处理
-                        return false;
-                    }
-                }
-            }
-
-            // 讯飞视频
-            else if(SCENE_XF_VIDEO.equals(scene)){
-                if(FUNC_VIDEO.equals(funcType) || FUNC_VIDEO_CTRL.equals(funcType)) {
-                    XiriPresenter xiriPresenter = new XiriPresenter();
-                    xiriPresenter.flyTekYuDian(json, FUNC_VIDEO);
-                    return true;
-                }else {
-                    if(matchXfVideo(funcType) || 0 != baseInfo.getSuccess()){
-                        XiriPresenter xiriPresenter = new XiriPresenter();
-                        String text = catchXfVideo(baseInfo.getText());
-                        if(StringUtils.isEmpty(text)) {
-                            xiriPresenter.sendCommand(baseInfo.getText());
-                        }else {
-                            xiriPresenter.sendCommand(text);
-                        }
-                        return true;
-                    }else {
-                        return false;
-                    }
-                }
-            }
-
             //【音乐场景】
             else if(SCENE_MY_MUSIC.equals(scene)){
 
@@ -314,27 +237,73 @@ public class FirstHandler extends BaseHandler {
                 else {
                     String command = mMyMusicRegex.filter(words);
                     if(!StringUtils.isEmpty(command)){
-                        bundle.putString(PLAYER_CATEGORY_KEY, MUSIC_CONTROL);
-                        //bundle.putString(PLAYER_RESULT_KEY, words);
-                        bundle.putString(PLAYER_RESULT_KEY, command);
-                        MyAppUtils.sendBroadcast(mContext, ACTION_PLAYER, bundle);
+                        //AppUtils.controlMusicPlayer(mContext, words);
+                        AppUtils.controlMusicPlayer(mContext, command);
                         return true;
                     }else {
-                        // 其他功能暂时不处理，但是还要改
-                        return false;
+                        // 其他功能也要处理
+                        return !isMusicWithFunc;
+                    }
+                }
+            }
+
+            // 【讯飞音乐】
+            else if(SCENE_XF_MUSIC.equals(scene)){
+
+                if(FUNC_MUSIC.equals(funcType) || FUNC_MUSIC_CTRL.equals(funcType)){
+                    XiriPresenter xiriPresenter = new XiriPresenter();
+                    xiriPresenter.flyTekYuDian(json, FUNC_MUSIC);
+                    return true;
+                }else {
+                    String command = mXfMusicRegex.filter(words);
+                    if(!StringUtils.isEmpty(command)){
+                        XiriPresenter xiriPresenter = new XiriPresenter();
+                        xiriPresenter.xfMusicAction(command, words);
+                        return true;
+                    }else {
+                        // 其他功能也要处理
+                        return !isMusicWithFunc;
+                    }
+                }
+            }
+
+            // 【讯飞视频】
+            else if(SCENE_XF_VIDEO.equals(scene)){
+                if(FUNC_VIDEO.equals(funcType) || FUNC_VIDEO_CTRL.equals(funcType)) {
+                    XiriPresenter xiriPresenter = new XiriPresenter();
+                    xiriPresenter.flyTekYuDian(json, FUNC_VIDEO);
+                    return true;
+                }else {
+                    if(matchXfVideo(funcType) || 0 != baseInfo.getSuccess()){
+                        XiriPresenter xiriPresenter = new XiriPresenter();
+                        String text = catchXfVideo(baseInfo.getText());
+                        if(StringUtils.isEmpty(text)) {
+                            xiriPresenter.sendCommand(baseInfo.getText());
+                        }else {
+                            xiriPresenter.sendCommand(text);
+                        }
+                        return true;
+                    }else {
+                        // 其他功能也要处理
+                        return !isMusicWithFunc;
                     }
                 }
             }
 
         }else {
 
-            // 如果当前是翻译场景
+            // 【当前是翻译场景】
             if(SCENE_MY_TRANS.equals(scene)){
                 MindBusEvent.TransEvent transEvent = new MindBusEvent.TransEvent();
                 transEvent.setType(TRANS_FAILURE);
                 transEvent.setText(json);
                 EventBus.getDefault().post(transEvent);
                 return true;
+            }
+            //【音乐场景】
+            else if(SCENE_MY_MUSIC.equals(scene)){
+                // 没有识别到任何东西，继续播放
+                AppUtils.controlMusicPlayer(mContext, "play");
             }
             // 止错于第一步
             else {

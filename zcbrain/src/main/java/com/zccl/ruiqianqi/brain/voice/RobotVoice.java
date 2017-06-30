@@ -335,6 +335,7 @@ public class RobotVoice extends VoiceManager {
     /**
      * 取消监听
      * 隐藏大表情
+     * @param destroyExpression 是否结束大表情
      */
     protected void cancelExpression(boolean destroyExpression){
         LogUtils.e(TAG, "cancelExpression");
@@ -1046,10 +1047,11 @@ public class RobotVoice extends VoiceManager {
 
     /**
      * 是不是继续循环监听
+     * @param from
      * @return
      */
-    public boolean isContinueListen(){
-        return mListenCheck.isContinueListen();
+    public boolean isContinueListen(String from){
+        return mListenCheck.isContinueListen(from);
     }
 
     /**********************************【SDK相关方法】*********************************************/

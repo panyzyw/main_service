@@ -488,7 +488,8 @@ public class SystemUtils {
 
     /**
      * 保持屏幕常亮
-     *  as long as this window is visible to the user, keep the device's screen turned on and bright.
+     * android:keepScreenOn="true"
+     * as long as this window is visible to the user, keep the device's screen turned on and bright.
      * @param activity
      */
     public static void keepScreenOn(Activity activity){

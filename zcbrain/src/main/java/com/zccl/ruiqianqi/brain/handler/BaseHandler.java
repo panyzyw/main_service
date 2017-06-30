@@ -25,15 +25,14 @@ public abstract class BaseHandler {
     // 播放数据的KEY
     public static final String PLAYER_RESULT_KEY = "result";
 
+    // 翻译场景
+    public static final String SCENE_MY_TRANS = "scene_my_trans";
+    // 音乐场景
+    public static final String SCENE_MY_MUSIC = "scene_my_music";
     // 讯飞音乐场景
     public static final String SCENE_XF_MUSIC = "scene_xf_music";
     // 讯飞视频场景
     public static final String SCENE_XF_VIDEO = "scene_xf_video";
-    // 音乐场景
-    public static final String SCENE_MY_MUSIC = "scene_my_music";
-    // 翻译场景
-    public static final String SCENE_MY_TRANS = "scene_my_trans";
-
 
     // 全局上下文
     protected Context mContext;

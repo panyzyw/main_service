@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_MY_MUSIC;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_APP;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_CALL;
 import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_CHAT;
@@ -491,13 +492,14 @@ public class MindHandler {
                     return;
                 }
 
+                MainBusEvent.ListenEvent listenEvent = (MainBusEvent.ListenEvent) obj;
+                LogUtils.e(TAG, "RECYCLE_LISTEN from = " + listenEvent.getFrom());
+
                 // 某些界面不要循环监听
-                if(!mRobotVoice.isContinueListen()){
+                if(!mRobotVoice.isContinueListen(listenEvent.getFrom())){
                     return;
                 }
 
-                MainBusEvent.ListenEvent listenEvent = (MainBusEvent.ListenEvent) obj;
-                LogUtils.e(TAG, "RECYCLE_LISTEN from = " + listenEvent.getFrom());
                 if(StringUtils.isEmpty(listenEvent.getFrom())){
 
                 }else {
@@ -515,6 +517,9 @@ public class MindHandler {
                 if(StringUtils.isEmpty(listenEvent.getFrom())){
 
                 }else {
+
+                    // 处理停止监听的逻辑
+                    handleStopListen(listenEvent.getFrom());
 
                     // 单击悬浮按钮结束监听
                     if(FloatListen.TAG.equals(listenEvent.getFrom())){
@@ -546,4 +551,16 @@ public class MindHandler {
 
     }
 
+
+    /**
+     * 处理单击悬浮按钮，停止监听
+     * @param from
+     */
+    private void handleStopListen(String from){
+        StatePresenter sp = StatePresenter.getInstance();
+        String scene = sp.getScene();
+        if(SCENE_MY_MUSIC.equals(scene)){
+            AppUtils.controlMusicPlayer(mContext, "play");
+        }
+    }
 }
