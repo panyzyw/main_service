@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.zccl.ruiqianqi.mind.eventbus.MainBusEvent;
 import com.zccl.ruiqianqi.tools.LogUtils;
+import com.zccl.ruiqianqi.tools.MYUIUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
 import com.zccl.ruiqianqi.zcui.R;
 
@@ -73,6 +74,8 @@ public class SensorReceiver extends BroadcastReceiver {
 
                 LogUtils.e(TAG, "touchValue = " + touchValue);
                 LogUtils.e(TAG, "wakeValue = " + wakeValue);
+
+                MYUIUtils.showToast(context, "touch = " + touchValue + " + " + wakeValue);
 
                 // 触摸唤醒、语音唤醒
                 if (TOUCH_HEAD_VALUE.equals(touchValue)) {

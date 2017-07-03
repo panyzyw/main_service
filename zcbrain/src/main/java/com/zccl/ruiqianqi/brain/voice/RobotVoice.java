@@ -453,7 +453,7 @@ public class RobotVoice extends VoiceManager {
 
                     LogUtils.e(TAG, canLocal + " - localization - " + cp.isLocalization());
 
-                    cp.setLocalization(true);
+                    //cp.setLocalization(true);
                     // 声源定位在哪唤醒，拾音波束就在哪，如果进行声源定位了，就要进行波束重置
                     // 如果没有进行声源定位，拾音波束就是上一次唤醒的波束
                     if(canLocal && cp.isLocalization()){
