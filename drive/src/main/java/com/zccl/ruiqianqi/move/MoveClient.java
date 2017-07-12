@@ -10,8 +10,6 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 
-import com.yongyida.robot.motorcontrol.MotorController;
-
 /**
  * Created by ruiqianqi on 2017/1/17 0017.
  */

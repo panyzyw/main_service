@@ -31,6 +31,8 @@ public class SDKHandler {
     public static final int RECV_FACE_DETECT = 5;
     // 唤醒结果的回调
     public static final int RECV_VOICE_WAKE_UP = 6;
+    // 紧急按钮
+    public static final int RECV_SENSOR_SOS = 7;
 
     // 全局上下文
     protected Context mContext;

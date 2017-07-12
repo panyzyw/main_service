@@ -96,7 +96,7 @@ public class AlsaRecorder {
 		mPcmListener = listener;
 	
 		Thread pcmOpenThread = new Thread() {
-			
+
 			@Override
 			public void run() {
 				// 当pcm设备处于打开状态时，pcm_open将会一直阻塞，故新开线程调用
@@ -107,7 +107,7 @@ public class AlsaRecorder {
 				}
 			}
 		};
-		
+
 		synchronized (mSyn) {
 			try {
 				pcmOpenThread.start();
@@ -191,6 +191,11 @@ public class AlsaRecorder {
 		private boolean mStop = false;
 		
 		public void stopRun() {
+			Log.e(TAG, "close five mai");
+			AlsaJni.pcm_close(pcmHandle);
+			pcmHandle = 0;
+			mIsRecording = false;
+			Log.e(TAG, "quit record");
 			mStop = true;
 		}
 		
@@ -205,12 +210,15 @@ public class AlsaRecorder {
 					mPcmListener.onPcmData(pcmData, pcmData.length);
 				}
 			}
+			Log.e(TAG, "five mai is closed");
+
+			/*
 			Log.e(TAG, "close five mai");
 			AlsaJni.pcm_close(pcmHandle);
-			mIsRecording = false;
 			pcmHandle = 0;
-
+			mIsRecording = false;
 			Log.e(TAG, "quit record");
+			*/
 		}
 		
 	}

@@ -3,7 +3,6 @@ package com.zccl.ruiqianqi.brain.voice;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemProperties;
 
 import com.google.gson.Gson;
 import com.iflytek.cloud.SpeechError;
@@ -14,7 +13,6 @@ import com.zccl.ruiqianqi.mind.voice.impl.VoiceManager;
 import com.zccl.ruiqianqi.plugin.voice.AbstractVoice;
 import com.zccl.ruiqianqi.plugin.voice.WakeInfo;
 import com.zccl.ruiqianqi.presentation.presenter.PersistPresenter;
-import com.zccl.ruiqianqi.presentation.presenter.StatePresenter;
 import com.zccl.ruiqianqi.presentation.presenter.SystemPresenter;
 import com.zccl.ruiqianqi.tools.CheckUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
@@ -47,8 +45,7 @@ public class RobotVoice extends VoiceManager {
 
     // 监听入口处理类
     private ListenCheck mListenCheck;
-    // 声源定位
-    private Localization mLocalization;
+
     // 处理类
     private MindHandler mMindHandler;
     // SDK处理类
@@ -98,7 +95,7 @@ public class RobotVoice extends VoiceManager {
     private boolean isUseUnderstand = false;
 
     // 是不是小勇的APPID
-    private String isAppIdXiaoYong;
+    //private String isAppIdXiaoYong;
 
     public RobotVoice(Context context) {
         super(context);
@@ -110,7 +107,6 @@ public class RobotVoice extends VoiceManager {
      */
     private void init(){
         mListenCheck = new ListenCheck(mContext, this);
-        mLocalization = new Localization(mContext);
         mMindHandler = new MindHandler(mContext, this);
         sdkHandler = new SDKHandler(mContext, this);
 
@@ -120,7 +116,7 @@ public class RobotVoice extends VoiceManager {
         // 开启音频输入线程
         MyRxUtils.doNewThreadRun(new Consumer());
 
-        isAppIdXiaoYong = mContext.getString(R.string.is_xiaoyong);
+        //isAppIdXiaoYong = mContext.getString(R.string.is_xiaoyong);
         mTestVipChannel = new TestVipChannel(mContext, this);
         mMindHandler.setVipTest(mTestVipChannel);
 
@@ -179,12 +175,16 @@ public class RobotVoice extends VoiceManager {
      *              touch_head_wake
      *              voice_wake
      *              somewhere_else
+     * @param angle            声源定位角度
      * @param isUseVoiceFloat true显示悬浮表情，false不显示悬浮表情
      * @param isUseExpression true显示大表情，  false不显示大表情
      */
-    public void handlerVoiceEntry(String fromWhere, boolean isUseVoiceFloat, boolean isUseExpression){
+    public void handlerVoiceEntry(String fromWhere, int angle, boolean isUseVoiceFloat, boolean isUseExpression){
 
         LogUtils.e(TAG, "fromWhere = " + fromWhere + " - " + sdkHandler.getSDKCallback());
+
+        // 声源定位
+        mListenCheck.localization(angle);
 
         // 有SDK，就进行SDK处理，下面就不处理了
         if(null != sdkHandler.getSDKCallback()){
@@ -219,15 +219,15 @@ public class RobotVoice extends VoiceManager {
         if(isUseVoiceFloat) {
             // 触摸唤醒，第一次，需要说话
             if (mContext.getString(R.string.sensor_touch).equals(fromWhere)) {
-                mListenCheck.startCheckAndListen(true, true, isUseExpression);
+                mListenCheck.startCheckAndListen(true, angle, true, isUseExpression);
             }
             // 语音唤醒，第一次，需要说话
             else if (mContext.getString(R.string.sensor_voice).equals(fromWhere)) {
-                mListenCheck.startCheckAndListen(true, true, isUseExpression);
+                mListenCheck.startCheckAndListen(true, angle, true, isUseExpression);
             }
             // 循环监听，不需要说话
             else {
-                mListenCheck.startCheckAndListen(false, false, isUseExpression);
+                mListenCheck.startCheckAndListen(false, angle, false, isUseExpression);
             }
         }
         // 不显示悬浮表情
@@ -425,43 +425,6 @@ public class RobotVoice extends VoiceManager {
                 // 唤醒亮屏，对手机好像没什么用
                 SystemUtils.wakeUp(mContext);
 
-                if(0 != wakeInfo.getAngle()){
-                    StatePresenter sp = StatePresenter.getInstance();
-                    boolean canLocal = true;
-
-                    /*
-                    // 机器人在电话中
-                    if(sp.isCalling()){
-                        canLocal = false;
-                    }
-                    // 机器人正在视频中
-                    else if(sp.isVideoing()){
-                        canLocal = false;
-                    }
-                    // 机器人正在工厂模式中
-                    else
-                    */
-                    if(sp.isFactory()){
-                        canLocal = false;
-                        LogUtils.e(TAG, "isFactory");
-                    }
-                    // 机器人在控制中
-                    else if(sp.isInControl()){
-                        canLocal = false;
-                        LogUtils.e(TAG, "isInControl");
-                    }
-
-                    LogUtils.e(TAG, canLocal + " - localization - " + cp.isLocalization());
-
-                    //cp.setLocalization(true);
-                    // 声源定位在哪唤醒，拾音波束就在哪，如果进行声源定位了，就要进行波束重置
-                    // 如果没有进行声源定位，拾音波束就是上一次唤醒的波束
-                    if(canLocal && cp.isLocalization()){
-                        mLocalization.rotate(wakeInfo.getAngle());
-                        setRealBeam(0);
-                    }
-
-                }
 
                 // 唤醒之后，进行人脸识别
                 Intent intent = new Intent("com.yongyida.robot.VoiceLocalization");
@@ -469,10 +432,12 @@ public class RobotVoice extends VoiceManager {
                 intent.putExtra("angle", wakeInfo.getAngle());
                 mContext.sendBroadcast(intent);
 
+
                 // 非触摸、有表情、唤醒
                 setTouchWake(false);
                 setUseExpression(true);
-                handlerVoiceEntry(mContext.getString(R.string.sensor_voice), true, isUseExpression());
+                handlerVoiceEntry(mContext.getString(R.string.sensor_voice), wakeInfo.getAngle(), true, isUseExpression());
+
 
                 // 唤醒后的SDK回调
                 sdkHandler.onReceive(SDKHandler.RECV_VOICE_WAKE_UP, new Gson().toJson(wakeInfo));

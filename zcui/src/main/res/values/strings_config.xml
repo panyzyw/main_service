@@ -11,6 +11,7 @@
     <string name="sensor_left_arm">left_arm</string>
     <string name="sensor_right_arm">right_arm</string>
     <string name="sensor_dance">dance</string>
+    <string name="sensor_sos">sos</string>
     <string name="hdmi_long_press">long_press</string>
     <string name="hdmi_short_press">short_press</string>
     <string name="screen_on">screen_on</string>

@@ -20,6 +20,12 @@ if(project.hasProperty("app.version") && file(project.property("app.version")).e
     props.load(new FileInputStream(file(project.property("app.version"))))
     versionCodeApp = props[wakeup + 'versionCode']
     versionNameApp = props[wakeup + 'versionName']
+    if(null == versionCodeApp){
+        versionCodeApp = props['xiaoyongversionCode']
+    }
+    if(null == versionNameApp){
+        versionNameApp = props['xiaoyongversionName']
+    }
     if("gspeech" == nlu){
         versionCodeApp = props['gspeechversionCode']
         versionNameApp = props['gspeechversionName']
@@ -30,9 +36,17 @@ if(project.hasProperty("app.version") && file(project.property("app.version")).e
 android {
 
     sourceSets.main {
-        resources.srcDirs = ['src/main/resources/', 'src/main/ext_res/'+ wakeup + '/resources']
-        res.srcDirs = ["src/main/res", 'src/main/ext_res/'+ wakeup + '/res']
-        java.srcDirs = ["src/main/java", 'src/main/ext_src/'+ wakeup + '/java']
+
+        if(file(".\\src\\main\\ext_res\\" + wakeup).exists()){
+            resources.srcDirs = ['src/main/resources/', 'src/main/ext_res/'+ wakeup + '/resources']
+            res.srcDirs = ["src/main/res", 'src/main/ext_res/'+ wakeup + '/res']
+            java.srcDirs = ["src/main/java", 'src/main/ext_src/'+ wakeup + '/java']
+        }else {
+            resources.srcDirs = ['src/main/resources/', 'src/main/ext_res/xiaoyong/resources']
+            res.srcDirs = ["src/main/res", 'src/main/ext_res/xiaoyong/res']
+            java.srcDirs = ["src/main/java", 'src/main/ext_src/xiaoyong/java']
+        }
+
     }
 
     defaultConfig {

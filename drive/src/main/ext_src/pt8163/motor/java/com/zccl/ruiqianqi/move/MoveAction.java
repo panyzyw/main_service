@@ -249,7 +249,10 @@ public class MoveAction {
      * @param time_distance
      */
     public void reverseLeft(int time_distance) throws RemoteException {
-
+        bindMotorService();
+        if(null != mMotorService){
+            //mMotorService.backTurnLeft(time_distance);
+        }
     }
 
     /**
@@ -258,7 +261,10 @@ public class MoveAction {
      * @param time_distance
      */
     public void reverseRight(int time_distance) throws RemoteException {
-
+        bindMotorService();
+        if(null != mMotorService){
+            //mMotorService.backTurnRight(time_distance);
+        }
     }
 
     /***************************************【头部操作】*******************************************/

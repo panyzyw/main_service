@@ -333,7 +333,7 @@ public class MindHandler {
                         mRobotVoice.setRealBeam(0);
                     }
                     mRobotVoice.setUseExpression(true);
-                    mRobotVoice.handlerVoiceEntry(mContext.getString(R.string.sensor_touch), true, mRobotVoice.isUseExpression());
+                    mRobotVoice.handlerVoiceEntry(mContext.getString(R.string.sensor_touch), 0,true, mRobotVoice.isUseExpression());
 
                     // SDK处理
                     mRobotVoice.onSDKReceive(SDKHandler.RECV_SENSOR_HEADER, null);
@@ -376,13 +376,23 @@ public class MindHandler {
                     // SDK处理
                     mRobotVoice.onSDKReceive(SDKHandler.RECV_SENSOR_RIGHT_ARM, null);
                 }
-
                 // 摸双肩
                 else if(text.equals(mContext.getString(R.string.sensor_dance))){
                     handlerFunc(mContext.getString(R.string.sensor_dance));
 
                     // SDK处理
                     mRobotVoice.onSDKReceive(SDKHandler.RECV_SENSOR_LEFT_RIGHT_ARM, null);
+                }
+                // 紧急按钮
+                else if(text.equals(mContext.getString(R.string.sensor_sos))){
+                    // SDK处理
+                    mRobotVoice.onSDKReceive(SDKHandler.RECV_SENSOR_SOS, null);
+
+                    // 如果是工厂模式就发音
+                    StatePresenter sp = StatePresenter.getInstance();
+                    if(sp.isFactory()){
+                        mRobotVoice.startTTS("SOS", null);
+                    }
                 }
 
                 // 打开五麦
@@ -505,7 +515,7 @@ public class MindHandler {
                 }else {
                     LogUtils.e(TAG, "VoiceFloat = " + listenEvent.isUseVoiceFloat());
                     LogUtils.e(TAG, "Expression = " + listenEvent.isUseExpression());
-                    mRobotVoice.handlerVoiceEntry(listenEvent.getFrom(), listenEvent.isUseVoiceFloat(), listenEvent.isUseExpression());
+                    mRobotVoice.handlerVoiceEntry(listenEvent.getFrom(), 0, listenEvent.isUseVoiceFloat(), listenEvent.isUseExpression());
                 }
             }
 

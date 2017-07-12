@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
 apply from: '../buildshell/library.gradle'
+//apply from: '../buildshell/ndk.gradle'
 
 def mic_ver = ""
 def app_id = ""
@@ -18,16 +19,20 @@ if(project.hasProperty("config") && file(project.property("config")).exists()) {
 android{
     sourceSets.main {
         //aidl.srcDirs = ['src/main/aidl']
+
         java.srcDirs = ["src/main/java",
                         "src/main/" + mic_ver + "/"+ platform + "/java"]
-        res.srcDir "src/main/res"
-        //disable automatic ndk-build call
-        jni.srcDirs = []
+        assets.srcDirs = ["src/main/assets",
+                          "src/main/"+ mic_ver + "/wakeup/" + wakeup + "/" + "assets"]
+
         jniLibs.srcDirs = ['src/main/libs',
                            'src/main/' + mic_ver + '/'+ platform + '/libs',
                            'src/main/ext_res/'+ app_id + '/libs']
+
+        res.srcDir "src/main/res"
+        //disable automatic ndk-build call
+        jni.srcDirs = []
         manifest.srcFile "src/main/AndroidManifest.xml"
-        assets.srcDirs = ["src/main/assets", "src/main/"+ mic_ver + "/wakeup/" + wakeup + "/" + "assets"]
         resources.srcDirs = ['src/main/resources/']
     }
 }

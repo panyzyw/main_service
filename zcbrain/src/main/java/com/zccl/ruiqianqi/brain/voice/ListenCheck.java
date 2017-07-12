@@ -7,6 +7,7 @@ import android.content.Intent;
 import com.zccl.ruiqianqi.brain.R;
 import com.zccl.ruiqianqi.brain.eventbus.MindBusEvent;
 import com.zccl.ruiqianqi.brain.system.MainBean;
+import com.zccl.ruiqianqi.presentation.presenter.PersistPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.ReportPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.StatePresenter;
 import com.zccl.ruiqianqi.presentation.presenter.SystemPresenter;
@@ -18,13 +19,14 @@ import com.zccl.ruiqianqi.utils.LedUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static com.zccl.ruiqianqi.brain.eventbus.MindBusEvent.TransEvent.TRANS_EXIT;
 import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_MY_MUSIC;
 import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_MY_TRANS;
 import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_XF_MUSIC;
 import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_XF_VIDEO;
-import static com.zccl.ruiqianqi.brain.semantic.FuncIntent.INTENT_EMOTION_CHAT;
-import static com.zccl.ruiqianqi.config.MyConfig.KEY_RESULT;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_ACCOUNT_EXCEPTION;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_CONNECT_EXCEPTION;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_FAILURE;
@@ -44,17 +46,26 @@ public class ListenCheck {
     private Context mContext;
     // 音频处理类
     private RobotVoice mRobotVoice;
+    // 声源定位
+    private Localization mLocalization;
     // 唤醒问候语
     private String[] helloWords;
+    // 唤醒后，如果是当然应用，不响应
+    private List<String> notWakeupPkgs;
+    // 当前包名
+    private String currentPkg;
     // 用不用显示悬浮表情
     private boolean isUseVoiceFloat;
 
     public ListenCheck(Context context, RobotVoice robotVoice){
         this.mContext = context;
         this.mRobotVoice = robotVoice;
+        mLocalization = new Localization(mContext);
         helloWords = mContext.getResources().getStringArray(R.array.hello_words);
+        notWakeupPkgs = Arrays.asList(mContext.getResources().getStringArray(R.array.not_wakeup_pkg));
     }
 
+    /**********************************************************************************************/
     /**
      * 要不要显示大表情
      * @return
@@ -65,7 +76,6 @@ public class ListenCheck {
         LogUtils.e(TAG, "currentScene1 = " + scene);
 
         MainBean mainBean = SystemPresenter.getInstance().sendCommandSync(SystemPresenter.GET_CUR_PKG, null);
-        String currentPkg = null;
         if(null != mainBean) {
             currentPkg = mainBean.getMsg();
         }
@@ -125,6 +135,7 @@ public class ListenCheck {
         else if(SCENE_XF_VIDEO.equals(scene)){
             recycleListen = false;
         }
+
         if(!recycleListen){
             if("expression".equals(from)){
                 AppUtils.endEmotion(mContext);
@@ -240,17 +251,37 @@ public class ListenCheck {
     }
 
     /**
+     * 声源定位选项
+     * @param angle
+     */
+    protected void localization(int angle){
+        // 不响应唤醒的应用
+        if(null != notWakeupPkgs && notWakeupPkgs.contains(currentPkg)){
+            return;
+        }
+
+        // 声源定位
+        PersistPresenter cp = PersistPresenter.getInstance();
+        if(angle > 0 && cp.isLocalization()){
+            mLocalization.rotate(angle);
+            mRobotVoice.setRealBeam(0);
+        }
+    }
+
+
+    /**
      * 需要播放问候语后再开启监听
-     * @param isTouchOrVoice true触摸和唤醒，false循环监听
-     * @param welcome         true说唤醒语，false不说唤醒语
+     * @param isTouchOrVoice   true触摸和唤醒，false循环监听
+     * @param angle             声源定位角度
+     * @param isPlayWelcome    true说唤醒语，false不说唤醒语
      * @param isUseExpression     是不是显示大表情
      */
-    protected void startCheckAndListen(boolean isTouchOrVoice, boolean welcome, boolean isUseExpression){
+    protected void startCheckAndListen(boolean isTouchOrVoice, int angle, boolean isPlayWelcome, boolean isUseExpression){
 
-        final int isGo = checkStatus(isTouchOrVoice);
-        if(0 == isGo || -3 == isGo) {
+        final int isGoon = checkStatus(isTouchOrVoice);
+        if(0 == isGoon || -3 == isGoon) {
 
-            if(-3 == isGo){
+            if(-3 == isGoon){
                 boolean isOfflineFunc = Boolean.parseBoolean(MyConfigure.getValue("off_line_func"));
                 if(!isOfflineFunc) {
                     // 提示需要联网
@@ -259,14 +290,14 @@ public class ListenCheck {
                 }
             }
 
-            // 说唤醒语
-            if(welcome) {
+            // 初始触发，说唤醒语
+            if(isPlayWelcome) {
                 String word = helloWords[CheckUtils.getRandom(helloWords.length)];
                 mRobotVoice.startTTS(word, new Runnable() {
                     @Override
                     public void run() {
                         // 有网络，正常监听
-                        if(0 == isGo) {
+                        if(0 == isGoon) {
                             mRobotVoice.startListenOnline();
                         }
                         // 网络断开了，开启离线
@@ -280,7 +311,7 @@ public class ListenCheck {
             // 连续监听，不说唤醒语
             else {
                 // 有网络，正常监听
-                if(0 == isGo) {
+                if(0 == isGoon) {
                     mRobotVoice.startListenOnline();
                 }
                 // 网络断开了，开启离线
@@ -290,7 +321,7 @@ public class ListenCheck {
                 startListenFace();
             }
 
-            LogUtils.e(TAG, "isUseExpression = " + isUseExpression);
+            // 开启大表情
             if(isUseExpression){
                 startListenExpression();
             }

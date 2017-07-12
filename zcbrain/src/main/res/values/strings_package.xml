@@ -7,4 +7,9 @@
     <string name="xf_music_player">com.lz.smart.music</string>
     <!-- 讯飞视频播放器 -->
     <string name="xf_video_player">com.zbmv</string>
+
+    <!-- 在最上层，不进行唤醒处理 -->
+    <string-array name="not_wakeup_pkg">
+        <item>com.popsand.echotutor</item>
+    </string-array>
 </resources>

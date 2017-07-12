@@ -222,7 +222,7 @@ public class VoiceWakeUp {
          */
         @Override
         public void onAudio(byte[] audio, int audioLen, int param1, int param2) {
-            //LogUtils.e(TAG, "onAudio: "+audioLen);
+            //LogUtils.e(TAG, "onAudio: " + audioLen);
             if (null != mWakeupCallback) {
                 if(!mWakeupCallback.isTouchWake()) {
                     mWakeupCallback.onAudio(audio, audioLen);

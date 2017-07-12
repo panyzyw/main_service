@@ -49,14 +49,21 @@ public class MyAudioRecorder {
     private int sampleRate = 16000;
     /**
      * 声道，输入的单声道
+     * {@link AudioFormat#CHANNEL_IN_MONO} and {@link AudioFormat#CHANNEL_IN_STEREO}.
+     * {@link AudioFormat#CHANNEL_IN_MONO} is guaranteed to work on all devices.
+     *
+     *  private int channelConfig = AudioFormat.CHANNEL_IN_DEFAULT;
+     * 设置音频的录制的声道
+     * CHANNEL_IN_MONO   为单声道
+     * CHANNEL_IN_STEREO 为双声道，
      */
-    // private int channelConfig = AudioFormat.CHANNEL_IN_DEFAULT;
-    // 设置音频的录制的声道
-    // CHANNEL_IN_MONO   为单声道
-    // CHANNEL_IN_STEREO 为双声道，
+
     private int channelConfig = AudioFormat.CHANNEL_IN_MONO;
     /**
      * 位长16bit，每次采样用多少字节来存
+     * {@link AudioFormat#ENCODING_PCM_8BIT},
+     * {@link AudioFormat#ENCODING_PCM_16BIT},
+     * {@link AudioFormat#ENCODING_PCM_FLOAT}.
      */
     private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
 
