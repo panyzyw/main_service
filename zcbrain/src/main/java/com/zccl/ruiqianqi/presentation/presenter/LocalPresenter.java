@@ -1,13 +1,13 @@
 package com.zccl.ruiqianqi.presentation.presenter;
 
 import com.zccl.ruiqianqi.brain.eventbus.MindBusEvent;
-import com.zccl.ruiqianqi.socket.localsocket.LocalServer;
+import com.zccl.ruiqianqi.domain.tasks.localtask.BaseLocalTask;
 import com.zccl.ruiqianqi.domain.tasks.localtask.LocalAddFriendTask;
 import com.zccl.ruiqianqi.domain.tasks.localtask.LocalDelFriendTask;
 import com.zccl.ruiqianqi.domain.tasks.localtask.LocalForwardTask;
 import com.zccl.ruiqianqi.domain.tasks.localtask.LocalLoginTask;
-import com.zccl.ruiqianqi.domain.tasks.localtask.BaseLocalTask;
 import com.zccl.ruiqianqi.presenter.base.BasePresenter;
+import com.zccl.ruiqianqi.socket.localsocket.LocalServer;
 import com.zccl.ruiqianqi.tools.StringUtils;
 import com.zccl.ruiqianqi.tools.executor.rxutils.MyRxUtils;
 
@@ -31,6 +31,7 @@ import static com.zccl.ruiqianqi.config.RemoteProtocol.B_AGORA_VIDEO_REPLY;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_AGORA_VIDEO_REPLY_ACK;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_MEETING_REPORT;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_MEETING_REPORT_ACK;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.B_TUTK_GET_ID;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_WEB_RTC_VIDEO_CANCEL;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_WEB_RTC_VIDEO_CANCEL_ACK;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_WEB_RTC_VIDEO_INVITE;
@@ -72,9 +73,12 @@ public class LocalPresenter extends BasePresenter implements LocalServer.LocalSo
         mLocalTaskMap.put(B_WEB_RTC_VIDEO_CANCEL, LocalForwardTask.class);
         mLocalTaskMap.put(B_WEB_RTC_VIDEO_CANCEL_ACK, LocalForwardTask.class);
 
-        // 【视频会议时间流量上报】
+        //【视频会议时间流量上报】
         mLocalTaskMap.put(B_MEETING_REPORT, LocalForwardTask.class);
         mLocalTaskMap.put(B_MEETING_REPORT_ACK, LocalForwardTask.class);
+
+        //【TUTK】
+        mLocalTaskMap.put(B_TUTK_GET_ID, LocalForwardTask.class);
 
         // 开启本地服务器
         mLocalServer = new LocalServer();

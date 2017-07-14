@@ -333,7 +333,7 @@ public class MindHandler {
                         mRobotVoice.setRealBeam(0);
                     }
                     mRobotVoice.setUseExpression(true);
-                    mRobotVoice.handlerVoiceEntry(mContext.getString(R.string.sensor_touch), 0,true, mRobotVoice.isUseExpression());
+                    mRobotVoice.handlerVoiceEntry(mContext.getString(R.string.sensor_touch), 0, true, mRobotVoice.isUseExpression());
 
                     // SDK处理
                     mRobotVoice.onSDKReceive(SDKHandler.RECV_SENSOR_HEADER, null);

@@ -16,6 +16,7 @@ import static com.zccl.ruiqianqi.config.RemoteProtocol.B_AGORA_VIDEO_REPLY;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_AGORA_VIDEO_REPLY_ACK;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_MEETING_REPORT;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_MEETING_REPORT_ACK;
+import static com.zccl.ruiqianqi.config.RemoteProtocol.B_TUTK_GET_ID;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_WEB_RTC_VIDEO_CANCEL;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_WEB_RTC_VIDEO_CANCEL_ACK;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.B_WEB_RTC_VIDEO_INVITE;
@@ -57,6 +58,7 @@ public class ForwardTask extends BaseTask {
                 }else if(B_WEB_RTC_VIDEO_CANCEL_ACK.equals(cmd)){
                 }else if(B_MEETING_REPORT.equals(cmd)){
                 }else if(B_MEETING_REPORT_ACK.equals(cmd)){
+                }else if(B_TUTK_GET_ID.equals(cmd)){
                 }
 
             }

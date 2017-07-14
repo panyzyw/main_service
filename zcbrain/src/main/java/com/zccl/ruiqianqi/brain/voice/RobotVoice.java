@@ -16,6 +16,7 @@ import com.zccl.ruiqianqi.presentation.presenter.PersistPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.SystemPresenter;
 import com.zccl.ruiqianqi.tools.CheckUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
+import com.zccl.ruiqianqi.tools.MYUIUtils;
 import com.zccl.ruiqianqi.tools.MyAppUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
 import com.zccl.ruiqianqi.tools.SystemUtils;
@@ -183,8 +184,10 @@ public class RobotVoice extends VoiceManager {
 
         LogUtils.e(TAG, "fromWhere = " + fromWhere + " - " + sdkHandler.getSDKCallback());
 
-        // 声源定位
-        mListenCheck.localization(angle);
+        // 声源定位，当前应用要是不响应唤醒，就返回
+        if(!mListenCheck.localization(angle)){
+            return;
+        }
 
         // 有SDK，就进行SDK处理，下面就不处理了
         if(null != sdkHandler.getSDKCallback()){
@@ -418,6 +421,8 @@ public class RobotVoice extends VoiceManager {
         public void wakeSuccess(WakeInfo wakeInfo) {
             if(null == wakeInfo)
                 return;
+
+            //MYUIUtils.showToast(mContext, "angle=" + wakeInfo.getAngle() + ", score=" + wakeInfo.getScore());
 
             PersistPresenter cp = PersistPresenter.getInstance();
             if(wakeInfo.getScore() >= cp.getThreshold()){

@@ -253,11 +253,13 @@ public class ListenCheck {
     /**
      * 声源定位选项
      * @param angle
+     * @return true代表继续，false代表中止
      */
-    protected void localization(int angle){
+    protected boolean localization(int angle){
+
         // 不响应唤醒的应用
         if(null != notWakeupPkgs && notWakeupPkgs.contains(currentPkg)){
-            return;
+            return false;
         }
 
         // 声源定位
@@ -266,6 +268,8 @@ public class ListenCheck {
             mLocalization.rotate(angle);
             mRobotVoice.setRealBeam(0);
         }
+
+        return true;
     }
 
 

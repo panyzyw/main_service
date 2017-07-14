@@ -69,6 +69,8 @@ public class RemoteProtocol {
     // 视频会议报告响应 【视频-->主服务-->服务器-->手机】或【手机-->服务器-->主服务-->视频】
     public static final String B_MEETING_REPORT_ACK = "/media/meeting/report/response";
 
+    // 【TUTK_ID】
+    public static final String B_TUTK_GET_ID = "/robot/get/tutk_id";
 
 
     // 手机推送【一级指令】

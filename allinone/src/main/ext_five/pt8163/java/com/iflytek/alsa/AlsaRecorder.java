@@ -191,11 +191,13 @@ public class AlsaRecorder {
 		private boolean mStop = false;
 		
 		public void stopRun() {
+			/*
 			Log.e(TAG, "close five mai");
 			AlsaJni.pcm_close(pcmHandle);
 			pcmHandle = 0;
 			mIsRecording = false;
 			Log.e(TAG, "quit record");
+			*/
 			mStop = true;
 		}
 		
@@ -212,13 +214,12 @@ public class AlsaRecorder {
 			}
 			Log.e(TAG, "five mai is closed");
 
-			/*
 			Log.e(TAG, "close five mai");
 			AlsaJni.pcm_close(pcmHandle);
 			pcmHandle = 0;
 			mIsRecording = false;
 			Log.e(TAG, "quit record");
-			*/
+
 		}
 		
 	}
