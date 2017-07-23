@@ -335,6 +335,7 @@ public class FirstHandler extends BaseHandler {
         }
 
         boolean isUseXiri = SystemProperties.getBoolean(isUseXiriKey, false);
+        // 用讯飞
         if(isUseXiri && (FUNC_MUSIC.equals(funcType) || FUNC_VIDEO.equals(funcType))){
             // 传给讯飞语点
             XiriPresenter musicPresenter = new XiriPresenter();
@@ -343,6 +344,39 @@ public class FirstHandler extends BaseHandler {
             mRobotVoice.stopOtherAppFunc(XiriPresenter.TAG);
             return true;
         }
+        // 不用讯飞
+        else {
+            // 播放音乐、儿歌、
+            // 戏曲、故事、广场舞、健康养生、习惯养成
+            boolean isFilterMusic;
+
+            // 用讯飞音乐：自有音乐播放器，不处理音乐
+            if(isUseXiri){
+                isFilterMusic = matchMyMusic(funcType);
+            }
+            // 自有音乐播放器，处理音乐
+            else {
+                isFilterMusic = matchMyMusic(funcType) || FUNC_MUSIC.equals(funcType);
+            }
+
+            // 音频
+            if(isFilterMusic){
+                Bundle bundle = new Bundle();
+                bundle.putString(PLAYER_CATEGORY_KEY, MUSIC_PLAY);
+                bundle.putString(PLAYER_RESULT_KEY, json);
+                MyAppUtils.sendBroadcast(mContext, ACTION_PLAYER, bundle);
+                // 关掉其他功能
+                mRobotVoice.stopOtherAppFunc("MusicPresenter");
+                return true;
+            }
+            // 视频
+            else if(FUNC_VIDEO.equals(funcType)){
+                MyAppUtils.openApp(mContext, "com.yongyida.robot.videotutarial");
+                return true;
+            }
+        }
+
+
 
         // 没有找到对应的语义
         if(RESULT_ZERO != baseInfo.getSuccess()){
@@ -356,28 +390,6 @@ public class FirstHandler extends BaseHandler {
             return true;
         }
 
-        // 播放音乐、儿歌、
-        // 戏曲、故事、广场舞、健康养生、习惯养成
-        boolean filter;
-
-        // 自有音乐播放器，不处理音乐
-        if(isUseXiri){
-            filter = matchMyMusic(funcType);
-        }
-        // 自有音乐播放器，处理音乐
-        else {
-            filter = matchMyMusic(funcType) || FUNC_MUSIC.equals(funcType);
-        }
-
-        if(filter){
-            Bundle bundle = new Bundle();
-            bundle.putString(PLAYER_CATEGORY_KEY, MUSIC_PLAY);
-            bundle.putString(PLAYER_RESULT_KEY, json);
-            MyAppUtils.sendBroadcast(mContext, ACTION_PLAYER, bundle);
-            // 关掉其他功能
-            mRobotVoice.stopOtherAppFunc("MusicPresenter");
-            return true;
-        }
 
         // 如果是聊天
         if(FUNC_CHAT.equals(funcType)) {
@@ -386,6 +398,21 @@ public class FirstHandler extends BaseHandler {
                 funcType = FUNC_MUTE;
             }
         }
+
+
+        /*
+        // 聊天或开放语义
+        if(FUNC_CHAT.equals(funcType) || FUNC_OPEN_QA.equals(funcType)){
+            // 在这里服务器的对话语义
+            StatePresenter sp = StatePresenter.getInstance();
+            Robot robot = sp.getRobot();
+            if(null != robot){
+                HttpReqPresenter htp = new HttpReqPresenter(mContext);
+                htp.queryCustomQA(baseInfo.getText(), "", robot.getRid(), robot.getSerial());
+            }
+            return true;
+        }
+        */
 
         // 机器人移动
         if(FUNC_MOVE.equals(funcType)){

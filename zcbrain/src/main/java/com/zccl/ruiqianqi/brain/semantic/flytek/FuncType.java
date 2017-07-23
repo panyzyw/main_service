@@ -69,13 +69,13 @@ public class FuncType {
 	public static final String FUNC_STOCK = "stock";
 	// 音乐
 	public static final String FUNC_MUSIC = "music";
-	// 音乐
+	// 音乐控制
 	public static final String FUNC_MUSIC_CTRL = "music_ctrl";
 
 	/***********************************【私有语义场景】*******************************************/
 	// 影视
 	public static final String FUNC_VIDEO = "video";
-	// 影视
+	// 影视控制
 	public static final String FUNC_VIDEO_CTRL = "video_ctrl";
 
 	// 广场舞
@@ -113,7 +113,7 @@ public class FuncType {
 
 
 
-
+	/************************************【通用问答库】********************************************/
 	// 算术
 	public static final String FUNC_ARITHMETIC = "calc";
 	// 百科

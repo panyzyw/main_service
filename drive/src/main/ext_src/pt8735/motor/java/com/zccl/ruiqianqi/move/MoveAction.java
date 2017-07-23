@@ -29,6 +29,8 @@ public class MoveAction {
     public static final int DRIVE_BY_TIME = 0;
     // 通过距离驱动【时间/距离】
     public static final int DRIVE_BY_DISTANCE = 1;
+    // 通过深蓝驱动
+    public static final int DRIVE_BY_SLAM = 2;
 
     // 全局上下文
     private Context mContext;

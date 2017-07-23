@@ -8,6 +8,150 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.zccl.ruiqianqi.presentation.view.MainActivity">
 
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.52"
+                android:orientation="horizontal"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="8dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/robot_forward"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="前进" />
+
+                    <Button
+                        android:id="@+id/robot_back"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="后退" />
+
+                    <Button
+                        android:id="@+id/robot_left"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="左转（自旋）" />
+
+                    <Button
+                        android:id="@+id/robot_right"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="右转（自旋）" />
+
+                    <Button
+                        android:id="@+id/robot_turn_left"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="左转" />
+
+                    <Button
+                        android:id="@+id/robot_turn_right"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="右转" />
+
+                    <Button
+                        android:id="@+id/robot_stop"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="停止运行" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/get_robot_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="获取机器人ID" />
+
+                    <TextView
+                        android:id="@+id/show_robot_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <Button
+                        android:id="@+id/open_factory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="打开工厂模式" />
+
+                    <Button
+                        android:id="@+id/open_fall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="打开防跌落" />
+
+                    <Button
+                        android:id="@+id/close_fall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="关闭防跌落" />
+
+                    <Button
+                        android:id="@+id/led_red_shanshuo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="红色闪烁" />
+
+                    <Button
+                        android:id="@+id/led_red_shanshuo_off"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="关闭闪烁" />
+
+                    <Button
+                        android:id="@+id/led_red_changliang"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="红色常亮" />
+
+                    <Button
+                        android:id="@+id/led_red_changliang_off"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="关闭常亮" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <Button
+                        android:id="@+id/quit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="退出" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
 </RelativeLayout>

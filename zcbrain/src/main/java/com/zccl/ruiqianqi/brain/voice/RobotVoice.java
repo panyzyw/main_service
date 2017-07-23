@@ -3,6 +3,7 @@ package com.zccl.ruiqianqi.brain.voice;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemProperties;
 
 import com.google.gson.Gson;
 import com.iflytek.cloud.SpeechError;
@@ -95,6 +96,9 @@ public class RobotVoice extends VoiceManager {
     // 是不是用语义理解
     private boolean isUseUnderstand = false;
 
+    // 马达驱动版本
+    private String motorVersionKey;
+
     // 是不是小勇的APPID
     //private String isAppIdXiaoYong;
 
@@ -121,6 +125,7 @@ public class RobotVoice extends VoiceManager {
         mTestVipChannel = new TestVipChannel(mContext, this);
         mMindHandler.setVipTest(mTestVipChannel);
 
+        motorVersionKey = mContext.getString(R.string.motor_version);
     }
 
     /**
@@ -381,10 +386,15 @@ public class RobotVoice extends VoiceManager {
 
     }
 
+    /**
+     * 进行某项功能
+     * @param cmd
+     * @param obj
+     */
+    public void sendCommand(int cmd, Object obj){
+        voiceWakeUp.sendCommand(cmd, obj);
+    }
 
-    /**********************************************************************************************/
-    /*********************************【生产者、消费者】*******************************************/
-    /**********************************************************************************************/
     /**
      * 设置拾音波束
      * @param beam
@@ -393,6 +403,9 @@ public class RobotVoice extends VoiceManager {
         voiceWakeUp.setRealBeam(beam);
     }
 
+    /**********************************************************************************************/
+    /*********************************【生产者、消费者】*******************************************/
+    /**********************************************************************************************/
     /**
      * 【自行处理】唤醒接口的回调
      */
@@ -425,6 +438,14 @@ public class RobotVoice extends VoiceManager {
             //MYUIUtils.showToast(mContext, "angle=" + wakeInfo.getAngle() + ", score=" + wakeInfo.getScore());
 
             PersistPresenter cp = PersistPresenter.getInstance();
+            String model = SystemProperties.get(motorVersionKey, "8163_20");
+            if(!StringUtils.isEmpty(model)) {
+                if(model.startsWith("8163_50")){
+                    // 仅仅Y50DE使用
+                    cp.setLocalization(true);
+                }
+            }
+
             if(wakeInfo.getScore() >= cp.getThreshold()){
 
                 // 唤醒亮屏，对手机好像没什么用
@@ -789,6 +810,9 @@ public class RobotVoice extends VoiceManager {
         @Override
         public void onResult(String result) {
             LogUtils.e(TAG, "TextUnder: onResult = " + result);
+
+            // CHECK最上层应用
+            mListenCheck.isShowExpression();
             mMindHandler.parseMindData(result, UNDERSTAND_SUCCESS);
         }
 

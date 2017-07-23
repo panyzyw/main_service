@@ -6,6 +6,8 @@ import com.zccl.ruiqianqi.domain.interactor.IHttpReqInteractor;
 import com.zccl.ruiqianqi.domain.interactor.base.BaseInteractor;
 import com.zccl.ruiqianqi.domain.model.httpreq.BoYanDown;
 import com.zccl.ruiqianqi.domain.model.httpreq.BoYanUp;
+import com.zccl.ruiqianqi.domain.model.httpreq.CustomQaDown;
+import com.zccl.ruiqianqi.domain.model.httpreq.CustomQaUp;
 import com.zccl.ruiqianqi.domain.model.translate.TransInfoD;
 import com.zccl.ruiqianqi.domain.repository.IHttpReqRepository;
 import com.zccl.ruiqianqi.tools.JsonUtils;
@@ -91,6 +93,37 @@ public class HttpReqInteractor extends BaseInteractor implements IHttpReqInterac
                 }).
                 // 开始订阅执行
                 subscribe(new HttpReqInteractor.HttpReqTask<BoYanDown>(IHttpReqInteractor.QUERY_BO_YAN));
+    }
+
+    /**
+     * 查询自定义语义
+     *
+     * @param question   问题
+     * @param oem        定制机型号
+     * @param rId        机器人序列号上的id
+     * @param sId        机器人序列号上的serial(4个字符)
+     */
+    @Override
+    public void queryCustomQA(String question, String oem, String rId, String sId){
+        CustomQaUp customQaUp = new CustomQaUp();
+        customQaUp.setQuestion(question);
+        customQaUp.setOem(oem);
+        customQaUp.setRid(rId);
+        customQaUp.setSid(sId);
+
+        mHttpRepository.queryCustomQARx(customQaUp).
+                // 对整个发射对象进行操作
+                compose(MyRxUtils.<String>handleSchedulers()).
+                // 把json格式转换成CustomQaDown对象
+                map(new Func1<String, CustomQaDown>() {
+                    @Override
+                    public CustomQaDown call(String customQaJson) {
+                        LogUtils.e(TAG, " customQaJson = " + customQaJson);
+                        return JsonUtils.parseJson(customQaJson, CustomQaDown.class);
+                    }
+                }).
+                // 开始订阅执行
+                subscribe(new HttpReqInteractor.HttpReqTask<CustomQaDown>(IHttpReqInteractor.QUERY_CUSTOM_QA));
     }
 
     /**

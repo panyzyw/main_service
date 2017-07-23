@@ -4,12 +4,14 @@ import android.content.Context;
 
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
+import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.TextUnderstander;
 import com.iflytek.cloud.TextUnderstanderListener;
 import com.iflytek.cloud.UnderstanderResult;
 import com.zccl.ruiqianqi.plugin.voice.AbstractVoice;
 import com.zccl.ruiqianqi.tools.LogUtils;
+import com.zccl.ruiqianqi.tools.config.MyConfigure;
 
 /**
  * Created by ruiqianqi on 2016/9/27 0027.
@@ -45,6 +47,14 @@ public final class VoiceTextRecognizer extends BaseVoice implements TextUndersta
                 }
             }
         });
+
+        boolean isAiUi = Boolean.parseBoolean(MyConfigure.getValue("use_aiui"));
+        if(isAiUi) {
+            // 3.0是AIUI
+            textUnderstander.setParameter(SpeechConstant.NLP_VERSION, "3.0");
+        }else {
+            textUnderstander.setParameter(SpeechConstant.NLP_VERSION, "2.0");
+        }
     }
 
     /**

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.zccl.ruiqianqi.domain.interactor.IHttpReqInteractor;
 import com.zccl.ruiqianqi.domain.interactor.httpreq.HttpReqInteractor;
 import com.zccl.ruiqianqi.domain.model.httpreq.BoYanDown;
+import com.zccl.ruiqianqi.domain.model.httpreq.CustomQaDown;
 import com.zccl.ruiqianqi.plugin.voice.AbstractVoice;
 import com.zccl.ruiqianqi.presenter.base.BasePresenter;
 import com.zccl.ruiqianqi.presenter.impl.MindPresenter;
@@ -22,7 +23,9 @@ public class HttpReqPresenter extends BasePresenter {
     private static String TAG = HttpReqPresenter.class.getSimpleName();
 
     // 薄言循环监听标志
-    private final String mBoYan = "listen_BoYan";
+    private final String mBoYan = "listenBoYan";
+    // 自定义语义循环监听标志
+    private final String mCustomQA = "listenCustomQA";
 
     /** USE_CASE：翻译用例 */
     private IHttpReqInteractor httpReqInteractor;
@@ -52,6 +55,18 @@ public class HttpReqPresenter extends BasePresenter {
      */
     public void queryBoYan(String words, String rId, String rName) {
         httpReqInteractor.queryBoYan(words, rId, rName);
+    }
+
+    /**
+     * RX执行：查询自定义语义
+     *
+     * @param question   问题
+     * @param oem        定制机型号
+     * @param rId        机器人序列号上的id
+     * @param sId        机器人序列号上的serial(4个字符)
+     */
+    public void queryCustomQA(String question, String oem, String rId, String sId) {
+        httpReqInteractor.queryCustomQA(question, oem, rId, sId);
     }
 
     /***********************************【领域给中心的回调实现】***********************************/
@@ -85,14 +100,42 @@ public class HttpReqPresenter extends BasePresenter {
                     AppUtils.startListen(mContext, mBoYan, true, true);
                 }
             }
+            else if(IHttpReqInteractor.QUERY_CUSTOM_QA == cmd){
+                CustomQaDown customQaDown = (CustomQaDown) t;
+                if(null != customQaDown){
+                    if(!StringUtils.isEmpty(customQaDown.getAnswer())){
+                        voice.startTTS(customQaDown.getAnswer(), null, new Runnable() {
+                            @Override
+                            public void run() {
+                                // 说话说完了开始监听
+                                LogUtils.e(TAG, "tts success");
+                                AppUtils.startListen(mContext, mCustomQA, true, true);
+                            }
+                        });
+                    }else {
+                        // 没有回答语句，开始监听
+                        LogUtils.e(TAG, "text is null");
+                        AppUtils.startListen(mContext, mCustomQA, true, true);
+                    }
+                }else {
+                    // 没有对象，开始监听
+                    LogUtils.e(TAG, "obj is null");
+                    AppUtils.startListen(mContext, mCustomQA, true, true);
+                }
+            }
         }
 
         @Override
         public void OnHttpFailure(int cmd, Throwable e) {
             if(IHttpReqInteractor.QUERY_BO_YAN == cmd){
                 // 请求出错，开始监听
-                LogUtils.e(TAG, "failure");
+                LogUtils.e(TAG, "QUERY_BO_YAN failure");
                 AppUtils.startListen(mContext, mBoYan, true, true);
+            }
+            else if(IHttpReqInteractor.QUERY_CUSTOM_QA == cmd){
+                // 请求出错，开始监听
+                LogUtils.e(TAG, "QUERY_CUSTOM_QA failure");
+                AppUtils.startListen(mContext, mCustomQA, true, true);
             }
         }
 

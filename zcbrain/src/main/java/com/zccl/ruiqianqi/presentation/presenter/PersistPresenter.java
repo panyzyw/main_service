@@ -15,8 +15,10 @@ import com.zccl.ruiqianqi.storage.db.MyDbFlow;
 import com.zccl.ruiqianqi.storage.db.ServerBean;
 import com.zccl.ruiqianqi.presenter.base.BasePresenter;
 import com.zccl.ruiqianqi.tools.LogUtils;
+import com.zccl.ruiqianqi.tools.MYUIUtils;
 import com.zccl.ruiqianqi.tools.ShareUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
+import com.zccl.ruiqianqi.tools.config.MyConfigure;
 import com.zccl.ruiqianqi.tools.executor.rxutils.MyRxUtils;
 
 import java.util.ArrayList;
@@ -282,7 +284,7 @@ public class PersistPresenter extends BasePresenter {
     private boolean getAccountId() {
 
         boolean isProvided = false;
-        /*
+
         try {
             ContentResolver resolver;
             Cursor cursor;
@@ -311,11 +313,12 @@ public class PersistPresenter extends BasePresenter {
 
         }
 
+
         // 如果 ContentProvider 没有提供
         if (!isProvided) {
-            String serial = SystemProperties.get("gsm.serial", null);
+            String serial = SystemProperties.get("ro.boot.serialno", null);
             if (!StringUtils.isEmpty(serial)) {
-                String[] id_sid = serial.split("-");
+                String[] id_sid = serial.trim().split("-");
                 if (id_sid.length > 1) {
                     ShareUtils.getE(mContext).putString(KEY_ID, id_sid[0]).commit();
                     ShareUtils.getE(mContext).putString(KEY_SID, id_sid[1].substring(0, 4)).commit();
@@ -323,13 +326,25 @@ public class PersistPresenter extends BasePresenter {
                 }
             }
         }
-        */
+
+        if (!isProvided) {
+            String serial = SystemProperties.get("gsm.serial", null);
+            if (!StringUtils.isEmpty(serial)) {
+                String[] id_sid = serial.trim().split("-");
+                if (id_sid.length > 1) {
+                    ShareUtils.getE(mContext).putString(KEY_ID, id_sid[0]).commit();
+                    ShareUtils.getE(mContext).putString(KEY_SID, id_sid[1].substring(0, 4)).commit();
+                    isProvided = true;
+                }
+            }
+        }
+
 
         // 如果那个gsm.serial属性没有取到
         if(!isProvided){
             String serial = RobotIDHelper.Builder.THIS.createIDHelper().getRobotSN();
             if (!StringUtils.isEmpty(serial)) {
-                String[] id_sid = serial.split("-");
+                String[] id_sid = serial.trim().split("-");
                 if (id_sid.length > 1) {
                     ShareUtils.getE(mContext).putString(KEY_ID, id_sid[0]).commit();
                     ShareUtils.getE(mContext).putString(KEY_SID, id_sid[1].substring(0, 4)).commit();
@@ -338,10 +353,15 @@ public class PersistPresenter extends BasePresenter {
             }
         }
 
-        // 测试用的ID
-        //ShareUtils.getE(mContext).putString(KEY_ID, "Y20C1484559243459").commit();
-        //ShareUtils.getE(mContext).putString(KEY_SID, "YZXU").commit();
-        //isProvided = true;
+        if(!isProvided) {
+            boolean useDefaultId = Boolean.parseBoolean(MyConfigure.getValue("use_default_id"));
+            if (useDefaultId) {
+                // 测试用的ID
+                ShareUtils.getE(mContext).putString(KEY_ID, MyConfigure.getValue("robot_id_9")).commit();
+                ShareUtils.getE(mContext).putString(KEY_SID, MyConfigure.getValue("robot_sid_9")).commit();
+                isProvided = true;
+            }
+        }
 
         //ShareUtils.getE(mContext).putString(KEY_ID, "Y128A1471339630244").commit();
         //ShareUtils.getE(mContext).putString(KEY_SID, "Q9DJ").commit();

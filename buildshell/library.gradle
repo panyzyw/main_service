@@ -65,7 +65,7 @@ android {
             // 关闭调式
             debuggable false
             // 关闭JNI调式
-            jniDebuggable true
+            jniDebuggable false
         }
 
         zcrelease {
@@ -84,9 +84,9 @@ android {
             // 移除没用的res
             //shrinkResources true
             // 关闭调式
-            debuggable false
+            debuggable true
             // 关闭JNI调式
-            jniDebuggable false
+            jniDebuggable true
         }
     }
 

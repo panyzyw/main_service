@@ -71,6 +71,17 @@ android {
         debug{
 
         }
+	
+        rk_platform{
+            if(project.hasProperty("rk_platform.sign") && file(project.property("rk_platform.sign")).exists()) {
+                Properties props = new Properties()
+                props.load(new FileInputStream(file(project.property("rk_platform.sign"))))
+                storeFile file(props['RELEASE_STORE_FILE'])
+                storePassword props['RELEASE_STORE_PASSWORD']
+                keyAlias props['RELEASE_KEY_ALIAS']
+                keyPassword props['RELEASE_KEY_PASSWORD']
+            }
+        }
     }
 
     buildTypes {
@@ -107,6 +118,33 @@ android {
             buildConfigField "boolean", "IS_TEST", "false"
             // release版本签名
             signingConfig signingConfigs.debug
+            // 混淆现在还不能启用，因为还没有配置
+            minifyEnabled false
+            // 混淆配置文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // 使用伪代码
+            pseudoLocalesEnabled true
+            // 字节对齐
+            zipAlignEnabled true
+            // 移除没用的res
+            //shrinkResources true
+            // 关闭调式
+            debuggable false
+            // 关闭JNI调式
+            jniDebuggable false
+            ndk {
+                // 关闭调式
+                debuggable false
+            }
+        }
+	
+	rk_platform {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            // 是不是测试，要加一些测试代码
+            buildConfigField "boolean", "IS_TEST", "false"
+            // release版本签名
+            signingConfig signingConfigs.rk_platform
             // 混淆现在还不能启用，因为还没有配置
             minifyEnabled false
             // 混淆配置文件

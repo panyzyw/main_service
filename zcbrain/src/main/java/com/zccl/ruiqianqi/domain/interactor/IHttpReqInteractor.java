@@ -7,6 +7,8 @@ public interface IHttpReqInteractor {
 
     // 查询薄言语义
     int QUERY_BO_YAN = 1;
+    // 查询自定义语义
+    int QUERY_CUSTOM_QA = 2;
 
     /**
      * 查询薄言语义
@@ -14,6 +16,16 @@ public interface IHttpReqInteractor {
      * @param words
      */
     void queryBoYan(String words, String rId, String rName);
+
+    /**
+     * 查询自定义语义
+     *
+     * @param question   问题
+     * @param oem        定制机型号
+     * @param rId        机器人序列号上的id
+     * @param sId        机器人序列号上的serial(4个字符)
+     */
+    void queryCustomQA(String question, String oem, String rId, String sId);
 
     /**
      * 领域HTTP请求回调接口

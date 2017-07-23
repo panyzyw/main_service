@@ -60,6 +60,8 @@ public class MyConfig {
     // 薄言语义请求地址
     public static final String BO_YAN_URI = "boyan_chat/query";
 
+    // 自定义语义请求地址
+    public static final String CUSTOM_QA_URI = "qa/query";
 
 
     // 喜马拉雅申请的应用私钥【现在用的还是测试的】

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.zccl.ruiqianqi.config.MyConfig;
 import com.zccl.ruiqianqi.domain.model.httpreq.BoYanUp;
+import com.zccl.ruiqianqi.domain.model.httpreq.CustomQaUp;
 import com.zccl.ruiqianqi.domain.repository.IHttpReqRepository;
 import com.zccl.ruiqianqi.domain.repository.ITranslateRepository;
 import com.zccl.ruiqianqi.storage.serviceapi.IHttpReqAPI;
@@ -40,6 +41,13 @@ public class HttpReqRepository implements IHttpReqRepository {
     public Observable<String> queryBoYanRx(BoYanUp boYanUp) {
         IHttpReqAPI httpReq = retrofit.httpReqService();
         Observable<String> observable = httpReq.queryBoYan(boYanUp);
+        return observable;
+    }
+
+    @Override
+    public Observable<String> queryCustomQARx(CustomQaUp customQaUp) {
+        IHttpReqAPI httpReq = retrofit.httpReqService();
+        Observable<String> observable = httpReq.queryCustomQA(customQaUp);
         return observable;
     }
 }

@@ -5,7 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.zccl.ruiqianqi.brain.eventbus.MindBusEvent;
+import com.zccl.ruiqianqi.brain.voice.RobotVoice;
 import com.zccl.ruiqianqi.mind.eventbus.MainBusEvent;
+import com.zccl.ruiqianqi.mind.voice.impl.VoiceWakeUp;
+import com.zccl.ruiqianqi.presentation.presenter.PushPresenter;
+import com.zccl.ruiqianqi.presenter.impl.MindPresenter;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
 import com.zccl.ruiqianqi.utils.AppUtils;
@@ -97,7 +101,20 @@ public class OtherReceiver extends BroadcastReceiver {
                     AppUtils.shutdownUp2Server(ACTION_SHUTDOWN, -1);
                 }
             }
-
+            // 文本理解
+            else if("text_nlp".equals(main_recv_function)){
+                String question = intent.getStringExtra(KEY_MAIN_RECV_RESULT);
+                PushPresenter pp = new PushPresenter();
+                pp.chat(question);
+            }
+			// 发送数据到串口
+            else if("send_data_to_tty".equals(main_recv_function)){
+                byte[] data = intent.getByteArrayExtra(KEY_MAIN_RECV_RESULT);
+                if(null != data) {
+                    RobotVoice robotVoice = (RobotVoice) MindPresenter.getInstance().getVoiceDevice();
+                    robotVoice.sendCommand(VoiceWakeUp.SEND_DATA_TO_TTY, data);
+                }
+            }
         }
     }
 

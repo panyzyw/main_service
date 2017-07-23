@@ -28,6 +28,10 @@ public class VoiceWakeUp {
     private static VoiceWakeUp instance;
     /** 录音设备 */
     public static final int RECORD_MODE = 5;
+
+    // 发送数据到串口
+    public static final int SEND_DATA_TO_TTY = 1;
+
     /**
      * 唤醒文件的名字
      */
@@ -105,15 +109,17 @@ public class VoiceWakeUp {
      * 开始底层录音，循环录音
      */
     public void startWakeUp(){
+        LogUtils.e(TAG, "startWakeUp");
         // 先启动ALSA
         mRecorder.startRecording(mPcmListener);
-        LogUtils.e(TAG, "startWakeUp");
+
     }
 
     /**
      * 停止底层录音
      */
     public void stopWakeUp(){
+        LogUtils.e(TAG, "stopWakeUp");
         if (mRecorder != null) {
             if (mRecorder.isRecording()) {
                 mRecorder.stopRecording();
@@ -133,9 +139,27 @@ public class VoiceWakeUp {
         mCaeEngine.setRealBeam(beam);
     }
 
+    /**
+     * 进行某项功能
+     * @param cmd
+     * @param obj
+     */
+    public void sendCommand(int cmd, Object obj){
+        if(SEND_DATA_TO_TTY == cmd){
+
+        }
+    }
+
     /*************************************【五麦回调】*********************************************/
     /**
      * 原始录音回调接口，非静态内部类持有外部类的引用
+     * 12路，用了7路
+     * 0----------->1
+     * 1----------->7
+     * 2----------->2
+     * 3----------->8
+     * 中---------->3
+     * 喇叭-------->4,10
      */
     private class MyPcmListener implements AlsaRecorder.PcmListener{
 
@@ -214,7 +238,7 @@ public class VoiceWakeUp {
          */
         @Override
         public void onAudio(byte[] audio, int audioLen, int param1, int param2) {
-            //LogUtils.e(TAG, "onAudio: "+audioLen);
+            //LogUtils.e(TAG, "onAudio: " + audioLen);
             if (null != mWakeupCallback) {
                 if(!mWakeupCallback.isTouchWake()) {
                     mWakeupCallback.onAudio(audio, audioLen);

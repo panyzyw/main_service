@@ -2,12 +2,12 @@ package com.zccl.ruiqianqi.brain.semantic.flytek;
 
 import com.google.gson.annotations.SerializedName;
 
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MOVE;
+import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_VIDEO;
 
 public class VideoBean extends BaseInfo{
 
 	public VideoBean(){
-		mServiceType = FUNC_MOVE;
+		mServiceType = FUNC_VIDEO;
 	}
 
 	// 语义

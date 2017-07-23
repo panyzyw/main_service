@@ -319,7 +319,8 @@ public class MindHandler {
                 }
 
                 // 触摸唤醒，一切从头开始
-                if(text.equals(mContext.getString(R.string.sensor_touch))){
+                if(text.equals(mContext.getString(R.string.sensor_touch)) ||
+                        text.equals(mContext.getString(R.string.hou_nao_shao))){
 
                     StatePresenter sp = StatePresenter.getInstance();
                     // 屏幕灭了，触摸就不响应

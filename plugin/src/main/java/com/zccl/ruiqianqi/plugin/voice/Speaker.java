@@ -9,10 +9,13 @@ public class Speaker {
     public static final int OFF_LINE_SPEAKER = 0;
     // 在线发音人
     public static final int ON_LINE_SPEAKER = 1;
+    // 语记发音人
+    public static final int OFF_LINE_PLUS_SPEAKER = 2;
+
     // 离线还是在线
     private int offOnType;
     // 发音人
-    private String speakerName;
+    private String speakerName = "jiajia";
     // 音频流类型列表
     private String streamTypeSelected = "3";
     // 音调

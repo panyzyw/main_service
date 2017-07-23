@@ -2,6 +2,7 @@ package com.zccl.ruiqianqi.storage.serviceapi;
 
 import com.zccl.ruiqianqi.config.MyConfig;
 import com.zccl.ruiqianqi.domain.model.httpreq.BoYanUp;
+import com.zccl.ruiqianqi.domain.model.httpreq.CustomQaUp;
 
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
@@ -22,4 +23,8 @@ public interface IHttpReqAPI {
     @POST(MyConfig.BO_YAN_URI)
     Observable<String> queryBoYan(@Body BoYanUp boYanUp);
 
+
+    @Headers("Content-Type: application/x-www-form-urlencoded;charset=UTF-8")
+    @POST(MyConfig.CUSTOM_QA_URI)
+    Observable<String> queryCustomQA(@Body CustomQaUp customQaUp);
 }

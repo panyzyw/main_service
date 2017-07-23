@@ -191,6 +191,21 @@ public class MyConfigure {
 				}
 			}
 		}
+
+		is = FileUtils.getFileStream(null, "allconfig.properties", ZERO_MYRES);
+		if(null != is) {
+			try {
+				CLIENT_PROPERTIES.load(is);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	/**
@@ -201,7 +216,7 @@ public class MyConfigure {
 	 */
 	public static String getValue(String key) {
 
-		LogUtils.e("getValue", "key = "+key);
+		LogUtils.e("getValue", "key = " + key);
 		if (CLIENT_CONFIG != null) {
 			Object obj = CLIENT_PROPERTIES.get(key);
 			if (obj != null) {

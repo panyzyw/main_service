@@ -149,6 +149,14 @@ public final class VoiceUnderstander extends BaseVoice implements SpeechUndersta
         // 解除麦克风独占
         //mSpeechUnderstander.setParameter("domain", "fariat");
         //mSpeechUnderstander.setParameter("aue", "speex-wb;10");
+
+        boolean isAiUi = Boolean.parseBoolean(MyConfigure.getValue("use_aiui"));
+        if(isAiUi) {
+            // 3.0是AIUI
+            mSpeechUnderstander.setParameter(SpeechConstant.NLP_VERSION, "3.0");
+        }else {
+            mSpeechUnderstander.setParameter(SpeechConstant.NLP_VERSION, "2.0");
+        }
     }
 
     /**
