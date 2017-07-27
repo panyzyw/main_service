@@ -35,7 +35,7 @@ public class MoveAction {
     // 全局上下文
     private Context mContext;
     // 机器人移动类
-    private MotorController mMotorController;
+    private MotorController mMotorService;
 
     // 绑定服务与请求方法的同步
     private CountDownLatch countDownLatch;
@@ -43,11 +43,11 @@ public class MoveAction {
     /**
      * 连接远程服务
      */
-    public ServiceConnection motorService = new ServiceConnection() {
+    public ServiceConnection motorConn = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mMotorController = MotorController.Stub.asInterface(service);
+            mMotorService = MotorController.Stub.asInterface(service);
 
             if(0 != countDownLatch.getCount()) {
                 countDownLatch.countDown();
@@ -64,7 +64,7 @@ public class MoveAction {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            mMotorController = null;
+            mMotorService = null;
             countDownLatch = new CountDownLatch(1);
         }
 
@@ -114,11 +114,11 @@ public class MoveAction {
      * 绑定服务，这个过程竟然要10多秒
      */
     private void bindMotorService(){
-        if(null != mContext && null == mMotorController) {
+        if(null != mContext && null == mMotorService) {
             Intent intent = new Intent();
             intent.setAction("com.yongyida.robot.MotorService");
             intent.setPackage("com.yongyida.robot.motorcontrol");
-            mContext.bindService(intent, motorService, Context.BIND_AUTO_CREATE);
+            mContext.bindService(intent, motorConn, Context.BIND_AUTO_CREATE);
         }
     }
 
@@ -126,8 +126,8 @@ public class MoveAction {
      * 解绑服务
      */
     public void unbindMotorService(){
-        if(null != mContext && null != mMotorController) {
-            mContext.unbindService(motorService);
+        if(null != mContext && null != mMotorService) {
+            mContext.unbindService(motorConn);
         }
     }
 
@@ -141,8 +141,8 @@ public class MoveAction {
      */
     public void setDriveType(int type) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.setDrvType(type);
+        if(null != mMotorService){
+            mMotorService.setDrvType(type);
         }
     }
 
@@ -152,7 +152,7 @@ public class MoveAction {
      */
     public void setSpeed(int speed) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
+        if(null != mMotorService){
             if(speed < 1 || speed > 100){
                 String errMsg = "";
                 if(null != mContext) {
@@ -161,7 +161,7 @@ public class MoveAction {
                 Log.e(TAG, errMsg);
                 return;
             }
-            mMotorController.setSpeed(speed);
+            mMotorService.setSpeed(speed);
         }
     }
 
@@ -172,8 +172,8 @@ public class MoveAction {
      */
     public void forward(int time_distance) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.forward(time_distance);
+        if(null != mMotorService){
+            mMotorService.forward(time_distance);
         }
     }
 
@@ -183,8 +183,8 @@ public class MoveAction {
      */
     public void back(int time_distance) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.back(time_distance);
+        if(null != mMotorService){
+            mMotorService.back(time_distance);
         }
     }
 
@@ -195,8 +195,8 @@ public class MoveAction {
      */
     public void left(int time_distance) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.left(time_distance);
+        if(null != mMotorService){
+            mMotorService.left(time_distance);
         }
     }
 
@@ -206,8 +206,8 @@ public class MoveAction {
      */
     public void right(int time_distance) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.right(time_distance);
+        if(null != mMotorService){
+            mMotorService.right(time_distance);
         }
     }
 
@@ -217,8 +217,8 @@ public class MoveAction {
      */
     public void stop() throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.stop();
+        if(null != mMotorService){
+            mMotorService.stop();
         }
     }
 
@@ -229,8 +229,8 @@ public class MoveAction {
      */
     public void turnLeft(int time_distance) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.turnLeft(time_distance);
+        if(null != mMotorService){
+            mMotorService.turnLeft(time_distance);
         }
     }
 
@@ -240,8 +240,8 @@ public class MoveAction {
      */
     public void turnRight(int time_distance) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.turnRight(time_distance);
+        if(null != mMotorService){
+            mMotorService.turnRight(time_distance);
         }
     }
 
@@ -252,8 +252,8 @@ public class MoveAction {
      */
     public void reverseLeft(int time_distance) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.reverseLeft(time_distance);
+        if(null != mMotorService){
+            //mMotorService.backTurnLeft(time_distance);
         }
     }
 
@@ -264,8 +264,8 @@ public class MoveAction {
      */
     public void reverseRight(int time_distance) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.reverseRight(time_distance);
+        if(null != mMotorService){
+            //mMotorService.backTurnRight(time_distance);
         }
     }
 
@@ -277,8 +277,8 @@ public class MoveAction {
      */
     public void headLeft(int time_distance) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.headLeft(time_distance);
+        if(null != mMotorService){
+            mMotorService.headLeft(time_distance);
         }
     }
 
@@ -289,8 +289,8 @@ public class MoveAction {
      */
     public void headRight(int time_distance) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.headRight(time_distance);
+        if(null != mMotorService){
+            mMotorService.headRight(time_distance);
         }
     }
 
@@ -301,8 +301,8 @@ public class MoveAction {
      */
     public void headUp(int time_distance) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.headUp(time_distance);
+        if(null != mMotorService){
+            mMotorService.headUp(time_distance);
         }
     }
 
@@ -313,8 +313,8 @@ public class MoveAction {
      */
     public void headDown(int time_distance) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.headDown(time_distance);
+        if(null != mMotorService){
+            mMotorService.headDown(time_distance);
         }
     }
 
@@ -324,7 +324,10 @@ public class MoveAction {
      * @throws RemoteException
      */
     public void headLeftEnd() throws RemoteException {
-
+        bindMotorService();
+        if(null != mMotorService){
+            mMotorService.headLeftEnd();
+        }
     }
 
     /**
@@ -333,7 +336,10 @@ public class MoveAction {
      * @throws RemoteException
      */
     public void headRightEnd() throws RemoteException {
-
+        bindMotorService();
+        if(null != mMotorService){
+            mMotorService.headRightEnd();
+        }
     }
 
     /**
@@ -342,7 +348,10 @@ public class MoveAction {
      * @throws RemoteException
      */
     public void headLeftTurnMid() throws RemoteException {
-
+        bindMotorService();
+        if(null != mMotorService){
+            mMotorService.headLeftTurnMid();
+        }
     }
 
     /**
@@ -351,7 +360,10 @@ public class MoveAction {
      * @throws RemoteException
      */
     public void headRightTurnMid() throws RemoteException {
-
+        bindMotorService();
+        if(null != mMotorService){
+            mMotorService.headRightTurnMid();
+        }
     }
 
     /**
@@ -360,7 +372,10 @@ public class MoveAction {
      * @throws RemoteException
      */
     public void headShake() throws RemoteException {
-
+        bindMotorService();
+        if(null != mMotorService){
+            mMotorService.headShake();
+        }
     }
 
     /**
@@ -369,8 +384,8 @@ public class MoveAction {
      */
     public void headStop() throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.headStop();
+        if(null != mMotorService){
+            mMotorService.headStop();
         }
     }
 
@@ -381,7 +396,10 @@ public class MoveAction {
      * @param updateStatus true为开，false为关
      */
     public void setUpdateStatus(boolean updateStatus) throws RemoteException {
-
+        bindMotorService();
+        if(null != mMotorService){
+            mMotorService.setUpdateStatus(updateStatus);
+        }
     }
 
     /**
@@ -390,6 +408,10 @@ public class MoveAction {
      * @return true正在升级中，false未在升级中
      */
     public boolean getUpdateStatus() throws RemoteException {
+        bindMotorService();
+        if(null != mMotorService){
+            return mMotorService.getUpdateStatus();
+        }
         return false;
     }
 
@@ -405,7 +427,10 @@ public class MoveAction {
      * @throws RemoteException
      */
     public void readState(int state) throws RemoteException{
-
+        bindMotorService();
+        if(null != mMotorService){
+            mMotorService.readState(state);
+        }
     }
 
     /**
@@ -414,8 +439,8 @@ public class MoveAction {
      */
     public void setFallOn(boolean isFallOn) throws RemoteException {
         bindMotorService();
-        if(null != mMotorController){
-            mMotorController.setFallOn(isFallOn);
+        if(null != mMotorService){
+            mMotorService.setFallOn(isFallOn);
         }
     }
 }

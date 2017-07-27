@@ -224,4 +224,29 @@ public class StringUtils {
 		String datestring = format2.format(date);
 		return datestring;
 	}
+
+	private static SimpleDateFormat sdf = null;
+
+	/**
+	 * 格式化时间戳
+	 * @param timestamp
+	 * @param strPattern
+	 * @return
+	 */
+	public static String formatUTC(long timestamp, String strPattern) {
+		if (TextUtils.isEmpty(strPattern)) {
+			strPattern = "yyyy-MM-dd HH:mm:ss";
+		}
+		if (sdf == null) {
+			try {
+				sdf = new SimpleDateFormat(strPattern, Locale.getDefault());
+			} catch (Throwable e) {
+
+			}
+		} else {
+			sdf.applyPattern(strPattern);
+		}
+		return sdf == null ? "NULL" : sdf.format(timestamp);
+	}
+
 }

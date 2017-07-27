@@ -86,7 +86,7 @@ public class StatePresenter extends BasePresenter {
     public void setInControl(final boolean inControl) {
         isInControl = inControl;
 
-        ServerBean serverBean = MyDbFlow.queryServerBean(PersistPresenter.getInstance().getServerAddr());
+        ServerBean serverBean = MyDbFlow.queryServerBean(PersistPresenter.getInstance().getServerAddr(), true);
         serverBean.isInControl = inControl + "";
 
         MyDbFlow.operateServerBean(MyDbFlow.OP.UPDATE, MyDbFlow.ASYNC, serverBean, new MyDbFlow.DbCallback() {

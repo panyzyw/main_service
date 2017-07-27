@@ -3,11 +3,15 @@ apply from: '../buildshell/library.gradle'
 
 def platform = ""
 def robot_ver = ""
-if(project.hasProperty("config") && file(project.property("config")).exists()) {
-    Properties props = new Properties()
-    props.load(new FileInputStream(file(project.property("config"))))
-    platform = props['platform']
-    robot_ver = props['robot_ver']
+if(project.hasProperty("mainservice.config")){
+    // ≈‰÷√Œƒº˛¬∑æ∂
+    def config = project.property("mainservice.config");
+    if(file(config).exists()) {
+        Properties props = new Properties()
+        props.load(new FileInputStream(file(config)))
+        platform = props['platform']
+        robot_ver = props['robot_ver']
+    }
 }
 
 android{

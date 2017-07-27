@@ -10,7 +10,21 @@ buildscript {
         classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'com.android.tools.build:gradle-experimental:0.7.3'
 
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        // Jack 是 java Android Compiler Kit 的缩写，它可以将 Java 代码直接编译为 Dalvik 字节码，
+        // 并负责 Minification, Obfuscation, Repackaging, Multidexing, Incremental compilation。
+        // 它试图取代 javac/dx/proguard/jarjar/multidex 库等工具。
+        // Android 终于有了自己的 Java 编译器。Android7.0（API24）在对JAVA8的支持上，需要使用新的编译器。
+
+        // android 迎来了Java 8，要想使用Java 8的话必须使用Jack编译，android-apt只支持javac编译
+        // 而annotationProcessor既支持javac同时也支持jack编译。
+
+        // APT is nothing else but a plugin (i.e. APT = "annotation processing tool").
+        // This plugin is no longer needed as the new annotationProcessor build step is built into
+        // the android gradle build script. In practice, just replace "APT" with "annotationProcessor"
+
+        //classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

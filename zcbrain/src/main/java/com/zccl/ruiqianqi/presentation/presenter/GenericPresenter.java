@@ -1,5 +1,6 @@
 package com.zccl.ruiqianqi.presentation.presenter;
 
+import android.content.Intent;
 import android.provider.Settings;
 
 import com.zccl.ruiqianqi.brain.semantic.flytek.GenericBean;
@@ -36,6 +37,8 @@ public class GenericPresenter extends BasePresenter{
     public static final String MY_APP = "myapp";
     // 打开学习
     public static final String STUDY = "study";
+    // 打开国学
+    public static final String GUO_XUE = "guoxue";
     // 打开档案
     public static final String PROFILE = "profile";
     // 打开无线网络设置
@@ -250,6 +253,19 @@ public class GenericPresenter extends BasePresenter{
         else if(STUDY.equals(function)) {
             MyAppUtils.startApp(mContext, "com.yongyida.robot.launcher2", "com.yongyida.robot.launcher2.activity.sub.EducationActivity");
         }
+        // 国学【RS20】
+        else if(GUO_XUE.equals(function)){
+            Intent intent = new Intent();
+            intent.setAction("com.yongyida.robot.nationknowledge");
+            intent.setClassName("com.yongyida.robot.launcher2", "com.yongyida.robot.launcher2.activity.NewPlayerActivity");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            try {
+                mContext.startActivity(intent);
+            }catch (Exception e){
+
+            }
+        }
+
         // 遥控器
         else if(REMOTE_CONTROL.equals(function)) {
             MyAppUtils.openApp(mContext, "com.yongyida.robot.irremote");

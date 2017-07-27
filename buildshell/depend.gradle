@@ -128,9 +128,9 @@ ext {
     retrofitGsonVersion = '2.1.0'
     retrofitRxjavaVersion = '2.1.0'
     retrofitProtobufVersion = '2.1.0'
-    dbflowVersion = '3.1.1'
-    dbflowCoreVersion = '3.1.1'
-    dbflowProcessorVersion = '3.1.1'
+    dbflowVersion = '4.0.5'
+    dbflowCoreVersion = '4.0.5'
+    dbflowProcessorVersion = '4.0.5'
 
     // domain
 
@@ -225,6 +225,8 @@ ext {
             dbflow:              "com.github.Raizlabs.DBFlow:dbflow:${dbflowVersion}",
             dbflowCore:          "com.github.Raizlabs.DBFlow:dbflow-core:${dbflowCoreVersion}",
             dbflowApt:           "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflowProcessorVersion}",
+            dbflowRx:           "com.github.Raizlabs.DBFlow:dbflow-rx:${dbflowVersion}",
+            dbflowRx2:           "com.github.Raizlabs.DBFlow:dbflow-rx2:${dbflowVersion}",
             rxbinding:          "com.jakewharton.rxbinding:rxbinding:${rxbindingVersion}",
             rxbindingDesign:    "com.jakewharton.rxbinding:rxbinding-design:${rxbindingVersion}",
             rxbindingAppcompat: "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${rxbindingVersion}",

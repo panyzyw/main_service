@@ -2,13 +2,17 @@ apply plugin: 'com.android.library'
 apply from: '../buildshell/library.gradle'
 
 // 唤醒词、平台配置
-def nlu = ""
 def app_id = ""
-if(project.hasProperty("config") && file(project.property("config")).exists()) {
-    Properties props = new Properties()
-    props.load(new FileInputStream(file(project.property("config"))))
-    nlu = props['nlu']
-    app_id = props['app_id']
+def nlu = ""
+if(project.hasProperty("mainservice.config")){
+    // 配置文件路径
+    def config = project.property("mainservice.config");
+    if(file(config).exists()) {
+        Properties props = new Properties()
+        props.load(new FileInputStream(file(config)))
+        app_id = props['app_id']
+        nlu = props['nlu']
+    }
 }
 
 

@@ -2,6 +2,8 @@ package com.zccl.ruiqianqi.presentation.presenter;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.zccl.ruiqianqi.brain.semantic.flytek.ChatBean;
 import com.zccl.ruiqianqi.domain.interactor.IHttpReqInteractor;
 import com.zccl.ruiqianqi.domain.interactor.httpreq.HttpReqInteractor;
 import com.zccl.ruiqianqi.domain.model.httpreq.BoYanDown;
@@ -139,6 +141,21 @@ public class HttpReqPresenter extends BasePresenter {
             }
         }
 
+    }
+
+    /**
+     * 构造成聊天，交由Master处理
+     * @param question
+     * @param answer
+     * @return
+     */
+    public String queryByMaster(String question, String answer){
+        ChatBean chatBean = new ChatBean();
+        chatBean.setText(question);
+        ChatBean.Answer answerBean = chatBean.new Answer();
+        chatBean.answer = answerBean;
+        chatBean.answer.text = answer;
+        return new Gson().toJson(chatBean);
     }
 
 }

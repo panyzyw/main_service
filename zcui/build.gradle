@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.neenbedankt.android-apt'
 apply from: '../buildshell/library.gradle'
 
 def getLayoutLibPath() {
@@ -28,18 +27,18 @@ dependencies {
     compile publicDepend.preference
     compile publicDepend.preference14
     compile publicDepend.eventbus
-    apt     publicDepend.eventbusApt
+    annotationProcessor     publicDepend.eventbusApt
 
     def presentationDepend = rootProject.ext.presentationDepend
     compile presentationDepend.butterknife
-    apt     presentationDepend.butterknifeApt
+    annotationProcessor      presentationDepend.butterknifeApt
     compile presentationDepend.rxbinding
     compile presentationDepend.rxbindingDesign
     compile presentationDepend.rxbindingAppcompat
     compile presentationDepend.rxlifecycle
     compile presentationDepend.rxlifecycleComps
     compile presentationDepend.fragmentargs
-    apt     presentationDepend.fragmentargsApt
+    annotationProcessor      presentationDepend.fragmentargsApt
 
     def toolsDepend = rootProject.ext.toolsDepend
     compile toolsDepend.glide
@@ -53,8 +52,20 @@ dependencies {
 }
 
 // 传递处理器参数，有些注解处理器需要传递参数，你能通过使用apt.arguments达到此目的
+/*
 apt {
     arguments {
         eventBusIndex "org.eventbus.zccl.Event"
+    }
+}
+*/
+
+android{
+    defaultConfig {
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [ eventBusIndex : 'org.eventbus.zccl.Event' ]
+            }
+        }
     }
 }

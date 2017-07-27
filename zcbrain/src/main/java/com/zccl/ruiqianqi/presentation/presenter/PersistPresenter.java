@@ -285,34 +285,50 @@ public class PersistPresenter extends BasePresenter {
 
         boolean isProvided = false;
 
-        try {
-            ContentResolver resolver;
-            Cursor cursor;
-            // launcher提供
-            Uri uri = Uri.parse("content://com.yongyida.robot.idprovider//id");
-            resolver = mContext.getContentResolver();
-            cursor = resolver.query(uri, null, null, null, null);
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    // id
-                    String id = cursor.getString(cursor.getColumnIndex("id")).trim();
-                    // sid
-                    String sid = cursor.getString(cursor.getColumnIndex("sid")).trim();
-
-                    if (StringUtils.isEmpty(id) || StringUtils.isEmpty(sid)) {
-
-                    } else {
-                        ShareUtils.getE(mContext).putString(KEY_ID, id).commit();
-                        ShareUtils.getE(mContext).putString(KEY_SID, sid).commit();
-                        isProvided = true;
-                    }
+        // 如果那个gsm.serial属性没有取到
+        if(!isProvided){
+            String serial = RobotIDHelper.Builder.THIS.createIDHelper().getRobotSN();
+            if (!StringUtils.isEmpty(serial)) {
+                String[] id_sid = serial.trim().split("-");
+                if (id_sid.length > 1) {
+                    ShareUtils.getE(mContext).putString(KEY_ID, id_sid[0]).commit();
+                    ShareUtils.getE(mContext).putString(KEY_SID, id_sid[1].substring(0, 4)).commit();
+                    isProvided = true;
+                    LogUtils.e(TAG, "id_A = " + id_sid);
                 }
-                cursor.close();
             }
-        } catch (Throwable e) {
-
         }
 
+        if (!isProvided) {
+            try {
+                ContentResolver resolver;
+                Cursor cursor;
+                // launcher提供
+                Uri uri = Uri.parse("content://com.yongyida.robot.idprovider//id");
+                resolver = mContext.getContentResolver();
+                cursor = resolver.query(uri, null, null, null, null);
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        // id
+                        String id = cursor.getString(cursor.getColumnIndex("id")).trim();
+                        // sid
+                        String sid = cursor.getString(cursor.getColumnIndex("sid")).trim();
+
+                        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(sid)) {
+
+                        } else {
+                            ShareUtils.getE(mContext).putString(KEY_ID, id).commit();
+                            ShareUtils.getE(mContext).putString(KEY_SID, sid).commit();
+                            isProvided = true;
+                        }
+                        LogUtils.e(TAG, "id_B = " + id + "-" + sid);
+                    }
+                    cursor.close();
+                }
+            } catch (Throwable e) {
+
+            }
+        }
 
         // 如果 ContentProvider 没有提供
         if (!isProvided) {
@@ -323,10 +339,12 @@ public class PersistPresenter extends BasePresenter {
                     ShareUtils.getE(mContext).putString(KEY_ID, id_sid[0]).commit();
                     ShareUtils.getE(mContext).putString(KEY_SID, id_sid[1].substring(0, 4)).commit();
                     isProvided = true;
+                    LogUtils.e(TAG, "id_C = " + id_sid);
                 }
             }
         }
 
+        /*
         if (!isProvided) {
             String serial = SystemProperties.get("gsm.serial", null);
             if (!StringUtils.isEmpty(serial)) {
@@ -338,33 +356,17 @@ public class PersistPresenter extends BasePresenter {
                 }
             }
         }
-
-
-        // 如果那个gsm.serial属性没有取到
-        if(!isProvided){
-            String serial = RobotIDHelper.Builder.THIS.createIDHelper().getRobotSN();
-            if (!StringUtils.isEmpty(serial)) {
-                String[] id_sid = serial.trim().split("-");
-                if (id_sid.length > 1) {
-                    ShareUtils.getE(mContext).putString(KEY_ID, id_sid[0]).commit();
-                    ShareUtils.getE(mContext).putString(KEY_SID, id_sid[1].substring(0, 4)).commit();
-                    isProvided = true;
-                }
-            }
-        }
+        */
 
         if(!isProvided) {
             boolean useDefaultId = Boolean.parseBoolean(MyConfigure.getValue("use_default_id"));
             if (useDefaultId) {
                 // 测试用的ID
-                ShareUtils.getE(mContext).putString(KEY_ID, MyConfigure.getValue("robot_id_9")).commit();
-                ShareUtils.getE(mContext).putString(KEY_SID, MyConfigure.getValue("robot_sid_9")).commit();
+                ShareUtils.getE(mContext).putString(KEY_ID, MyConfigure.getValue("robot_id")).commit();
+                ShareUtils.getE(mContext).putString(KEY_SID, MyConfigure.getValue("robot_sid")).commit();
                 isProvided = true;
             }
         }
-
-        //ShareUtils.getE(mContext).putString(KEY_ID, "Y128A1471339630244").commit();
-        //ShareUtils.getE(mContext).putString(KEY_SID, "Q9DJ").commit();
         return isProvided;
     }
 

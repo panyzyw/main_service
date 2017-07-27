@@ -380,6 +380,7 @@ public class FirstHandler extends BaseHandler {
 
         // 没有找到对应的语义
         if(RESULT_ZERO != baseInfo.getSuccess()){
+
             // 在这里获取薄言豆豆的对话语义
             StatePresenter sp = StatePresenter.getInstance();
             Robot robot = sp.getRobot();
@@ -388,6 +389,15 @@ public class FirstHandler extends BaseHandler {
                 htp.queryBoYan(baseInfo.getText(), robot.getRid(), robot.getRname());
             }
             return true;
+
+
+            /*
+            // 解析完之后，交由Master处理
+            HttpReqPresenter htp = new HttpReqPresenter(mContext);
+            json = htp.queryByMaster(baseInfo.getText(), "");
+            funcType = FUNC_CHAT;
+            LogUtils.e(TAG, "RC4 = " + json);
+            */
         }
 
 

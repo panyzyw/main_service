@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.neenbedankt.android-apt'
 apply from: '../buildshell/library.gradle'
 
 // ext_nio
@@ -48,7 +47,7 @@ dependencies {
     compile publicDepend.appcompat
     compile publicDepend.commons_io
     compile publicDepend.eventbus
-    apt     publicDepend.eventbusApt
+    annotationProcessor      publicDepend.eventbusApt
 
     def toolsDepend = rootProject.ext.toolsDepend
     compile toolsDepend.gson

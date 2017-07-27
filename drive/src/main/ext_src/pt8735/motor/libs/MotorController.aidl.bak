@@ -1,0 +1,39 @@
+// MotorController.aidl
+package com.yongyida.robot.motorcontrol;
+// Declare any non-default types here with import statements
+
+interface MotorController {
+    void setDrvType(int drvType);     //设置驱动类型
+
+    void setSpeed(int speed);       //设置马达速度
+
+    int forward(int arg);
+
+    int back(int arg);
+
+    int left(int arg);
+	
+    int right(int arg);
+	
+	int turnLeft(int arg);
+	
+	int turnRight(int arg);
+
+    int stop();
+
+    int headLeft(int arg);
+
+    int headRight(int arg);
+
+	int reverseLeft(int arg);
+
+	int reverseRight(int arg);
+	
+    int headUp(int arg);
+
+    int headDown(int arg);
+
+    int headStop();
+
+    void setFallOn(boolean on);
+}

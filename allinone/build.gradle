@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.neenbedankt.android-apt'
 apply from: '../buildshell/library.gradle'
 //apply from: '../buildshell/ndk.gradle'
 
@@ -7,17 +6,22 @@ def mic_ver = ""
 def app_id = ""
 def platform = ""
 def wakeup = ""
-def use_aiui = "yes"
+def use_aiui_libs = "yes"
 def mic_test = "yes"
-if(project.hasProperty("config") && file(project.property("config")).exists()) {
-    Properties props = new Properties()
-    props.load(new FileInputStream(file(project.property("config"))))
-    mic_ver = props['mic_ver']
-    app_id = props['app_id']
-    platform = props['platform']
-    wakeup = props['wakeup']
-    use_aiui = props['use_aiui']
-    mic_test = props['mic_test']
+
+if(project.hasProperty("mainservice.config")){
+    // ≈‰÷√Œƒº˛¬∑æ∂
+    def config = project.property("mainservice.config");
+    if(file(config).exists()) {
+        Properties props = new Properties()
+        props.load(new FileInputStream(file(config)))
+        mic_ver = props['mic_ver']
+        app_id = props['app_id']
+        platform = props['platform']
+        wakeup = props['wakeup']
+        use_aiui_libs = props['use_aiui_libs']
+        mic_test = props['mic_test']
+    }
 }
 
 android{
@@ -38,9 +42,9 @@ android{
         //disable automatic ndk-build call
         jni.srcDirs = []
         manifest.srcFile "src/main/AndroidManifest.xml"
-        resources.srcDirs = ['src/main/resources/', "src/main/" + mic_ver + "/"+ platform + "/resources"]
+        resources.srcDirs = ['src/main/resources/']
 
-        if("yes" == use_aiui){
+        if("yes" == use_aiui_libs){
             jniLibs.srcDirs += [ 'src/main/ext_libs_appid/'+ app_id + '/libsaiui']
         }else {
             jniLibs.srcDirs += [ 'src/main/ext_libs_appid/'+ app_id + '/libs']
@@ -65,7 +69,7 @@ dependencies {
     provided files(getLayoutLibPath())
     compile fileTree(include: ['*.jar'], dir: 'src/main/libs')
     compile fileTree(dir: "src/main/" + mic_ver + "/" + platform + "/libs", include: ['*.jar'])
-    if("yes" == use_aiui){
+    if("yes" == use_aiui_libs){
         compile fileTree(dir: "src/main/ext_libs_appid/" + app_id + "/libsaiui", include: ['*.jar'])
     }else{
         compile fileTree(dir: "src/main/ext_libs_appid/" + app_id + "/libs", include: ['*.jar'])
@@ -84,7 +88,7 @@ dependencies {
     compile publicDepend.support
     compile publicDepend.appcompat
     compile publicDepend.eventbus
-    apt     publicDepend.eventbusApt
+    annotationProcessor     publicDepend.eventbusApt
 
     compile project(':tools')
     compile project(':drive')

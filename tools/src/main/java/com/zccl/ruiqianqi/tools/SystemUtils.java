@@ -883,7 +883,10 @@ public class SystemUtils {
 
         //tasks.get(0).topActivity.getClassName() == "com.zccl.mvp.view.MainActivity"
         //tasks.get(0).topActivity.getShortClassName() == "MainActivity"
-        return tasks.get(0);
+        if(tasks.size() > 0) {
+            return tasks.get(0);
+        }
+        return null;
     }
 
     /**

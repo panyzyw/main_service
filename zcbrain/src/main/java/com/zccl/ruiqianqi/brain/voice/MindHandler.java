@@ -320,6 +320,7 @@ public class MindHandler {
 
                 // 触摸唤醒，一切从头开始
                 if(text.equals(mContext.getString(R.string.sensor_touch)) ||
+                        text.equals(mContext.getString(R.string.qian_e)) ||
                         text.equals(mContext.getString(R.string.hou_nao_shao))){
 
                     StatePresenter sp = StatePresenter.getInstance();

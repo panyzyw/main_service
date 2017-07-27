@@ -11,12 +11,13 @@ import com.raizlabs.android.dbflow.config.DatabaseDefinition;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.runtime.BaseTransactionManager;
-import com.raizlabs.android.dbflow.sql.language.Condition;
 import com.raizlabs.android.dbflow.sql.language.CursorResult;
-import com.raizlabs.android.dbflow.sql.language.SQLCondition;
+import com.raizlabs.android.dbflow.sql.language.Operator;
+import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.DefaultTransactionManager;
+import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModelTransaction;
 import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 import com.raizlabs.android.dbflow.structure.database.transaction.PriorityTransactionQueue;
 import com.raizlabs.android.dbflow.structure.database.transaction.ProcessModelTransaction;
@@ -34,6 +35,8 @@ import static com.zccl.ruiqianqi.storage.db.MyDbFlow.OP.UPDATE;
 
 /**
  * Created by ruiqianqi on 2017/1/14 0014.
+ *
+ * https://agrosner.gitbooks.io/dbflow/content/Retrieval.html
  */
 
 public class MyDbFlow {
@@ -41,6 +44,11 @@ public class MyDbFlow {
     // 类标识
     private static String TAG = MyDbFlow.class.getSimpleName();
 
+    /**
+     * model.insert(); // inserts
+     * model.update(); // updates
+     * model.save();   // checks if exists, if true update, else insert.
+     */
     public enum OP{
         // 增
         INSERT,
@@ -74,11 +82,12 @@ public class MyDbFlow {
                                 databaseDefinition);
                     }
                 }).build());
+
         // 初始化DBFlow数据库操作
         FlowManager.init(builder.build());
     }
 
-    /**********************************************************************************************/
+    /**************************************【事务操作方式一】**************************************/
     /**
      * 事务、批量【增、删、改】服务器地址，
      *
@@ -97,7 +106,7 @@ public class MyDbFlow {
             ProcessModelTransaction<ServerBean> processModelTransaction =
                     new ProcessModelTransaction.Builder<>(new ProcessModelTransaction.ProcessModel<ServerBean>() {
                         @Override
-                        public void processModel(ServerBean serverBean) {
+                        public void processModel(ServerBean serverBean, DatabaseWrapper wrapper) {
                             if (INSERT == op) {
                                 //serverBean.save();
                                 serverBean.insert();
@@ -115,6 +124,7 @@ public class MyDbFlow {
 
                         }
                     }).addAll(serverBeanList).build();
+
             if(SYNC == sync){
                 // 批量同步
                 database.executeTransaction(processModelTransaction);
@@ -139,13 +149,18 @@ public class MyDbFlow {
                         }).build().execute();
             }
 
-            // 没什么用
+            /**
+             * All Model must be from same Table/Model Class.
+             * No progress listening
+             * Can only save, insert, or update the whole list entirely.
+             */
             /*
             FastStoreModelTransaction
-                    .insertBuilder(FlowManager.getModelAdapter(OpenQA.class))
-                    .addAll(openQAList)
+                    .insertBuilder(FlowManager.getModelAdapter(ServerBean.class))
+                    .addAll(serverBeanList)
                     .build();
                     */
+
         } catch (SQLException e) {
             if (null != dbCallback) {
                 dbCallback.OnFailure(e);
@@ -168,12 +183,11 @@ public class MyDbFlow {
 
         DatabaseDefinition database = FlowManager.getDatabase(AppDatabase.class);
         try {
-
             // 批量插入
             ProcessModelTransaction<ServerBean> processModelTransaction =
                     new ProcessModelTransaction.Builder<>(new ProcessModelTransaction.ProcessModel<ServerBean>() {
                         @Override
-                        public void processModel(ServerBean serverBean) {
+                        public void processModel(ServerBean serverBean, DatabaseWrapper wrapper) {
                             if (INSERT == op) {
                                 //serverBean.save();
                                 serverBean.insert();
@@ -197,7 +211,7 @@ public class MyDbFlow {
                 database.executeTransaction(processModelTransaction);
             }else{
                 // 批量异步
-                database.beginTransactionAsync(processModelTransaction)
+                Transaction transaction = database.beginTransactionAsync(processModelTransaction)
                         .success(new Transaction.Success() {
                             @Override
                             public void onSuccess(Transaction transaction) {
@@ -213,8 +227,25 @@ public class MyDbFlow {
                                     dbCallback.OnFailure(error);
                                 }
                             }
-                        }).build().execute();
+                        }).build();
+
+                transaction.execute();
+
+                // attempt to cancel before its run. If it's already ran, this call has no effect.
+                //transaction.cancel();
             }
+
+            /**
+             * All Model must be from same Table/Model Class.
+             * No progress listening
+             * Can only save, insert, or update the whole list entirely.
+             */
+            /*
+            FastStoreModelTransaction
+                    .insertBuilder(FlowManager.getModelAdapter(ServerBean.class))
+                    .add(serverBean)
+                    .build();
+                    */
 
         } catch (SQLException e) {
             if (null != dbCallback) {
@@ -223,7 +254,7 @@ public class MyDbFlow {
         }
     }
 
-    /**********************************************************************************************/
+    /***********************************【事务操作方式二】*****************************************/
     /**
      * 批量【增、删、改】服务器地址
      *
@@ -243,7 +274,7 @@ public class MyDbFlow {
                 // run a transaction synchronous easily.
                 database.executeTransaction(new MyTransaction(op, (ServerBean[]) serverBeanList.toArray()));
             }else {
-                database.beginTransactionAsync(new MyTransaction(op, (ServerBean[]) serverBeanList.toArray())).success(new Transaction.Success() {
+                Transaction transaction = database.beginTransactionAsync(new MyTransaction(op, (ServerBean[]) serverBeanList.toArray())).success(new Transaction.Success() {
                     @Override
                     public void onSuccess(Transaction transaction) {
                         if (null != dbCallback) {
@@ -257,7 +288,11 @@ public class MyDbFlow {
                             dbCallback.OnFailure(error);
                         }
                     }
-                }).build().execute();
+                }).build();
+                transaction.execute();
+
+                // attempt to cancel before its run. If it's already ran, this call has no effect.
+                //transaction.cancel();
             }
         } catch (SQLException e) {
             if (null != dbCallback) {
@@ -339,28 +374,14 @@ public class MyDbFlow {
      * @param flagVersion                 服务器地址版本
      * @return
      */
-    public static ServerBean queryServerBean(String flagVersion) {
+    public static ServerBean queryServerBean(String flagVersion, boolean ascDesc) {
         return SQLite.select()
                 .from(ServerBean.class)
                 .where(ServerBean_Table.flagVersion.eq(flagVersion))
+                .orderBy(ServerBean_Table.id, ascDesc)
                 .querySingle();
     }
 
-    /**
-     * 同步查询所有的用户
-     *
-     * orderBy(ServerBean_Table.id, true) 代表升序
-     * ASC   升序
-     * DESC  降序
-     *
-     * @return
-     */
-    public static List<ServerBean> queryAllServerBean() {
-        return SQLite.select()
-                .from(ServerBean.class)
-                .orderBy(ServerBean_Table.id, true)
-                .queryList();
-    }
 
     /**
      * 根据信息，同步查询多条信息
@@ -372,14 +393,30 @@ public class MyDbFlow {
      * @param flagVersions                  多条信息查询条件
      * @return
      */
-    public static List<ServerBean> querySomeServerBean(List<String> flagVersions) {
+    public static List<ServerBean> querySomeServerBean(List<String> flagVersions, boolean ascDesc) {
         List<String> flagVersionList = new ArrayList<>();
         flagVersionList.addAll(flagVersions);
-        SQLCondition condition = Condition.column(ServerBean_Table.flagVersion.getNameAlias()).in(flagVersionList);
+        SQLOperator condition = ServerBean_Table.flagVersion.in(flagVersionList);
         return SQLite.select()
                 .from(ServerBean.class)
                 .where(condition)
-                .orderBy(ServerBean_Table.id, true)
+                .orderBy(ServerBean_Table.id, ascDesc)
+                .queryList();
+    }
+
+    /**
+     * 同步查询所有的用户
+     *
+     * orderBy(ServerBean_Table.id, true) 代表升序
+     * ASC   升序
+     * DESC  降序
+     *
+     * @return
+     */
+    public static List<ServerBean> queryAllServerBean(boolean ascDesc) {
+        return SQLite.select()
+                .from(ServerBean.class)
+                .orderBy(ServerBean_Table.id, ascDesc)
                 .queryList();
     }
 
@@ -421,50 +458,25 @@ public class MyDbFlow {
                     }
                 })
                 .execute();
-    }
 
-    /**
-     * 异步查询所有的用户
-     * orderBy(ServerBean_Table.id, true) 代表升序
-     * ASC   升序
-     * DESC  降序
-     *
-     * @param queryServerBeanCallback  查询回调接口
-     * @return
-     */
-    public static void queryAllServerBean(final IQueryServerBeanCallback queryServerBeanCallback) {
-        SQLite.select()
-                .from(ServerBean.class)
-                .orderBy(ServerBean_Table.id, true)
-                .async()
-                .queryResultCallback(new QueryTransaction.QueryResultCallback<ServerBean>() {
-                    @Override
-                    public void onQueryResult(QueryTransaction transaction, @NonNull CursorResult<ServerBean> tResult) {
-                        // called when query returns on UI thread
-                        List<ServerBean> serverBeanList = tResult.toListClose();
-                        // do something with results
-                        if (null != queryServerBeanCallback) {
-                            queryServerBeanCallback.OnQueryListResult(serverBeanList);
-                        }
-                    }
-                }).
-                success(new Transaction.Success() {
-                    @Override
-                    public void onSuccess(Transaction transaction) {
-                        if (null != queryServerBeanCallback) {
-                            queryServerBeanCallback.OnSuccess();
-                        }
-                    }
-                }).
-                error(new Transaction.Error() {
-                    @Override
-                    public void onError(Transaction transaction, Throwable error) {
-                        if (null != queryServerBeanCallback) {
-                            queryServerBeanCallback.OnFailure(error);
-                        }
-                    }
-                })
-                .execute();
+                /*
+                FlowManager.getDatabaseForTable(ServerBean.class)
+                .beginTransactionAsync(new QueryTransaction.Builder<>(
+                        SQLite.select()
+                        .from(ServerBean.class)
+                        .where(ServerBean_Table.flagVersion.eq(flagVersion)))
+                        .queryResult(new QueryTransaction.QueryResultCallback<ServerBean>() {
+                            @Override
+                            public void onQueryResult(QueryTransaction<ServerBean> transaction, @NonNull CursorResult<ServerBean> tResult) {
+                                ServerBean serverBean = tResult.toModelClose();
+                                // do something with results
+                                if (null != queryServerBeanCallback) {
+                                    queryServerBeanCallback.OnQueryResult(serverBean);
+                                }
+                            }
+                        }).build())
+                .build().execute();
+                */
     }
 
     /**
@@ -482,7 +494,7 @@ public class MyDbFlow {
         List<String> flagVersionList = new ArrayList<>();
         flagVersionList.addAll(flagVersions);
 
-        SQLCondition condition = Condition.column(ServerBean_Table.flagVersion.getNameAlias()).in(flagVersionList);
+        SQLOperator condition = ServerBean_Table.flagVersion.in(flagVersionList);
         SQLite.select()
                 .from(ServerBean.class)
                 .where(condition)
@@ -516,7 +528,53 @@ public class MyDbFlow {
     }
 
     /**
-     * 异步数据查询回调接口
+     * 异步查询所有的用户
+     * orderBy(ServerBean_Table.id, true) 代表升序
+     * ASC   升序
+     * DESC  降序
+     *
+     * @param queryServerBeanCallback  查询回调接口
+     * @return
+     */
+    public static void queryAllServerBean(final IQueryServerBeanCallback queryServerBeanCallback) {
+        SQLite.select()
+                .from(ServerBean.class)
+                .orderBy(ServerBean_Table.id, true)
+                .async()
+                .queryResultCallback(new QueryTransaction.QueryResultCallback<ServerBean>() {
+                    @Override
+                    public void onQueryResult(QueryTransaction<ServerBean> transaction, @NonNull CursorResult<ServerBean> tResult) {
+                        // called when query returns on UI thread
+                        List<ServerBean> serverBeanList = tResult.toListClose();
+                        // do something with results
+                        if (null != queryServerBeanCallback) {
+                            queryServerBeanCallback.OnQueryListResult(serverBeanList);
+                        }
+                    }
+                }).
+                success(new Transaction.Success() {
+                    @Override
+                    public void onSuccess(Transaction transaction) {
+                        if (null != queryServerBeanCallback) {
+                            queryServerBeanCallback.OnSuccess();
+                        }
+                    }
+                }).
+                error(new Transaction.Error() {
+                    @Override
+                    public void onError(Transaction transaction, Throwable error) {
+                        if (null != queryServerBeanCallback) {
+                            queryServerBeanCallback.OnFailure(error);
+                        }
+                    }
+                })
+                .execute();
+    }
+
+
+    /*********************************************************************************************/
+    /**
+     * 数据库操作【查询】对外回调接口
      */
     public interface IQueryServerBeanCallback extends DbCallback {
         void OnQueryResult(ServerBean serverBean);
@@ -524,7 +582,7 @@ public class MyDbFlow {
     }
 
     /**
-     * 数据库操作接口
+     * 数据库操作【增、删、改】对外回调接口
      */
     public interface DbCallback {
         void OnSuccess();
@@ -532,7 +590,7 @@ public class MyDbFlow {
     }
 
     /**
-     * 事件
+     * 事务
      */
     protected static class MyTransaction implements ITransaction {
         private OP mOp = INSERT;

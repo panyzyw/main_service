@@ -191,7 +191,7 @@ public class SocketPresenter extends BasePresenter {
             // 登录成功，快来陪我玩
             ReportPresenter.report(mContext.getString(R.string.login_server_success));
 
-            ServerBean serverBean = MyDbFlow.queryServerBean(PersistPresenter.getInstance().getServerAddr());
+            ServerBean serverBean = MyDbFlow.queryServerBean(PersistPresenter.getInstance().getServerAddr(), true);
             serverBean.rid = loginEvent.getRid();
             //serverBean.update();
             LogUtils.e(TAG, "rid = " + serverBean.rid);

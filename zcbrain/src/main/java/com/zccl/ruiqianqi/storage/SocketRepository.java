@@ -13,7 +13,7 @@ import com.zccl.ruiqianqi.storage.db.ServerBean;
 public class SocketRepository implements ISocketRepository {
     @Override
     public ServerAddr queryServerAddr(String flagVersion) {
-        ServerBean serverBean = MyDbFlow.queryServerBean(flagVersion);
+        ServerBean serverBean = MyDbFlow.queryServerBean(flagVersion, true);
         return Converter.serverBean2Addr(serverBean);
     }
 }

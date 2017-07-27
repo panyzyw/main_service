@@ -1,7 +1,6 @@
 package com.zccl.ruiqianqi.storage.db;
 
 import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ModelContainer;
 import com.raizlabs.android.dbflow.annotation.NotNull;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -11,7 +10,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 /**
  * Created by ruiqianqi on 2017/1/14 0014.
  */
-@ModelContainer
+//@ModelContainer
 @Table(database = AppDatabase.class)
 public class ServerBean extends BaseModel {
     // 自增ID

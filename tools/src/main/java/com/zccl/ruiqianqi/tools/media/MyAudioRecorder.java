@@ -37,16 +37,17 @@ import static com.zccl.ruiqianqi.tools.media.MyAudioRecorder.State.INITIALIZED;
  */
 public class MyAudioRecorder {
 
+    // 类标志
     private static String TAG = MyAudioRecorder.class.getSimpleName();
-    /**
-     * 全局上下文
-     */
+
+    // 全局上下文
     private Context mContext;
 
     /**
      * 录制频率，单位hz.这里的值注意了，写的不好，可能实例化AudioRecord对象的时候，会出错。我开始写成11025就不行。这取决于硬件设备
      */
     private int sampleRate = 16000;
+
     /**
      * 声道，输入的单声道
      * {@link AudioFormat#CHANNEL_IN_MONO} and {@link AudioFormat#CHANNEL_IN_STEREO}.
@@ -57,8 +58,8 @@ public class MyAudioRecorder {
      * CHANNEL_IN_MONO   为单声道
      * CHANNEL_IN_STEREO 为双声道，
      */
-
     private int channelConfig = AudioFormat.CHANNEL_IN_MONO;
+
     /**
      * 位长16bit，每次采样用多少字节来存
      * {@link AudioFormat#ENCODING_PCM_8BIT},
@@ -82,17 +83,11 @@ public class MyAudioRecorder {
     // 文件保存路径
     private String mFilePath;
 
-    /**
-     * 录制条件
-     */
+    // 录制条件
     private boolean isRecording = false;
-    /**
-     * 接收缓存大小
-     */
+    // 接收缓存大小
     private int recvBufSize = 0;
-    /**
-     * 录音类
-     */
+    // 录音类
     private AudioRecord audioRecord = null;
     // 录音器当前状态
     private State mState;
@@ -105,6 +100,9 @@ public class MyAudioRecorder {
     private AcousticEchoCanceler mAcousticEchoCanceler;
     // 降噪用的
     private AutomaticGainControl mAutomaticGainControl;
+
+    // 音频数据回调
+    private OnAudioCallback mAudioCallback;
 
     public MyAudioRecorder(Context context) {
         this.mContext = context;
@@ -369,6 +367,60 @@ public class MyAudioRecorder {
     }
 
     /**
+     * 开始录音
+     * @param audioCallback 录音音频的回调
+     */
+    public void startRecord(OnAudioCallback audioCallback){
+        this.mAudioCallback = audioCallback;
+
+        if (mState == INITIALIZED) {
+            Observable.create(new Observable.OnSubscribe<String>() {
+                @Override
+                public void call(Subscriber<? super String> subscriber) {
+
+                    // 开始录制
+                    audioRecord.startRecording();
+                    isRecording = true;
+                    mState = State.RECORDING;
+
+                    // 定义循环，根据isRecording的值来判断是否继续录制
+                    while (isRecording) {
+                        // 从bufferSize中读取字节，返回读取的byte个数
+                        int bufferReadResult = audioRecord.read(buffer, 0, buffer.length);
+                        switch (bufferReadResult) {
+                            case android.media.AudioRecord.ERROR_INVALID_OPERATION:
+                                break;
+                            case android.media.AudioRecord.ERROR_BAD_VALUE:
+                                break;
+                            case android.media.AudioRecord.ERROR_DEAD_OBJECT:
+                                break;
+                            case android.media.AudioRecord.ERROR:
+                                break;
+                        }
+
+                        if(bufferReadResult > AudioRecord.SUCCESS) {
+                            if (null != mAudioCallback) {
+                                mAudioCallback.OnAudio(buffer, bufferReadResult);
+                            }
+                        }
+
+                        /*
+                        if(AudioRecord.RECORDSTATE_STOPPED == audioRecord.getRecordingState()){
+                            isRecording = false;
+                        }
+                        */
+
+                    }
+
+                }
+            })
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe();
+        }
+    }
+
+    /**
      * 停止录音
      */
     public void stopRecord() {
@@ -455,5 +507,9 @@ public class MyAudioRecorder {
          * 录音生了错误
          */
         ERROR,
+    }
+
+    public interface OnAudioCallback{
+        void OnAudio(byte[] data, int len);
     }
 }

@@ -56,16 +56,20 @@ public class MyHttp2Client {
 
     /**
      * 添加文字部分请求
+     * Content-Disposition: form-data; name="metadata"
+     * Content-Type: application/json; charset=UTF-8
      * @param json
      * @return
      */
     private static MultipartBody.Part partJson(String json){
-        RequestBody body = RequestBody.create(MediaType.parse("application/json"), json);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=UTF-8"), json);
         return MultipartBody.Part.createFormData("metadata", null, body);
     }
 
     /**
      * 添加音频部分请求
+     * Content-Disposition: form-data; name="audio"
+     * Content-Type: application/octet-stream
      * @param data
      * @return
      */
@@ -99,6 +103,9 @@ public class MyHttp2Client {
             @Override
             public void onFailure(Call call, IOException e) {
                 LogUtils.e(TAG, e.getMessage(), e);
+                if(null != responseListener){
+                    responseListener.OnFailure(e);
+                }
             }
 
             @Override
@@ -108,15 +115,23 @@ public class MyHttp2Client {
                 //LogUtils.e(TAG, "Http name: " + response.protocol().name());
                 //LogUtils.e(TAG, "Http code: " + code);
                 // 有数据返回
-                if(code==200){
+                if(code == 200){
                     if(null != responseListener){
                         responseListener.OnSuccess(response);
                     }
                 }
+                /*
                 // 没有数据返回
                 else if(code==204){
 
                 }
+                */
+                else {
+                    if(null != responseListener){
+                        responseListener.OnFailure(new Throwable("code != 200"));
+                    }
+                }
+
             }
         });
     }
@@ -153,6 +168,7 @@ public class MyHttp2Client {
      */
     public interface ResponseListener{
         void OnSuccess(Response response);
+        void OnFailure(Throwable e);
     }
 
 }

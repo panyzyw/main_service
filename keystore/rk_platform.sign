@@ -1,0 +1,4 @@
+RELEASE_STORE_FILE=..\\keystore\\rk_platform.jks
+RELEASE_STORE_PASSWORD=android
+RELEASE_KEY_ALIAS=androiddebugkey
+RELEASE_KEY_PASSWORD=android

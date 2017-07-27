@@ -1,3 +1,4 @@
+//apply plugin: 'com.neenbedankt.android-apt'
 android {
 
     def globalConfig = rootProject.extensions.getByName("ext")
@@ -11,6 +12,7 @@ android {
         versionName globalConfig.getAt("versionName")
 
         testInstrumentationRunner rootProject.ext.testInstrumentationRunner
+
     }
 
     sourceSets.main {
@@ -25,12 +27,12 @@ android {
         resources.srcDirs = ['src/main/resources/']
     }
 
-    /*
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
-    */
+
 
     buildTypes {
 

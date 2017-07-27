@@ -21,6 +21,7 @@ import com.zccl.ruiqianqi.tools.MYUIUtils;
 import com.zccl.ruiqianqi.tools.MyAppUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
 import com.zccl.ruiqianqi.tools.SystemUtils;
+import com.zccl.ruiqianqi.tools.config.MyConfigure;
 import com.zccl.ruiqianqi.tools.executor.rxutils.MyRxUtils;
 import com.zccl.ruiqianqi.utils.AppUtils;
 import com.zccl.ruiqianqi.utils.LedUtils;
@@ -435,15 +436,15 @@ public class RobotVoice extends VoiceManager {
             if(null == wakeInfo)
                 return;
 
-            //MYUIUtils.showToast(mContext, "angle=" + wakeInfo.getAngle() + ", score=" + wakeInfo.getScore());
+            boolean isShowDebug = Boolean.parseBoolean(MyConfigure.getValue("show_debug"));
+            if(isShowDebug) {
+                MYUIUtils.showToast(mContext, "angle=" + wakeInfo.getAngle() + ", score=" + wakeInfo.getScore());
+            }
 
             PersistPresenter cp = PersistPresenter.getInstance();
-            String model = SystemProperties.get(motorVersionKey, "8163_20");
-            if(!StringUtils.isEmpty(model)) {
-                if(model.startsWith("8163_50")){
-                    // 仅仅Y50DE使用
-                    cp.setLocalization(true);
-                }
+            boolean isLocalizationOn = Boolean.parseBoolean(MyConfigure.getValue("localization"));
+            if(isLocalizationOn){
+                cp.setLocalization(true);
             }
 
             if(wakeInfo.getScore() >= cp.getThreshold()){
@@ -452,12 +453,14 @@ public class RobotVoice extends VoiceManager {
                 SystemUtils.wakeUp(mContext);
 
 
-                // 唤醒之后，进行人脸识别
-                Intent intent = new Intent("com.yongyida.robot.VoiceLocalization");
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                intent.putExtra("angle", wakeInfo.getAngle());
-                mContext.sendBroadcast(intent);
-
+                String face_detect = MyConfigure.getValue("face_detect");
+                if(!"no".equals(face_detect)) {
+                    // 唤醒之后，进行人脸识别
+                    Intent intent = new Intent("com.yongyida.robot.VoiceLocalization");
+                    intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                    intent.putExtra("angle", wakeInfo.getAngle());
+                    mContext.sendBroadcast(intent);
+                }
 
                 // 非触摸、有表情、唤醒
                 setTouchWake(false);

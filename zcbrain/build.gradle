@@ -1,23 +1,24 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 apply from: '../buildshell/android.gradle'
 
 // 唤醒词、平台配置
-def nlu = ""
 def wakeup = ""
-if(project.hasProperty("config") && file(project.property("config")).exists()) {
+// 配置文件路径
+def config = project.property("mainservice.config")
+if(project.hasProperty("mainservice.config") && file(config).exists()) {
     Properties props = new Properties()
-    props.load(new FileInputStream(file(project.property("config"))))
-    nlu = props['nlu']
+    props.load(new FileInputStream(file(config)))
     wakeup = props['wakeup']
 }
 
 // 软件版本配置
 def versionCodeApp = "1"
 def versionNameApp = "1.0.0"
-if(project.hasProperty("app.version") && file(project.property("app.version")).exists()) {
+// 版本文件路径
+def version = project.property("mainservice.version")
+if(project.hasProperty("mainservice.version") && file(version).exists()) {
     Properties props = new Properties()
-    props.load(new FileInputStream(file(project.property("app.version"))))
+    props.load(new FileInputStream(file(version)))
     versionCodeApp = props[wakeup + 'versionCode']
     versionNameApp = props[wakeup + 'versionName']
     if(null == versionCodeApp){
@@ -25,10 +26,6 @@ if(project.hasProperty("app.version") && file(project.property("app.version")).e
     }
     if(null == versionNameApp){
         versionNameApp = props['xiaoyongversionName']
-    }
-    if("gspeech" == nlu){
-        versionCodeApp = props['gspeechversionCode']
-        versionNameApp = props['gspeechversionName']
     }
 }
 
@@ -49,12 +46,19 @@ android {
             java.srcDirs = ["src/main/java", 'src/main/ext_src/xiaoyong/java']
         }
 
+        /*
         if(file(".\\src\\main\\ext_resources\\" + wakeup + "\\resources").exists()){
             resources.srcDirs = ['src/main/resources/', 'src/main/ext_resources/'+ wakeup + '/resources']
         }else {
             resources.srcDirs = ['src/main/resources/', 'src/main/ext_resources/xiaoyong/resources']
         }
+        */
 
+        if(file("..\\buildconfig\\mainservice\\ext_resources\\" + wakeup + "\\resources").exists()){
+            resources.srcDirs = ['src/main/resources/', '../buildconfig/mainservice/ext_resources/'+ wakeup + '/resources']
+        }else {
+            resources.srcDirs = ['src/main/resources/', '../buildconfig/mainservice/ext_resources/xiaoyong/resources']
+        }
     }
 
     defaultConfig {
@@ -125,14 +129,15 @@ dependencies {
 
     def presentationDepend = rootProject.ext.presentationDepend
     compile presentationDepend.butterknife
-    apt     presentationDepend.butterknifeApt
+    annotationProcessor      presentationDepend.butterknifeApt
     compile presentationDepend.dbflow
     compile presentationDepend.dbflowCore
-    apt     presentationDepend.dbflowApt
+    annotationProcessor      presentationDepend.dbflowApt
 
     def developmentDepend = rootProject.ext.developmentDepend
     debugCompile      developmentDepend.leakcanary
     releaseCompile    developmentDepend.leakcanaryNoop
+    mtk_testkeyCompile  developmentDepend.leakcanaryNoop
     rk_platformCompile  developmentDepend.leakcanaryNoop
 
     compile project(':flytek')

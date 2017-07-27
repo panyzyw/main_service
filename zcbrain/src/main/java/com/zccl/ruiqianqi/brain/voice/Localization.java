@@ -8,6 +8,7 @@ import com.zccl.ruiqianqi.brain.R;
 import com.zccl.ruiqianqi.move.MoveAction;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
+import com.zccl.ruiqianqi.tools.config.MyConfigure;
 
 /**
  * Created by ruiqianqi on 2017/4/2 0002.
@@ -36,7 +37,10 @@ public class Localization {
      * @param angle
      */
     protected void rotate(int angle){
-        String model = SystemProperties.get(motorVersionKey, "8163_20");
+        String model = MyConfigure.getValue(motorVersionKey);
+        if(StringUtils.isEmpty(model)) {
+            model = SystemProperties.get(motorVersionKey, "8163_20");
+        }
         if(!StringUtils.isEmpty(model)) {
             if(model.startsWith("8735")){
                 if(model.contains("_20")){
@@ -55,6 +59,16 @@ public class Localization {
                     motor_8163_50(angle);
                 }else if(model.contains("_128")){
 
+                }else if(model.contains("_150")){
+
+                }
+            }else if(model.startsWith("rk3399")){
+                if(model.contains("_20")){
+
+                }else if(model.contains("_50")){
+
+                }else if(model.contains("_128")){
+                    motor_rk3399_128(angle);
                 }else if(model.contains("_150")){
 
                 }
@@ -177,6 +191,27 @@ public class Localization {
                 angle = 360 - angle;
                 moveAction.setSpeed(27);
                 moveAction.right(13 * angle - angle / 2);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+/*********************************【rk3399声源定位】*********************************************/
+    /**
+     * 128机型的声源定位
+     * @param angle
+     */
+    private void motor_rk3399_128(int angle){
+        LogUtils.e(TAG, "motor_rk3399_128 localization");
+        try {
+            moveAction.setDriveType(MoveAction.DRIVE_BY_DISTANCE);
+            if(angle <= 180){
+                moveAction.setSpeed(40);
+                moveAction.right(angle * 90);
+            }else{
+                moveAction.setSpeed(40);
+                moveAction.left((360 - angle) * 90);
             }
         } catch (RemoteException e) {
             e.printStackTrace();
