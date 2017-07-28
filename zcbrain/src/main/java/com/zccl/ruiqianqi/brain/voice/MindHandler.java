@@ -25,6 +25,7 @@ import com.zccl.ruiqianqi.presentation.presenter.StatePresenter;
 import com.zccl.ruiqianqi.tools.JsonUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
+import com.zccl.ruiqianqi.tools.config.MyConfigure;
 import com.zccl.ruiqianqi.tools.media.MyMediaPlayer;
 import com.zccl.ruiqianqi.utils.AppUtils;
 import com.zccl.ruiqianqi.utils.LedUtils;
@@ -274,7 +275,11 @@ public class MindHandler {
                     sp.setControlId(null);
                     */
                 }
-                ReportPresenter.report(reportBean);
+                boolean isNetTips = Boolean.parseBoolean(MyConfigure.getValue("net_tips"));
+                if(isNetTips){
+                    ReportPresenter.report(reportBean);
+                }
+
             }
             // 电话状态改变了
             else if(PHONE_CHANGE == flag){
