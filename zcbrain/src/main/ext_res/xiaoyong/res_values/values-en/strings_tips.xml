@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="net_is_off">
+        <item>please connect the network, experience more</item>
+    </string-array>
+
+    <string-array name="net_connecting">
+        <item>I\'m connecting the network</item>
+    </string-array>
+
+    <string-array name="net_connected">
+        <item>the network is connected</item>
+    </string-array>
+
+    <string-array name="net_disconnected">
+        <item>the network id disconnected</item>
+    </string-array>
+
+    <string-array name="login_server_success">
+        <item>login successfully, enjoy yourself</item>
+    </string-array>
+
+    <string-array name="no_audio_input">
+        <item>I can\'t hear you</item>
+        <item>Why do you keep silence</item>
+        <item>speak loudly</item>
+        <item>I didn\'t follow you</item>
+    </string-array>
+
+    <string-array name="no_net_use">
+        <item>the Internet isn\'t so good</item>
+        <item>This Internet connection! Slow as a snail</item>
+        <item>The current network condition is not good, rest a while</item>
+        <item>The network is off</item>
+    </string-array>
+
+</resources>

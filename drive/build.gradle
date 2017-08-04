@@ -4,7 +4,7 @@ apply from: '../buildshell/library.gradle'
 def platform = ""
 def robot_ver = ""
 if(project.hasProperty("mainservice.config")){
-    // ÅäÖÃÎÄ¼şÂ·¾¶
+    // é…ç½®æ–‡ä»¶è·¯å¾„
     def config = project.property("mainservice.config");
     if(file(config).exists()) {
         Properties props = new Properties()

@@ -1,7 +1,5 @@
 package com.zccl.ruiqianqi.domain.model.httpreq;
 
-import com.zccl.ruiqianqi.domain.interactor.IHttpReqInteractor;
-
 /**
  * Created by ruiqianqi on 2017/4/24 0024.
  */

@@ -25,7 +25,6 @@ android {
             //incremental true
         }
 
-
         jackOptions {
             enabled true
         }

@@ -142,10 +142,16 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
                     <Button
-                        android:id="@+id/quit"
+                        android:id="@+id/alexa"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="退出" />
+                        android:text="Alexa" />
+
+                    <Button
+                        android:id="@+id/login_out_alexa"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="LoginOut" />
                 </LinearLayout>
             </LinearLayout>
 

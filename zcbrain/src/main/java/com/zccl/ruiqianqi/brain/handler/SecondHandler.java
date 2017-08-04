@@ -229,10 +229,12 @@ public class SecondHandler extends BaseHandler {
     @Override
     public boolean handleSemantic(String json, String funcType) {
 
+
         // 全局发送【主要是为了调试查看】
         Bundle bundle = new Bundle();
         bundle.putString(KEY_OVERALL_RESULT, json);
         MyAppUtils.sendBroadcast(mContext, INTENT_ACTION_OVERALL, bundle);
+
 
         // 如果是聊天
         if(FUNC_CHAT.equals(funcType)) {

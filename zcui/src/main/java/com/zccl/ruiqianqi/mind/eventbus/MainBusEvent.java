@@ -149,15 +149,15 @@ public class MainBusEvent {
      * 网络变化事件
      */
     public static class NetEvent{
-        private boolean isConn;
+        private int state;
         private String text;
 
-        public boolean isConn() {
-            return isConn;
+        public int getState() {
+            return state;
         }
 
-        public void setConn(boolean conn) {
-            isConn = conn;
+        public void setState(int state) {
+            this.state = state;
         }
 
         public String getText() {

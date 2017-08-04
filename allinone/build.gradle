@@ -10,7 +10,7 @@ def use_aiui_libs = "yes"
 def mic_test = "yes"
 
 if(project.hasProperty("mainservice.config")){
-    // ÅäÖÃÎÄ¼şÂ·¾¶
+    // é…ç½®æ–‡ä»¶è·¯å¾„
     def config = project.property("mainservice.config");
     if(file(config).exists()) {
         Properties props = new Properties()

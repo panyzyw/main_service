@@ -1,12 +1,16 @@
 package com.zccl.ruiqianqi.presentation.view;
 
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.zccl.ruiqianqi.brain.R;
+import com.zccl.ruiqianqi.tools.MyAppUtils;
 import com.zccl.ruiqianqi.tools.SystemUtils;
 import com.zccl.ruiqianqi.view.activity.BaseCompatActivity;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseCompatActivity {
 
@@ -40,6 +44,7 @@ public class MainActivity extends BaseCompatActivity {
      * 初始化UI
      */
     private void initView(){
+
         finish();
     }
 
@@ -66,5 +71,27 @@ public class MainActivity extends BaseCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @OnClick(R.id.alexa)
+    void OnAlexa(){
+        // 跳转到ALEXA登录授权
+        ComponentName componentName = new ComponentName(getApplicationContext(),
+                "com.zccl.ruiqianqi.mind.voice.alexa.VoiceAuthorActivity");
+        Intent intent = new Intent();
+        intent.putExtra("isSignIn", true);
+        intent.setComponent(componentName);
+        MyAppUtils.startActivity(this, intent);
+    }
+
+    @OnClick(R.id.login_out_alexa)
+    void OnLoginOutAlexa(){
+        // 跳转到ALEXA登录授权
+        ComponentName componentName = new ComponentName(getApplicationContext(),
+                "com.zccl.ruiqianqi.mind.voice.alexa.VoiceAuthorActivity");
+        Intent intent = new Intent();
+        intent.putExtra("isSignIn", false);
+        intent.setComponent(componentName);
+        MyAppUtils.startActivity(this, intent);
     }
 }

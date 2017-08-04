@@ -4,6 +4,7 @@ apply from: 'buildshell/depend.gradle'
 buildscript {
     repositories {
         jcenter()
+        // Required because retrolambda is on maven central
         mavenCentral()
     }
     dependencies {
@@ -27,6 +28,8 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
     }
 }
 
@@ -47,6 +50,9 @@ allprojects {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/'}
         // 可以把 GitHub 项目发布成 maven 库
         maven { url "https://jitpack.io" }
+
+        // 该项目的全局设置
+        //apply plugin: 'me.tatarka.retrolambda'
     }
 
     tasks.withType(org.gradle.api.tasks.compile.JavaCompile) {

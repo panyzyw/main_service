@@ -2,13 +2,17 @@ apply plugin: 'com.android.application'
 apply from: '../buildshell/android.gradle'
 
 // 唤醒词、平台配置
+def robot_ver = ""
 def wakeup = ""
+def nlu = "flytek"
 // 配置文件路径
 def config = project.property("mainservice.config")
 if(project.hasProperty("mainservice.config") && file(config).exists()) {
     Properties props = new Properties()
     props.load(new FileInputStream(file(config)))
+    robot_ver = props['robot_ver']
     wakeup = props['wakeup']
+    nlu = props['nlu']
 }
 
 // 软件版本配置
@@ -34,16 +38,28 @@ android {
 
     sourceSets.main {
 
+        res.srcDirs = ["src/main/res"]
+
         if(file(".\\src\\main\\ext_res\\" + wakeup + "\\res").exists()){
-            res.srcDirs = ["src/main/res", 'src/main/ext_res/'+ wakeup + '/res']
+            res.srcDirs += ['src/main/ext_res/'+ wakeup + '/res']
         }else {
-            res.srcDirs = ["src/main/res", 'src/main/ext_res/xiaoyong/res']
+            res.srcDirs += ['src/main/ext_res/xiaoyong/res']
+        }
+
+        if(file(".\\src\\main\\ext_res\\" + wakeup + "\\res_values").exists()){
+            res.srcDirs += ['src/main/ext_res/'+ wakeup + '/res_values']
+        }else {
+            res.srcDirs += ['src/main/ext_res/xiaoyong/res_values']
         }
 
         if(file(".\\src\\main\\ext_src\\" + wakeup + "\\java").exists()){
             java.srcDirs = ["src/main/java", 'src/main/ext_src/'+ wakeup + '/java']
         }else {
             java.srcDirs = ["src/main/java", 'src/main/ext_src/xiaoyong/java']
+        }
+
+        if(file(".\\src\\main\\ext_nlu_src\\" + nlu + "\\java").exists()){
+            java.srcDirs += ['src/main/ext_nlu_src/'+ nlu + '/java']
         }
 
         /*
@@ -54,9 +70,13 @@ android {
         }
         */
 
-        if(file("..\\buildconfig\\mainservice\\ext_resources\\" + wakeup + "\\resources").exists()){
+        if(file("..\\buildconfig\\mainservice\\ext_resources\\" + wakeup + "\\" + robot_ver).exists()){
+            resources.srcDirs = ['src/main/resources/', '../buildconfig/mainservice/ext_resources/' + wakeup + '/' + robot_ver]
+        }
+        else if(file("..\\buildconfig\\mainservice\\ext_resources\\" + wakeup + "\\resources").exists()){
             resources.srcDirs = ['src/main/resources/', '../buildconfig/mainservice/ext_resources/'+ wakeup + '/resources']
-        }else {
+        }
+        else {
             resources.srcDirs = ['src/main/resources/', '../buildconfig/mainservice/ext_resources/xiaoyong/resources']
         }
     }
@@ -97,11 +117,19 @@ android {
     }
 
     sourceSets.P_armv7 {
-        manifest.srcFile "src/main/ext_src/${wakeup}/AndroidManifest.xml"
+        if(file("src/main/ext_src/${wakeup}/AndroidManifest.xml").exists()){
+            manifest.srcFile "src/main/ext_src/${wakeup}/AndroidManifest.xml"
+        }else if(file("src/main/ext_nlu_src/${nlu}/AndroidManifest.xml").exists()){
+            manifest.srcFile "src/main/ext_nlu_src/${nlu}/AndroidManifest.xml"
+        }
     }
 
     sourceSets.P_armall {
-        manifest.srcFile "src/main/ext_src/${wakeup}/AndroidManifest.xml"
+        if(file("src/main/ext_src/${wakeup}/AndroidManifest.xml").exists()){
+            manifest.srcFile "src/main/ext_src/${wakeup}/AndroidManifest.xml"
+        }else if(file("src/main/ext_nlu_src/${nlu}/AndroidManifest.xml").exists()){
+            manifest.srcFile "src/main/ext_nlu_src/${nlu}/AndroidManifest.xml"
+        }
     }
 }
 
@@ -145,6 +173,7 @@ dependencies {
     compile project(':drive')
     compile project(':socket')
     compile project(':zcui')
+
 }
 
 /*

@@ -9,7 +9,7 @@ import com.iflytek.cae.CAEError;
 import com.iflytek.cae.CAEListener;
 import com.iflytek.cloud.util.ResourceUtil;
 import com.zccl.ruiqianqi.mind.voice.allinone.R;
-import com.zccl.ruiqianqi.mind.voice.impl.beans.FiveWakeUpInfo;
+import com.zccl.ruiqianqi.mind.voice.impl.beans.SixWakeUpInfo;
 import com.zccl.ruiqianqi.plugin.voice.AbstractVoice;
 import com.zccl.ruiqianqi.plugin.voice.WakeInfo;
 import com.zccl.ruiqianqi.presentation.mictest.SavePcmAudio;
@@ -209,12 +209,12 @@ public class VoiceWakeUp {
         @Override
         public void onWakeup(String jsonResult) {
             LogUtils.e(TAG, "onWakeup: " + jsonResult);
-            FiveWakeUpInfo fiveWakeUpInfo = JsonUtils.parseJson(jsonResult, FiveWakeUpInfo.class);
-            if(null != fiveWakeUpInfo){
+            SixWakeUpInfo sixWakeUpInfo = JsonUtils.parseJson(jsonResult, SixWakeUpInfo.class);
+            if(null != sixWakeUpInfo){
                 WakeInfo wakeInfo = new WakeInfo();
-                wakeInfo.setAngle(fiveWakeUpInfo.getAngle());
-                wakeInfo.setScore(fiveWakeUpInfo.getScore());
-                wakeInfo.setBeam(fiveWakeUpInfo.getBeam());
+                wakeInfo.setAngle(sixWakeUpInfo.getAngle());
+                wakeInfo.setScore(sixWakeUpInfo.getScore());
+                wakeInfo.setBeam(sixWakeUpInfo.getBeam());
                 if(null != mWakeupCallback){
                     mWakeupCallback.wakeSuccess(wakeInfo);
                 }

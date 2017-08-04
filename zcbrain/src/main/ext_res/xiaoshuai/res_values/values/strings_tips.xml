@@ -1,0 +1,50 @@
+<resources>
+
+    <string-array name="net_is_off">
+        <item>请连网体验更多功能</item>
+        <item>小帅在离线模式下听不懂太多命令哦，最好给我配置网络，我们就可以愉快地玩咯</item>
+        <item>这个问题我不懂啊 小帅要联网才能更聪明哦 快帮我联网吧</item>
+        <item>我还没连网噢，快点帮我连上吧</item>
+    </string-array>
+
+    <string-array name="net_connecting">
+        <item>正在连接网络</item>
+        <item>小帅正在努力连接网络</item>
+        <item>正在连网，请稍等</item>
+        <item>主人，我正在连接网络，很快就能陪你玩啦</item>
+    </string-array>
+
+    <string-array name="net_connected">
+        <item>网络已连接</item>
+        <item>小帅联网成功！</item>
+        <item>小帅连上网了，主人有事儿请吩咐哈</item>
+        <item>联网了，心情倍儿棒</item>
+        <item>网络已连接，主人，快来陪我玩</item>
+    </string-array>
+
+    <string-array name="net_disconnected">
+        <item>网络已断开</item>
+        <item>网络，哪去啦？</item>
+        <item>网络不见啦！主人</item>
+        <item>嗷哟！没网了</item>
+        <item>网络断开啦</item>
+    </string-array>
+
+    <string-array name="login_server_success">
+        <item>登录成功</item>
+    </string-array>
+
+    <string-array name="no_audio_input">
+        <item>我没听见哪！</item>
+        <item>你怎么不说话！</item>
+        <item>你能大点声吗？</item>
+        <item>我没听清楚！</item>
+    </string-array>
+
+    <string-array name="no_net_use">
+        <item>貌似网络不太好啊</item>
+        <item>这网速！慢的跟蜗牛一样呀</item>
+        <item>当前网络状况不佳，休息一会儿吧</item>
+        <item>网络开小差了！</item>
+    </string-array>
+</resources>
