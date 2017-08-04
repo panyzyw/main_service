@@ -54,26 +54,32 @@ public class ListenCheck {
     private List<String> notWakeupPkgs;
     // 当前包名
     private String currentPkg;
-    // 用不用显示悬浮表情
-    private boolean isUseVoiceFloat;
 
-    public ListenCheck(Context context, RobotVoice robotVoice){
+    // 用不用显示悬浮小表情
+    private boolean isUseVoiceFloat;
+    // 用不用显示监听大表情
+    private boolean isUseExpression;
+    // 网络断开
+    private String[] netIsOffS;
+
+    protected ListenCheck(Context context, RobotVoice robotVoice){
         this.mContext = context;
         this.mRobotVoice = robotVoice;
         mLocalization = new Localization(mContext);
         helloWords = mContext.getResources().getStringArray(R.array.hello_words);
         notWakeupPkgs = Arrays.asList(mContext.getResources().getStringArray(R.array.not_wakeup_pkg));
+        netIsOffS = mContext.getResources().getStringArray(R.array.net_is_off);
     }
 
     /**********************************************************************************************/
     /**
-     * 要不要显示大表情
+     * 根据当前应用，决定要不要显示大表情
      * @return
      */
     public boolean isShowExpression(){
         StatePresenter sp = StatePresenter.getInstance();
         String scene = sp.getScene();
-        LogUtils.e(TAG, "currentScene1 = " + scene);
+        LogUtils.e(TAG, "currentScene = " + scene);
 
         MainBean mainBean = SystemPresenter.getInstance().sendCommandSync(SystemPresenter.GET_CUR_PKG, null);
         if(null != mainBean) {
@@ -206,8 +212,6 @@ public class ListenCheck {
 
         // 网络连接有问题
         if(!sp.isNetConnected()){
-            LogUtils.e(TAG, mContext.getString(R.string.have_no_net));
-            //soundTips(mContext.getString(R.string.have_no_net));
             return -3;
         }
 
@@ -275,12 +279,11 @@ public class ListenCheck {
 
     /**
      * 需要播放问候语后再开启监听
-     * @param isTouchOrVoice   true触摸和唤醒，false循环监听
-     * @param angle             声源定位角度
-     * @param isPlayWelcome    true说唤醒语，false不说唤醒语
-     * @param isUseExpression     是不是显示大表情
+     * @param isTouchOrVoice     true触摸和唤醒，false循环监听
+     * @param isPlayWelcome      true说唤醒语，false不说唤醒语
+     * @param isUseExpression    是不是显示大表情
      */
-    protected void startCheckAndListen(boolean isTouchOrVoice, int angle, boolean isPlayWelcome, boolean isUseExpression){
+    protected void startCheckAndListen(boolean isTouchOrVoice, boolean isPlayWelcome, boolean isUseExpression){
 
         final int isGoon = checkStatus(isTouchOrVoice);
         if(0 == isGoon || -3 == isGoon) {
@@ -289,7 +292,7 @@ public class ListenCheck {
                 boolean isOfflineFunc = Boolean.parseBoolean(MyConfigure.getValue("off_line_func"));
                 if(!isOfflineFunc) {
                     // 提示需要联网
-                    mRobotVoice.startTTS(mContext.getString(R.string.please_online), null);
+                    mRobotVoice.startTTS(netIsOffS[CheckUtils.getRandom(netIsOffS.length)], null);
                     return;
                 }
             }
@@ -338,7 +341,7 @@ public class ListenCheck {
 
     /**********************************【读写成员变量】********************************************/
     /**
-     * 获取要不要显示悬浮表情
+     * 读取要不要悬浮小表情
      * @return
      */
     public boolean isUseVoiceFloat() {
@@ -346,11 +349,27 @@ public class ListenCheck {
     }
 
     /**
-     * 设置要不要显示悬浮表情
+     * 设置要不要悬浮小表情
      * @param useVoiceFloat
      */
     public void setUseVoiceFloat(boolean useVoiceFloat) {
         isUseVoiceFloat = useVoiceFloat;
+    }
+
+    /**
+     * 读取要不要监听大表情
+     * @return
+     */
+    public boolean isUseExpression() {
+        return isUseExpression;
+    }
+
+    /**
+     * 设置要不要监听大表情
+     * @param useExpression
+     */
+    public void setUseExpression(boolean useExpression) {
+        isUseExpression = useExpression;
     }
 
     /**********************************【表情相关方法】********************************************/
@@ -371,7 +390,7 @@ public class ListenCheck {
     }
 
     /**
-     * 结束监听表情
+     * 结束监听悬浮小表情
      */
     protected void endListenFace(){
 
@@ -418,6 +437,13 @@ public class ListenCheck {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 结束监听大表情
+     */
+    public void endListenExpression(){
+        AppUtils.endEmotion(mContext);
     }
 
 }

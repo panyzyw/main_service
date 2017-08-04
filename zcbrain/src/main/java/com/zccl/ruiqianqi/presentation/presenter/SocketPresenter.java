@@ -2,23 +2,24 @@ package com.zccl.ruiqianqi.presentation.presenter;
 
 import com.zccl.ruiqianqi.brain.R;
 import com.zccl.ruiqianqi.brain.eventbus.MindBusEvent;
+import com.zccl.ruiqianqi.domain.interactor.ISocketInteractor;
+import com.zccl.ruiqianqi.domain.interactor.socket.SocketInteractor;
 import com.zccl.ruiqianqi.domain.model.ServerAddr;
-import com.zccl.ruiqianqi.domain.tasks.remotetask.BindUserTask;
-import com.zccl.ruiqianqi.storage.SocketRepository;
-import com.zccl.ruiqianqi.socket.eventbus.SocketBusEvent;
 import com.zccl.ruiqianqi.domain.tasks.remotetask.BaseTask;
+import com.zccl.ruiqianqi.domain.tasks.remotetask.BindUserTask;
 import com.zccl.ruiqianqi.domain.tasks.remotetask.ControlOffTask;
 import com.zccl.ruiqianqi.domain.tasks.remotetask.ControlOnTask;
 import com.zccl.ruiqianqi.domain.tasks.remotetask.FlushTask;
 import com.zccl.ruiqianqi.domain.tasks.remotetask.ForwardTask;
 import com.zccl.ruiqianqi.domain.tasks.remotetask.LoginTask;
 import com.zccl.ruiqianqi.domain.tasks.remotetask.PushTask;
-import com.zccl.ruiqianqi.domain.interactor.ISocketInteractor;
-import com.zccl.ruiqianqi.domain.interactor.socket.SocketInteractor;
 import com.zccl.ruiqianqi.mind.eventbus.MainBusEvent;
 import com.zccl.ruiqianqi.presenter.base.BasePresenter;
+import com.zccl.ruiqianqi.socket.eventbus.SocketBusEvent;
+import com.zccl.ruiqianqi.storage.SocketRepository;
 import com.zccl.ruiqianqi.storage.db.MyDbFlow;
 import com.zccl.ruiqianqi.storage.db.ServerBean;
+import com.zccl.ruiqianqi.tools.CheckUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.PhoneUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
@@ -34,19 +35,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_FAILURE;
-import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_ING;
 import static com.zccl.ruiqianqi.config.MyConfig.STATE_LOGIN_SUCCESS;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.A_BINDER_USER_QUERY;
-import static com.zccl.ruiqianqi.socket.eventbus.SocketBusEvent.IdleEvent.REQUEST_HEART;
-import static com.zccl.ruiqianqi.socket.eventbus.SocketBusEvent.SocketCarrier.RESPONSE_DATA;
-import static com.zccl.ruiqianqi.socket.eventbus.SocketBusEvent.SocketCarrier.RESPONSE_HEART;
-import static com.zccl.ruiqianqi.socket.eventbus.SocketBusEvent.SocketCarrier.RESPONSE_MSG;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.A_CONTROL_OFF;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.A_CONTROL_ON;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.A_FLUSH;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.A_LOGIN;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.A_MEDIA_FORWARD_2_VIDEO;
 import static com.zccl.ruiqianqi.config.RemoteProtocol.A_ORDER_PUSH;
+import static com.zccl.ruiqianqi.socket.eventbus.SocketBusEvent.IdleEvent.REQUEST_HEART;
+import static com.zccl.ruiqianqi.socket.eventbus.SocketBusEvent.SocketCarrier.RESPONSE_DATA;
+import static com.zccl.ruiqianqi.socket.eventbus.SocketBusEvent.SocketCarrier.RESPONSE_HEART;
+import static com.zccl.ruiqianqi.socket.eventbus.SocketBusEvent.SocketCarrier.RESPONSE_MSG;
 
 /**
  * Created by ruiqianqi on 2017/1/14 0014.
@@ -66,7 +66,8 @@ public class SocketPresenter extends BasePresenter {
     // 网络任务集合
     private Map<String, Class<? extends BaseTask>> taskMap;
 
-
+    // 登录成功提示
+    private String[] loginSuccessTips;
     /**
      * 构造方法
      */
@@ -114,6 +115,8 @@ public class SocketPresenter extends BasePresenter {
 
         // 注册事件总线，电池电量变化、机器人名字改变；
         EventBus.getDefault().register(this);
+
+        loginSuccessTips = mContext.getResources().getStringArray(R.array.login_server_success);
     }
 
 
@@ -189,7 +192,7 @@ public class SocketPresenter extends BasePresenter {
             mSocketInteractor.heartBeat();
 
             // 登录成功，快来陪我玩
-            ReportPresenter.report(mContext.getString(R.string.login_server_success));
+            ReportPresenter.report(loginSuccessTips[CheckUtils.getRandom(loginSuccessTips.length)]);
 
             ServerBean serverBean = MyDbFlow.queryServerBean(PersistPresenter.getInstance().getServerAddr(), true);
             serverBean.rid = loginEvent.getRid();

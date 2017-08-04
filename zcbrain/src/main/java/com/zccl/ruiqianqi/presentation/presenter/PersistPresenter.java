@@ -294,7 +294,7 @@ public class PersistPresenter extends BasePresenter {
                     ShareUtils.getE(mContext).putString(KEY_ID, id_sid[0]).commit();
                     ShareUtils.getE(mContext).putString(KEY_SID, id_sid[1].substring(0, 4)).commit();
                     isProvided = true;
-                    LogUtils.e(TAG, "id_A = " + id_sid);
+                    LogUtils.e(TAG, "id_A = " + serial.trim());
                 }
             }
         }

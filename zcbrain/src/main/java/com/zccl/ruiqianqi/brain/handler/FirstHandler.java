@@ -181,7 +181,7 @@ public class FirstHandler extends BaseHandler {
     public boolean handlerScene(String json, int type){
         StatePresenter sp = StatePresenter.getInstance();
         String scene = sp.getScene();
-        LogUtils.e(TAG, "currentScene2 = " + scene);
+        LogUtils.e(TAG, "handlerScene = " + scene);
 
         if(UNDERSTAND_SUCCESS == type){
             BaseInfo baseInfo = JsonUtils.parseJson(json, BaseInfo.class);

@@ -3,15 +3,19 @@ package com.zccl.ruiqianqi.mind.app;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.net.NetworkInfo;
 import android.support.multidex.MultiDex;
 
 import com.tencent.bugly.Bugly;
+import com.zccl.ruiqianqi.tools.ShareUtils;
 import com.zccl.ruiqianqi.tools.config.MyConfigure;
 import com.zccl.ruiqianqi.mind.eventbus.MainBusEvent;
 import com.zccl.ruiqianqi.tools.FileUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
+
+import static com.zccl.ruiqianqi.mind.receiver.internet.NetChangedReceiver.NET_STATUS_KEY;
 
 /**
  * Created by ruiqianqi on 2016/7/19 0019.
@@ -27,16 +31,19 @@ public class BaseApplication extends Application {
         // 多DEX，这行代码必须加上
         MultiDex.install(this);
 
-        //参数1：上下文对象
-        //参数2：注册时申请的APPID
-        //参数3：是否开启debug模式，true表示打开debug模式，false表示关闭调试模式
+        // 参数1：上下文对象
+        // 参数2：注册时申请的APPID
+        // 参数3：是否开启debug模式，true表示打开debug模式，false表示关闭调试模式
         //Bugly.init(getApplicationContext(), "5c3ac0f156", false);
 
-        //未捕获的错误处理机制
+        // 未捕获的错误处理机制
         CrashHandler.getInstance().init(this);
 
-        //初始化，检查SD卡
+        // 初始化，检查SD卡
         FileUtils.existSDCard(this);
+
+        // 初始化为未连网
+        ShareUtils.getE(this).putInt(NET_STATUS_KEY, NetworkInfo.State.DISCONNECTED.ordinal()).commit();
 
     }
 

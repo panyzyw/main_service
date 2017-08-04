@@ -40,18 +40,26 @@ public class NetChangedReceiver extends BroadcastReceiver {
         // 这个监听wifi的打开与关闭，与wifi的连接无关
         if(intent.getAction().equals(WifiManager.WIFI_STATE_CHANGED_ACTION)){
             int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_DISABLED);
-            if(wifiState == WifiManager.WIFI_STATE_DISABLED){
-                LogUtils.e(TAG, "系统关闭wifi");
+
+            if(wifiState == WifiManager.WIFI_STATE_DISABLING){
+                //LogUtils.e(TAG, "系统关闭wifi中");
             }
-            else if(wifiState == WifiManager.WIFI_STATE_DISABLING){
-                LogUtils.e(TAG, "系统关闭wifi中");
+            else if(wifiState == WifiManager.WIFI_STATE_DISABLED){
+                //LogUtils.e(TAG, "系统关闭wifi");
+            }
+            else if(wifiState == WifiManager.WIFI_STATE_ENABLING){
+                //LogUtils.e(TAG, "系统开启wifi中");
             }
             else if(wifiState == WifiManager.WIFI_STATE_ENABLED){
-                LogUtils.e(TAG, "系统开启wifi");
+                //LogUtils.e(TAG, "系统开启wifi");
+            }
+            else {
+                //WifiManager.WIFI_STATE_UNKNOWN
             }
 
+            LogUtils.e(TAG, "wifiState = " + wifiState);
             // 通知网络变化了
-            checkNet(context);
+            //checkNet(context);
 
         }
         // 这个监听wifi的连接状态即是否连上了一个有效无线路由，当上边广播的状态是WifiManager.WIFI_STATE_DISABLING，
@@ -61,16 +69,15 @@ public class NetChangedReceiver extends BroadcastReceiver {
         else if(intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)){
             NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
             if (null != networkInfo) {
+                /*
                 if(PhoneUtils.isNetConnected(context)){
                     int netType = PhoneUtils.getNetType(context);
                 }else {
 
-                }
+                }*/
+                checkNet(context, networkInfo.getState());
             }
-
-            // 通知网络变化了
-            checkNet(context);
-
+            LogUtils.e(TAG, "networkInfo1 = " + networkInfo.getState().ordinal());
         }
 
         // 这个监听网络连接的设置，包括wifi和移动数据的打开和关闭。.
@@ -79,15 +86,15 @@ public class NetChangedReceiver extends BroadcastReceiver {
         else if(intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)){
             NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
             if (null != networkInfo) {
-                if(networkInfo.isConnected()){
+                /*
+                if(PhoneUtils.isNetConnected(context)){
                     int netType = PhoneUtils.getNetType(context);
                 }else {
 
-                }
+                }*/
+                checkNet(context, networkInfo.getState());
             }
-
-            // 通知网络变化了
-            checkNet(context);
+            LogUtils.e(TAG, "networkInfo2 = " + networkInfo.getState().ordinal());
 
         }
         // 这个是信号强弱的广播
@@ -138,44 +145,76 @@ public class NetChangedReceiver extends BroadcastReceiver {
         if(PhoneUtils.isNetConnected(context)){
             int mNetType = PhoneUtils.getNetType(context);
             if(TYPE_WIFI == mNetType){
-                netEvent.setConn(true);
+                netEvent.setState(NetworkInfo.State.CONNECTED.ordinal());
                 netEvent.setText(context.getString(R.string.net_wifi));
             }
             else if(TYPE_MOBILE == mNetType || NET_TYPE_WAP == mNetType){
                 int subNetType = PhoneUtils.getSubNetType(context);
-                if(SUB_NET_TYPE_2G==subNetType){
-                    netEvent.setConn(true);
+                if(SUB_NET_TYPE_2G == subNetType){
+                    netEvent.setState(NetworkInfo.State.CONNECTED.ordinal());
                     netEvent.setText(context.getString(R.string.net_2g));
-                }else if(SUB_NET_TYPE_3G==subNetType){
-                    netEvent.setConn(true);
+
+                }else if(SUB_NET_TYPE_3G == subNetType){
+                    netEvent.setState(NetworkInfo.State.CONNECTED.ordinal());
                     netEvent.setText(context.getString(R.string.net_3g));
-                }else if(SUB_NET_TYPE_4G==subNetType){
-                    netEvent.setConn(true);
+
+                }else if(SUB_NET_TYPE_4G == subNetType){
+                    netEvent.setState(NetworkInfo.State.CONNECTED.ordinal());
                     netEvent.setText(context.getString(R.string.net_4g));
-                }else if(SUB_NET_TYPE_RESERVED==subNetType){
-                    netEvent.setConn(true);
+
+                }else if(SUB_NET_TYPE_RESERVED == subNetType){
+                    netEvent.setState(NetworkInfo.State.CONNECTED.ordinal());
                     netEvent.setText(context.getString(R.string.net_unknown_mobile));
                 }else {
-                    netEvent.setConn(false);
+                    netEvent.setState(NetworkInfo.State.DISCONNECTED.ordinal());
                     netEvent.setText(context.getString(R.string.net_none));
                 }
             }
             else {
-                netEvent.setConn(true);
+                netEvent.setState(NetworkInfo.State.CONNECTED.ordinal());
                 netEvent.setText(context.getString(R.string.net_unknown));
             }
         }else {
-            netEvent.setConn(false);
+            netEvent.setState(NetworkInfo.State.DISCONNECTED.ordinal());
             netEvent.setText(context.getString(R.string.net_none));
         }
 
-        boolean isConn = ShareUtils.getP(context).getBoolean(NET_STATUS_KEY, false);
-        if(isConn == netEvent.isConn()){
+        int state = ShareUtils.getP(context).getInt(NET_STATUS_KEY, NetworkInfo.State.DISCONNECTED.ordinal());
+        if(state == netEvent.getState()){
             return;
         }else {
-            ShareUtils.getE(context).putBoolean(NET_STATUS_KEY, netEvent.isConn()).commit();
+            ShareUtils.getE(context).putInt(NET_STATUS_KEY, netEvent.getState()).commit();
             // 通知网络变化了
             EventBus.getDefault().post(netEvent);
         }
+    }
+
+
+    /**
+     * 检测网络
+     * @param context
+     */
+    private void checkNet(Context context, NetworkInfo.State enumState){
+        MainBusEvent.NetEvent netEvent = new MainBusEvent.NetEvent();
+
+        // 连接中、连接上、断开了，状态已经明确，不用再查询
+        if(NetworkInfo.State.CONNECTING == enumState ||
+                NetworkInfo.State.CONNECTED == enumState ||
+                NetworkInfo.State.DISCONNECTED == enumState){
+            netEvent.setState(enumState.ordinal());
+
+            int state = ShareUtils.getP(context).getInt(NET_STATUS_KEY, NetworkInfo.State.DISCONNECTED.ordinal());
+            if(state == netEvent.getState()){
+                return;
+            }else {
+                ShareUtils.getE(context).putInt(NET_STATUS_KEY, netEvent.getState()).commit();
+                // 通知网络变化了
+                EventBus.getDefault().post(netEvent);
+            }
+        }
+        else {
+            checkNet(context);
+        }
+
     }
 }

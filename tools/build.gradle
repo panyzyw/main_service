@@ -35,6 +35,7 @@ dependencies {
 
     def dataDepend = rootProject.ext.dataDepend
     compile dataDepend.okhttp
+    compile dataDepend.okhttpmock
     compile dataDepend.okhttpLogging
     compile dataDepend.retrofit
     compile dataDepend.retrofitScalars

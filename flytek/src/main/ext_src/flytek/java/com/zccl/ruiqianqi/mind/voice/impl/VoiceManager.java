@@ -4,6 +4,11 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.zccl.ruiqianqi.mind.voice.flytek.Configuration;
+import com.zccl.ruiqianqi.mind.voice.flytek.VoiceRecognizer;
+import com.zccl.ruiqianqi.mind.voice.flytek.VoiceSynthesizer;
+import com.zccl.ruiqianqi.mind.voice.flytek.VoiceTextRecognizer;
+import com.zccl.ruiqianqi.mind.voice.flytek.VoiceUnderstander;
 import com.zccl.ruiqianqi.plugin.voice.AbstractVoice;
 import com.zccl.ruiqianqi.plugin.voice.Speaker;
 import com.zccl.ruiqianqi.tools.StringUtils;
@@ -19,8 +24,12 @@ public class VoiceManager extends AbstractVoice {
 
     // 没有音频数据录入
     public static final int NO_VOICE = 10118;
-    // 网络连接发生异常
-    public static final int NO_NET = 10212;
+    // 网络连接发生异常(错误码:10212)
+    public static final int NO_NET_10212 = 10212;
+    // 获取结果超时 (错误码:20002)
+    public static final int NO_NET_20002 = 20002;
+    // 网络连接发生异常(错误码:10114)
+    public static final int NO_NET_10114 = 10114;
 
     // 默认发音人
     public static final String DEFAULT_SPEAKER = Configuration.SPEAKER_NAME;

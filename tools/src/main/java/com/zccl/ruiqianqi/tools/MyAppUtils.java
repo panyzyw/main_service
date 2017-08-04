@@ -708,7 +708,7 @@ public class MyAppUtils {
      * @param context
      * @param intent
      */
-    private static void startActivity(Context context, Intent intent){
+    public static void startActivity(Context context, Intent intent){
         try {
             context.startActivity(intent);
         }catch (Exception e){

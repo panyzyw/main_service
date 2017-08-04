@@ -1,14 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">主服务</string>
-
-    <string-array name="no_audio_input">
-        <item>我没听见哪！</item>
-        <item>你怎么不说话！</item>
-        <item>你能大点声吗？</item>
-        <item>我没听清楚！</item>
-    </string-array>
-    <string name="no_net_use">网络开小差了！</string>
-    <string name="who_is_speaking">谁在说话？</string>
 
     <string-array name="hello_words">
         <item>什么事?</item>
@@ -25,9 +17,6 @@
         <item>现在开始，请叫我静静</item>
     </string-array>
 
-    <string name="have_net">网络已连接，当前网络为</string>
-    <string name="no_net">网络断开了</string>
-    <string name="have_no_net">网络已断开</string>
     <string name="connect_server_failure">连接服务器失败</string>
     <string name="login_server_failure">登录服务器失败</string>
     <string name="login_server_no_success">非成功登录状态</string>
@@ -40,7 +29,6 @@
     <string name="error_account_id">机器人帐号异常</string>
     <string name="okay_account_id">机器人帐号正常</string>
     <string name="login_is_going">连接成功，正在登录</string>
-    <string name="login_server_success">登录成功，快来陪我玩</string>
 
     <string name="control_is_on">控制已连接</string>
     <string name="control_is_off">控制已断开</string>

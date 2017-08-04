@@ -61,7 +61,7 @@
             android:name=".service.MainService"
             android:stopWithTask="false">
             <intent-filter>
-                <!-- SDK版本用的 -->
+                <!-- SDK版本用的，绑定用的 -->
                 <action android:name="com.yongyida.robot.SDK"></action>
             </intent-filter>
         </service>

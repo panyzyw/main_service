@@ -88,13 +88,21 @@ public class MyHttp2Client {
                                  String json, byte[] data, final ResponseListener responseListener){
 
         MultipartBody.Part part1 = partJson(json);
-        MultipartBody.Part part2 = partData(data);
+        RequestBody requestBody;
+        if(null != data) {
+            MultipartBody.Part part2 = partData(data);
 
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addPart(part1)
-                .addPart(part2)
-                .build();
+            requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addPart(part1)
+                    .addPart(part2)
+                    .build();
+        }else {
+            requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addPart(part1)
+                    .build();
+        }
 
         Request request = builder.url(url).post(requestBody).build();
 
@@ -112,8 +120,9 @@ public class MyHttp2Client {
             public void onResponse(Call call, Response response) throws IOException {
                 int code = response.code();
                 LogUtils.e(TAG, "Http protocol: " + response.protocol());
-                //LogUtils.e(TAG, "Http name: " + response.protocol().name());
-                //LogUtils.e(TAG, "Http code: " + code);
+                LogUtils.e(TAG, "Http name: " + response.protocol().name());
+                LogUtils.e(TAG, "Response code: " + code);
+
                 // 有数据返回
                 if(code == 200){
                     if(null != responseListener){
@@ -140,10 +149,8 @@ public class MyHttp2Client {
      * 异步【GET】请求
      * @param url
      */
-    public static void getAsync(String url){
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
+    public static void getAsync(Request.Builder builder, String url){
+        Request request = builder.url(url).build();
 
         getOkHttpClient().newCall(request).enqueue(new Callback() {
 
@@ -154,10 +161,10 @@ public class MyHttp2Client {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                LogUtils.d(TAG, "Http protocol: " + response.protocol());
-                LogUtils.d(TAG, "Http name: " + response.protocol().name());
-                LogUtils.d(TAG, "Response code is " + response.code());
-                LogUtils.d(TAG, "Response msg is " + response.body().string());
+                LogUtils.e(TAG, "Http protocol: " + response.protocol());
+                LogUtils.e(TAG, "Http name: " + response.protocol().name());
+                LogUtils.e(TAG, "Response code is " + response.code());
+                LogUtils.e(TAG, "Response msg is " + response.body().string());
             }
 
         });

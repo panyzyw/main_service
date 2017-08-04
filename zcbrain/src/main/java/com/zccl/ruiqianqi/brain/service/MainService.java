@@ -63,6 +63,12 @@ public class MainService extends SystemService {
         Intent intent = new Intent(context, MainService.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startService(intent);
+
+        /*
+        intent = new Intent(context, WsService.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startService(intent);
+        */
     }
 
     /**
@@ -147,6 +153,7 @@ public class MainService extends SystemService {
         // 注册动态广播
         IntentFilter filter = new IntentFilter(FACE_DETECT);
         getApplicationContext().registerReceiver(dynamicReceiver, filter);
+
 
         LogUtils.f("mainservice", System.currentTimeMillis() + "：onCreate\n");
     }

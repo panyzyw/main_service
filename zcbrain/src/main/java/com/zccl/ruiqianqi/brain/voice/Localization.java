@@ -25,7 +25,7 @@ public class Localization {
     // 马达驱动版本
     private String motorVersionKey;
 
-    public Localization(Context context){
+    protected Localization(Context context){
         this.mContext = context;
         moveAction = MoveAction.getInstance(mContext);
         motorVersionKey = mContext.getString(R.string.motor_version);

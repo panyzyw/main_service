@@ -207,6 +207,7 @@ ext {
 
     dataDepend = [
             okhttp:             "com.squareup.okhttp3:okhttp:${okhttpVersion}",
+            okhttpmock:         "com.squareup.okhttp3:mockwebserver:${okhttpVersion}",
             okhttpLogging:      "com.squareup.okhttp3:logging-interceptor:${okhttpLoggingVersion}",
             retrofit:           "com.squareup.retrofit2:retrofit:${retrofitVersion}",
             retrofitScalars:    "com.squareup.retrofit2:converter-scalars:${retrofitScalarsVersion}",
