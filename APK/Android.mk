@@ -7,7 +7,13 @@ LOCAL_MODULE_TAGS := optional
 ifeq ($(WAKE_UP_NAME),)
 LOCAL_SRC_FILES := xiaoyong.apk
 else
+FILE_EXIST := $(shell test -f packages/apps/$(LOCAL_MODULE)/APK/$(WAKE_UP_NAME).apk && echo yes)
+$(warning ------------$(FILE_EXIST)------------)
+ifeq ($(FILE_EXIST),yes)
 LOCAL_SRC_FILES := $(WAKE_UP_NAME).apk
+else
+LOCAL_SRC_FILES := xiaoyong.apk
+endif
 endif
 
 
