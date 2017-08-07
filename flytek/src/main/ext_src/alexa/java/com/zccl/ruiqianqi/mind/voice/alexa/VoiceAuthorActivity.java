@@ -46,7 +46,7 @@ public class VoiceAuthorActivity extends AppCompatActivity {
 
     private static final Scope ALEXA_ALL_SCOPE = ScopeFactory.scopeNamed("alexa:all");
 
-    // 唯一序列号
+    // 唯一序列号，相当于机器人ID
     // INSERT UNIQUE DSN FOR YOUR DEVICE
     private String PRODUCT_DSN;
 
@@ -62,33 +62,42 @@ public class VoiceAuthorActivity extends AppCompatActivity {
 
     // 验证请求类
     private RequestContext mRequestContext;
+    // 是不是登录
+    private boolean isSignIn = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String id = ShareUtils.getP(this).getString(KEY_ID, "");
-        String sid = ShareUtils.getP(this).getString(KEY_SID, "");
-        PRODUCT_DSN = id + sid;
-        if(StringUtils.isEmpty(PRODUCT_DSN)){
-            PRODUCT_DSN = PhoneUtils.getUniqueNO(this);
+        isSignIn = getIntent().getBooleanExtra("isSignIn", true);
+        if(isSignIn) {
+            String id = ShareUtils.getP(this).getString(KEY_ID, "");
+            String sid = ShareUtils.getP(this).getString(KEY_SID, "");
+            PRODUCT_DSN = id + sid;
+            if (StringUtils.isEmpty(PRODUCT_DSN)) {
+                PRODUCT_DSN = PhoneUtils.getUniqueNO(this);
+            }
+
+            mRequestContext = RequestContext.create(this);
+            mRequestContext.registerListener(new AuthorizeListenerImpl());
+            getToken(true);
+        }else {
+            signOut();
         }
-
-        mRequestContext = RequestContext.create(this);
-        mRequestContext.registerListener(new AuthorizeListenerImpl());
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        getToken(true);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mRequestContext.onResume();
+        if(isSignIn) {
+            mRequestContext.onResume();
+        }
     }
 
     @Override
@@ -121,7 +130,7 @@ public class VoiceAuthorActivity extends AppCompatActivity {
     /**
      * 登录授权
      */
-    private void login() {
+    private void signIn() {
         JSONObject scopeData = new JSONObject();
         JSONObject productInstanceAttributes = new JSONObject();
         try {
@@ -155,18 +164,19 @@ public class VoiceAuthorActivity extends AppCompatActivity {
     /**
      * 退出登录
      */
-    private void loginOut() {
+    private void signOut() {
         AuthorizationManager.signOut(getApplicationContext(), new Listener<Void, AuthError>() {
             @Override
             public void onSuccess(Void response) {
-                // Set logged out state in UI
+                LogUtils.e(TAG, "LoginOut success");
             }
 
             @Override
             public void onError(AuthError authError) {
-                // Log the error
+                LogUtils.e(TAG, "LoginOut failure");
             }
         });
+        finish();
     }
 
     /**
@@ -286,7 +296,7 @@ public class VoiceAuthorActivity extends AppCompatActivity {
                 LogUtils.e(TAG, "accessToken = " + accessToken);
                 VoiceAuthorActivity.this.finish();
 
-                initDownChannel(accessToken);
+                AlexaClient.getInstance().initDownChannel(accessToken);
 
             }
             // TOKEN已过期
@@ -297,7 +307,7 @@ public class VoiceAuthorActivity extends AppCompatActivity {
 
                 // 重新登录
                 if (reLogin) {
-                    login();
+                    signIn();
                 }
 
             }
@@ -314,18 +324,10 @@ public class VoiceAuthorActivity extends AppCompatActivity {
 
             // 重新登录
             if (reLogin) {
-                login();
+                signIn();
             }
 
         }
     }
 
-    /**
-     * Establishing the downchannel stream
-     */
-    private void initDownChannel(String accessToken){
-        // AVS特有的头消息
-        Request.Builder builder = Configuration.addGetHeaders(accessToken);
-        MyHttp2Client.getAsync(builder, DIRECTIVE_URL);
-    }
 }

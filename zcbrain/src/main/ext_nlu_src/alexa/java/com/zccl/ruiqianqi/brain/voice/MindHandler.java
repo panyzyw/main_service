@@ -2,8 +2,8 @@ package com.zccl.ruiqianqi.brain.voice;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.net.NetworkInfo;
 
-import com.google.gson.Gson;
 import com.zccl.ruiqianqi.beans.ReportBean;
 import com.zccl.ruiqianqi.brain.R;
 import com.zccl.ruiqianqi.brain.handler.BaseHandler;
@@ -13,61 +13,22 @@ import com.zccl.ruiqianqi.brain.handler.OtherHandler;
 import com.zccl.ruiqianqi.brain.handler.SDKHandler;
 import com.zccl.ruiqianqi.brain.handler.SecondHandler;
 import com.zccl.ruiqianqi.brain.semantic.flytek.BaseInfo;
-import com.zccl.ruiqianqi.brain.semantic.flytek.ExpressionBean;
 import com.zccl.ruiqianqi.brain.service.FloatListen;
-import com.zccl.ruiqianqi.brain.service.MainService;
-import com.zccl.ruiqianqi.domain.model.dataup.LogCollectBack;
 import com.zccl.ruiqianqi.mind.eventbus.MainBusEvent;
 import com.zccl.ruiqianqi.move.MoveAction;
 import com.zccl.ruiqianqi.presentation.presenter.BatteryPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.ReportPresenter;
 import com.zccl.ruiqianqi.presentation.presenter.StatePresenter;
+import com.zccl.ruiqianqi.tools.CheckUtils;
 import com.zccl.ruiqianqi.tools.JsonUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.StringUtils;
+import com.zccl.ruiqianqi.tools.config.MyConfigure;
 import com.zccl.ruiqianqi.tools.media.MyMediaPlayer;
 import com.zccl.ruiqianqi.utils.AppUtils;
 import com.zccl.ruiqianqi.utils.LedUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.zccl.ruiqianqi.brain.handler.BaseHandler.SCENE_MY_MUSIC;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_APP;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_CALL;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_CHAT;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_DICT;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_DISPLAY;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_EMOTION_CHAT;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_FACE;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_GAME;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_GENERIC;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_HABIT;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_HEALTH;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MOVE;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MOVIE_INFO;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MUSIC;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MUSIC_CTRL;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_MUTE;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_OPERA;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SMART_HOME;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SMS;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SOUND;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SQUARE_DANCE;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_STORY;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_SWITCH;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_TRANSLATE;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_TRANSLATE_;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_TV_CONTROL;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_VIDEO;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_VIDEO_CTRL;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_WATCH_TV;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_YYD_CAHT;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.FUNC_YYD_CHAT;
-import static com.zccl.ruiqianqi.brain.semantic.flytek.FuncType.OP_EMOTION_CHAT;
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.APP_STATUS_CHANGE;
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.BATTERY_CHANGE;
 import static com.zccl.ruiqianqi.plugin.voice.AbstractVoice.HDMI_CHANGE;
@@ -106,9 +67,15 @@ public class MindHandler {
     // HDMI是否已挂载
     private boolean isHdmiPlugged;
 
-
     // 头是不是朝向右边
     private boolean isHeadRight = false;
+
+    // 网络连接中
+    private String[] netConnectingS;
+    // 网络已连接
+    private String[] netConnectedS;
+    // 网络已断开
+    private String[] netDisconnectedS;
 
     protected MindHandler(Context context, RobotVoice robotVoice) {
         this.mContext = context;
@@ -152,6 +119,9 @@ public class MindHandler {
             }
         };
 
+        netConnectingS = mContext.getResources().getStringArray(R.array.net_connecting);
+        netConnectedS = mContext.getResources().getStringArray(R.array.net_connected);
+        netDisconnectedS = mContext.getResources().getStringArray(R.array.net_disconnected);
     }
 
     /**********************************************************************************************/
@@ -258,23 +228,34 @@ public class MindHandler {
             if(NET_CHANGE == flag){
                 MainBusEvent.NetEvent event = (MainBusEvent.NetEvent) obj;
                 StatePresenter sp = StatePresenter.getInstance();
-                sp.setNetConnected(event.isConn());
+                sp.setNetConnected(NetworkInfo.State.CONNECTED.ordinal()==event.getState());
 
+                LogUtils.e("netchange", "netchange = " + event.getState());
                 ReportBean reportBean;
-                if(event.isConn()){
-                    // 网络已连接，当前网络为
-                    reportBean = ReportBean.obtain(ReportBean.CODE_TTS, mContext.getString(R.string.have_net) + event.getText());
-                    //reportBean = null;
-                }else {
-                    // 网络已断开
-                    reportBean = ReportBean.obtain(ReportBean.CODE_TTS, mContext.getString(R.string.no_net) /*+ event.getText()*/);
+                // 正在连接网络
+                if(NetworkInfo.State.CONNECTING.ordinal()==event.getState()){
+                    reportBean = ReportBean.obtain(ReportBean.CODE_TTS, netConnectingS[CheckUtils.getRandom(netConnectingS.length)]);
+                }
+                // 网络已连接
+                else if(NetworkInfo.State.CONNECTED.ordinal()==event.getState()){
+                    //reportBean = ReportBean.obtain(ReportBean.CODE_TTS, mContext.getString(R.string.have_net) + event.getText());
+                    reportBean = ReportBean.obtain(ReportBean.CODE_TTS, netConnectedS[CheckUtils.getRandom(netConnectedS.length)]);
+                }
+                // 网络已断开
+                else {
+                    //reportBean = ReportBean.obtain(ReportBean.CODE_TTS, mContext.getString(R.string.no_net) /*+ event.getText()*/);
+                    reportBean = ReportBean.obtain(ReportBean.CODE_TTS, netDisconnectedS[CheckUtils.getRandom(netDisconnectedS.length)]);
                     /*
                     sp.setRobotState(STATE_CONNECT_OFF);
                     sp.setInControl(false);
                     sp.setControlId(null);
                     */
                 }
-                ReportPresenter.report(reportBean);
+                boolean isNetTips = Boolean.parseBoolean(MyConfigure.getValue("net_tips"));
+                if(isNetTips){
+                    ReportPresenter.report(reportBean);
+                }
+
             }
             // 电话状态改变了
             else if(PHONE_CHANGE == flag){

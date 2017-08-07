@@ -25,12 +25,12 @@ public class RecognizeMsg {
         /**
          * A unique ID used to represent a specific message.
          */
-        public String messageId;
+        public String messageId = BaseEvent.getUuid();
         /**
          * A unique identifier that your client must create for each Recognize event sent to Alexa.
          * This parameter is used to correlate directives sent in response to a specific Recognize event.
          */
-        public String dialogRequestId = CheckUtils.getRandomString();;
+        public String dialogRequestId = CheckUtils.getRandomString();
     }
 
     public class Payload{
@@ -57,7 +57,7 @@ public class RecognizeMsg {
          * Represents the action taken by the user to start streaming audio to AVS.
          * Accepted values: "PRESS_AND_HOLD", "TAP", and "WAKEWORD".
          */
-        private String type;
+        private String type = "TAP";
         private Payload_ payload = new Payload_();
     }
 

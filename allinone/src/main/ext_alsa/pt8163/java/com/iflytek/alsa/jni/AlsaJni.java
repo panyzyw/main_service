@@ -1,11 +1,5 @@
 package com.iflytek.alsa.jni;
 
-
-import com.zccl.ruiqianqi.eventbus.MicBusEvent;
-import com.zccl.ruiqianqi.tools.LogUtils;
-
-import org.greenrobot.eventbus.EventBus;
-
 public class AlsaJni {
 	
 	static {
@@ -66,17 +60,4 @@ public class AlsaJni {
 	 */
 	public static native int pcm_close(int handle);
 
-	public static int yyd_mic_callback(int val){
-		MicBusEvent.Operator5MicEvent operator5MicEvent = new MicBusEvent.Operator5MicEvent();
-		// 关闭五麦
-		if(0 == val){
-			operator5MicEvent.setStatus(MicBusEvent.Operator5MicEvent.CLOSE_5_MIC);
-		}
-		// 打开五麦
-		else {
-			operator5MicEvent.setStatus(MicBusEvent.Operator5MicEvent.OPEN_5_MIC);
-		}
-		//EventBus.getDefault().post(operator5MicEvent);
-		return val;
-	}
 }

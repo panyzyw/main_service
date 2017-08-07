@@ -29,7 +29,8 @@ public class VoiceRecognizer extends BaseVoice {
      * 初始化
      */
     private void init() {
-        mRecordClient = new AlexaClient(mContext);
+        mRecordClient = AlexaClient.getInstance();
+        mRecordClient.initAlexa(mContext);
     }
 
     /**

@@ -13,8 +13,8 @@ public class RecognizerState {
     public Payload payload = new Payload();
 
     public RecognizerState(){
-        header.namespace = "Notifications";
-        header.name = "IndicatorState";
+        header.namespace = "SpeechRecognizer";
+        header.name = "RecognizerState";
         payload.wakeword = "ALEXA";
     }
 

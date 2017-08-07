@@ -23,14 +23,34 @@ public class AlertsState {
     }
 
     public static class Alert{
+        /**
+         * Alert token returned by the Alexa Voice Service when the alert was set
+         */
         public String token;
+        /**
+         * Identifies the alert type.
+         * Accepted Values: TIMER or ALARM
+         */
         public String type;
+        /**
+         * Time the alert is scheduled in ISO 8601 format
+         */
         public String scheduledTime;
     }
 
     public static class ActiveAlert{
+        /**
+         * The token for alert that is currently firing
+         */
         public String token;
+        /**
+         * Identifies the alert type.
+         * Accepted Values: TIMER or ALARM
+         */
         public String type;
+        /**
+         * Time the alert is scheduled in ISO 8601 format.
+         */
         public String scheduledTime;
     }
 

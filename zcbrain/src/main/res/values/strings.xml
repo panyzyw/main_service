@@ -3,11 +3,20 @@
     <string name="app_name">主服务</string>
 
     <string-array name="hello_words">
-        <item>什么事?</item>
-        <item>干嘛啊?</item>
+        <item>什么事？</item>
+        <item>干嘛啊？</item>
         <item>我在呢!</item>
         <item>在呢!</item>
         <item>请说!</item>
+        <item>请吩咐!</item>
+        <item>请指示!</item>
+        <item>干什么？</item>
+        <item>怎么啦？</item>
+        <item>做啥子？</item>
+        <item>有什么事么？</item>
+        <item>你好!</item>
+        <item>没错，就是我!</item>
+        <item>怎么了？</item>
     </string-array>
 
     <string-array name="mute_words">

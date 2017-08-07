@@ -109,6 +109,11 @@ public class MyAudioRecorder {
         init();
     }
 
+    public MyAudioRecorder(Context context, int recvBufSize) {
+        this.mContext = context;
+        init();
+    }
+
     /**
      * 初始化
      */
@@ -121,6 +126,7 @@ public class MyAudioRecorder {
                 mBitsPerSample = 8;
             }
 
+            // 单通道
             switch (channelConfig) {
                 case AudioFormat.CHANNEL_IN_DEFAULT: // AudioFormat.CHANNEL_CONFIGURATION_DEFAULT
                 case AudioFormat.CHANNEL_IN_MONO:

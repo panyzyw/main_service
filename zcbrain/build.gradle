@@ -163,8 +163,8 @@ dependencies {
     annotationProcessor      presentationDepend.dbflowApt
 
     def developmentDepend = rootProject.ext.developmentDepend
-    debugCompile      developmentDepend.leakcanary
-    releaseCompile    developmentDepend.leakcanaryNoop
+    debugCompile        developmentDepend.leakcanary
+    releaseCompile      developmentDepend.leakcanaryNoop
     mtk_testkeyCompile  developmentDepend.leakcanaryNoop
     rk_platformCompile  developmentDepend.leakcanaryNoop
 

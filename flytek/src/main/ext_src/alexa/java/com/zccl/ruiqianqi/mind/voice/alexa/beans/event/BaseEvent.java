@@ -30,7 +30,7 @@ public class BaseEvent {
         public String messageId = getUuid();
     }
 
-    private static String getUuid() {
+    public static String getUuid() {
         String uuid = UUID.randomUUID().toString();
         return uuid;
     }

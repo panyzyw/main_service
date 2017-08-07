@@ -51,7 +51,8 @@ android{
         }
 
         if("yes" == mic_test){
-            java.srcDirs += ["src/main/ext_mictest/java"]
+            java.srcDirs += ["src/main/ext_mictest/java", 'src/main/ext_mictest/'+ mic_ver + '/java']
+            res.srcDirs += ['src/main/ext_mictest/res', 'src/main/ext_mictest/'+ mic_ver + '/res']
             jniLibs.srcDirs += [ 'src/main/ext_mictest/libs']
             manifest.srcFile "src/main/ext_mictest/AndroidManifest.xml"
         }

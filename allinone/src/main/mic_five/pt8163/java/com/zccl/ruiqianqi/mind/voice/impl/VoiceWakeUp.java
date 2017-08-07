@@ -281,13 +281,12 @@ public class VoiceWakeUp {
 
     /**
      * 重启唤醒
-     * @param context
      * 返回值：true  表示需要检测
      *         false 表示不需要检测
      */
-    public static boolean reboot(Context context){
+    public boolean reboot(){
         // 唤醒监听开启
-        VoiceWakeUp.getInstance(context).startWakeUp();
+        startWakeUp();
         return true;
     }
 

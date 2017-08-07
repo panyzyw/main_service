@@ -15,7 +15,16 @@ public class IndicatorState {
     }
 
     public class Payload{
+        /**
+         * Indicates there are new or pending notifications that have not been communicated to the user.
+         * Note: Any indicator that has not been cleared is considered enabled.
+         */
         public boolean isEnabled;
+        /**
+         * Corresponds to the persistVisualIndicator value of the last SetIndicator directive received.
+         * If persistVisualIndicator was true for the last directive received, upon reconnecting,
+         * isVisualIndicatorPersisted must be true
+         */
         public boolean isVisualIndicatorPersisted;
     }
 }

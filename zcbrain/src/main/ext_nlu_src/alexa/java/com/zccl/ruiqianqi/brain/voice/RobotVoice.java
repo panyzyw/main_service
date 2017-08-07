@@ -244,7 +244,7 @@ public class RobotVoice extends VoiceManager {
      * @param obj
      */
     public void sendCommand(int cmd, Object obj){
-        voiceWakeUp.sendCommand(cmd, obj);
+        mVoiceWakeUp.sendCommand(cmd, obj);
     }
 
     /**
@@ -252,7 +252,7 @@ public class RobotVoice extends VoiceManager {
      * @param beam
      */
     protected void setRealBeam(int beam) {
-        voiceWakeUp.setRealBeam(beam);
+        mVoiceWakeUp.setRealBeam(beam);
     }
 
     /**********************************************************************************************/

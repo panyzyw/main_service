@@ -60,8 +60,6 @@ public class VoiceWakeUp {
     // 需要重启吗
     private volatile boolean needReboot = false;
 
-    // 保存录音数据，只是在测试五麦的时候用
-    private SavePcmAudio mSavePcmAudio;
 
     /**
      * 用这个用话，instance不需要用volatile修饰
@@ -101,7 +99,6 @@ public class VoiceWakeUp {
         mCaeListener = new MyCAEListener();
         mCaeEngine.setCAEListener(mCaeListener);
 
-        mSavePcmAudio = new SavePcmAudio();
     }
 
     /**
@@ -149,15 +146,16 @@ public class VoiceWakeUp {
         }
     }
 
-    /*************************************【五麦回调】*********************************************/
+    /*************************************【六麦回调】*********************************************/
     /**
      * 原始录音回调接口，非静态内部类持有外部类的引用
      * 12路，用了7路
-     * 0----------->1
-     * 1----------->7
-     * 2----------->2
-     * 3----------->8
-     * 中---------->3
+     * 1----------->1
+     * 2----------->7
+     * 3----------->2
+     * 4----------->8
+     * 5----------->3
+     * 6----------->9
      * 喇叭-------->4,10
      */
     private class MyPcmListener implements AlsaRecorder.PcmListener{
@@ -176,7 +174,7 @@ public class VoiceWakeUp {
                 mCaeEngine.writeAudio(bytes, length);
 
                 // 保存录音数据，只是在测试五麦的时候用
-                mSavePcmAudio.writeAudio(bytes, length);
+                SavePcmAudio.writeAudio(bytes, length);
 
                 if(null != mWakeupCallback){
                     // 触摸唤醒走单mic模式，此模式无降噪，只能近距离识别
@@ -281,13 +279,12 @@ public class VoiceWakeUp {
 
     /**
      * 重启唤醒
-     * @param context
      * 返回值：true  表示需要检测
      *         false 表示不需要检测
      */
-    public static boolean reboot(Context context){
+    public boolean reboot(){
         // 唤醒监听开启
-        VoiceWakeUp.getInstance(context).startWakeUp();
+        startWakeUp();
         return true;
     }
 

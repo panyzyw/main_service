@@ -29,7 +29,7 @@
     </string-array>
 
     <string-array name="no_net_use">
-        <item>the Internet isn't so good</item>
+        <item>the Internet isn\'t so good</item>
         <item>This Internet connection! Slow as a snail</item>
         <item>The current network condition is not good, rest a while</item>
         <item>The network is off</item>

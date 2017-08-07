@@ -16,7 +16,14 @@ public class VolumeState {
     }
 
     public class Payload{
+        /**
+         * Identifies current speaker volume.
+         * Accepted Values: 0 to 100
+         */
         public long volume;
+        /**
+         * Identifies mute state of the client's speaker
+         */
         public boolean muted;
     }
 }

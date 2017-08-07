@@ -21,7 +21,7 @@ public abstract class BaseVoice {
     }
 
     // 语音数据来源
-    protected DATA_SOURCE_TYPE mDataSourceType = DATA_SOURCE_TYPE.TYPE_RAW_DATA;
+    protected DATA_SOURCE_TYPE mDataSourceType = DATA_SOURCE_TYPE.TYPE_RECORD;
     // 主线程Handler
     protected Handler mHandler;
 

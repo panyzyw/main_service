@@ -4,13 +4,19 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.zccl.ruiqianqi.mind.voice.alexa.beans.directive.Directive;
+import com.zccl.ruiqianqi.mind.voice.alexa.beans.event.BaseEvent;
 import com.zccl.ruiqianqi.mind.voice.alexa.beans.event.Event;
 import com.zccl.ruiqianqi.mind.voice.alexa.beans.event.RecognizeEvent;
 import com.zccl.ruiqianqi.mind.voice.alexa.beans.event.RecognizeMsg;
+import com.zccl.ruiqianqi.mind.voice.alexa.beans.event.SynchronizeStateEvent;
+import com.zccl.ruiqianqi.mind.voice.alexa.beans.event.SynchronizeStateMsg;
 import com.zccl.ruiqianqi.mind.voice.alexa.beans.state.AlertsState;
+import com.zccl.ruiqianqi.mind.voice.alexa.beans.state.IndicatorState;
 import com.zccl.ruiqianqi.mind.voice.alexa.beans.state.PlaybackState;
+import com.zccl.ruiqianqi.mind.voice.alexa.beans.state.RecognizerState;
 import com.zccl.ruiqianqi.mind.voice.alexa.beans.state.SpeechState;
 import com.zccl.ruiqianqi.mind.voice.alexa.beans.state.VolumeState;
+import com.zccl.ruiqianqi.tools.CheckUtils;
 import com.zccl.ruiqianqi.tools.FileUtils;
 import com.zccl.ruiqianqi.tools.LogUtils;
 import com.zccl.ruiqianqi.tools.ShareUtils;
@@ -50,8 +56,17 @@ import static com.zccl.ruiqianqi.mind.voice.alexa.Configuration.EVENT_URL;
 
 public class AlexaClient {
 
+    // 类标志
     private static String TAG = AlexaClient.class.getSimpleName();
+    // 单例
+    private static AlexaClient instance = new AlexaClient();
+    // 全局上下文
+    private Context mContext;
 
+    // 请求的TOKEN
+    private String mAccessToken = null;
+    // 分隔符
+    private String mBoundary = "*#*#";
     /**
      * Alexa currently returns speech as an mp3 audio file with the following characteristics:
      * Audio file with ID3 version 2.4.0,
@@ -61,39 +76,50 @@ public class AlexaClient {
      * audio/mpeg
      */
     private MyMediaPlayer mMyMediaPlayer;
-
     // 录音类
     private MyAudioRecorder mMyAudioRecorder;
-
     // 0表示录音 1表示音频数组
     private int mDataWay = 0;
-
     // 单麦录音
-    private volatile boolean isRecording = false;
+    private boolean isRecording = false;
     // 五麦监听
-    private volatile boolean isListening = false;
+    private boolean isListening = false;
 
-    // 全局上下文
-    private Context mContext;
+    // 识别状态
+    private RecognizerState mRecognizerState;
+    // 警告状态
+    private AlertsState mAlertsState;
+    // 音频回放状态
+    private PlaybackState mPlaybackState;
+    // 音量播放状态
+    private VolumeState mVolumeState;
+    // 发音状态
+    private SpeechState mSpeechState;
+    // 提醒状态
+    private IndicatorState mIndicatorState;
+
+    // 同步机器人状态请求
+    private SynchronizeStateEvent mSynchronizeStateEvent;
     // 识别上行请求
-    private RecognizeEvent mRecognizeEvent = null;
-    // 请求的TOKEN
-    private String mAccessToken = null;
+    private RecognizeEvent mRecognizeEvent;
 
-
-    // 分隔符
-    private String mBoundary = "*#*#";
-
-    public AlexaClient(Context context){
-        this.mContext = context;
-        init();
-
+    /**
+     * 私有默认构造子
+     */
+    private AlexaClient(){}
+    /**
+     * 静态工厂方法
+     */
+    public static AlexaClient getInstance(){
+        return instance;
     }
 
     /**
      * 初始化
      */
-    private void init(){
+    public void initAlexa(Context context){
+        // 全局上下文
+        mContext = context;
         // 创建播放器，直接播放音频
         mMyMediaPlayer = new MyMediaPlayer(mContext);
         // 创建录音器
@@ -101,17 +127,65 @@ public class AlexaClient {
         // TOKEN
         mAccessToken = ShareUtils.getP(mContext).getString("TOKEN", null);
 
-        //initDownChannel();
+        mRecognizerState = new RecognizerState();
+        mAlertsState = new AlertsState();
+        mPlaybackState = new PlaybackState();
+        mVolumeState = new VolumeState();
+        mSpeechState = new SpeechState();
+        mIndicatorState = new IndicatorState();
+
         initProtocol();
     }
 
     /**
-     * Establishing the downchannel stream
+     * Establishing The DownChannel Stream
      */
-    private void initDownChannel(){
+    public void initDownChannel(String accessToken){
+        if(StringUtils.isEmpty(mAccessToken)){
+            this.mAccessToken = accessToken;
+        }
         // AVS特有的头消息
-        Request.Builder builder = Configuration.addGetHeaders(mAccessToken);
-        MyHttp2Client.getAsync(builder, DIRECTIVE_URL);
+        Request.Builder builder = Configuration.addGetHeaders(accessToken);
+        MyHttp2Client.getAsync(builder, DIRECTIVE_URL, new MyHttp2Client.ResponseListener() {
+            @Override
+            public void OnSuccess(Response response) {
+                sendSynchronizeEvent();
+            }
+
+            @Override
+            public void OnFailure(Throwable e) {
+
+            }
+        });
+    }
+
+    /**
+     * 上行状态同步事件
+     */
+    private void sendSynchronizeEvent(){
+        mSynchronizeStateEvent = new SynchronizeStateEvent();
+        SynchronizeStateMsg synchronizeStateMsg = new SynchronizeStateMsg();
+
+        mPlaybackState.payload.token = "";
+        mPlaybackState.payload.offsetInMilliseconds = 0;
+        mPlaybackState.payload.playerActivity = "IDLE";
+
+        mVolumeState.payload.volume = 50;
+        mVolumeState.payload.muted = false;
+
+        mSpeechState.payload.token = "";
+        mSpeechState.payload.offsetInMilliseconds = 0;
+        mSpeechState.payload.playerActivity = "FINISHED";
+
+        mSynchronizeStateEvent.context.add(mAlertsState);
+        mSynchronizeStateEvent.context.add(mPlaybackState);
+        mSynchronizeStateEvent.context.add(mVolumeState);
+        mSynchronizeStateEvent.context.add(mSpeechState);
+        mSynchronizeStateEvent.event = synchronizeStateMsg;
+
+        // AVS特有的头消息
+        Request.Builder builder = Configuration.addPostHeaders(mAccessToken, mBoundary);
+        MyHttp2Client.postAsync(builder, EVENT_URL, new Gson().toJson(mSynchronizeStateEvent), null, new MyResponseCallback());
     }
 
     /**
@@ -121,29 +195,30 @@ public class AlexaClient {
         mRecognizeEvent = new RecognizeEvent();
         RecognizeMsg recognizeMsg = new RecognizeMsg();
 
-        AlertsState alertsState = new AlertsState();
+        mPlaybackState.payload.token = "";
+        mPlaybackState.payload.offsetInMilliseconds = 0;
+        mPlaybackState.payload.playerActivity = "IDLE";
 
-        PlaybackState playbackState = new PlaybackState();
-        playbackState.payload.token = "";
-        playbackState.payload.offsetInMilliseconds = 0;
-        playbackState.payload.playerActivity = "IDLE";
+        mVolumeState.payload.volume = 50;
+        mVolumeState.payload.muted = false;
 
-        SpeechState speechState = new SpeechState();
-        speechState.payload.token = "";
-        speechState.payload.offsetInMilliseconds = 0;
-        speechState.payload.playerActivity = "FINISHED";
+        mSpeechState.payload.token = "";
+        mSpeechState.payload.offsetInMilliseconds = 0;
+        mSpeechState.payload.playerActivity = "FINISHED";
 
-        VolumeState volumeState = new VolumeState();
-        volumeState.payload.volume = 50;
-        volumeState.payload.muted = false;
-
-        mRecognizeEvent.context.add(alertsState);
-        mRecognizeEvent.context.add(playbackState);
-        mRecognizeEvent.context.add(speechState);
-        mRecognizeEvent.context.add(volumeState);
+        mRecognizeEvent.context.add(mAlertsState);
+        mRecognizeEvent.context.add(mPlaybackState);
+        mRecognizeEvent.context.add(mVolumeState);
+        mRecognizeEvent.context.add(mSpeechState);
         mRecognizeEvent.event = recognizeMsg;
 
     }
+
+
+
+
+
+
 
     /**
      * Send streaming recognize requests to server.
@@ -158,6 +233,7 @@ public class AlexaClient {
 
         this.mDataWay = dataWay;
 
+        mRecognizeEvent.event.header.dialogRequestId = CheckUtils.getRandomString();
         // 单麦录音
         if(mDataWay == BaseVoice.DATA_SOURCE_TYPE.TYPE_RECORD.ordinal()){
             isRecording = true;
@@ -166,13 +242,13 @@ public class AlexaClient {
                     @Override
                     public void OnAudio(byte[] data, int len) {
                         // 每次消息的ID
-                        mRecognizeEvent.event.header.messageId = UUID.randomUUID().toString();
+                        mRecognizeEvent.event.header.messageId = BaseEvent.getUuid();
                         // AVS特有的头消息
                         Request.Builder builder = Configuration.addPostHeaders(mAccessToken, mBoundary);
 
                         byte[] newData = new byte[len];
                         System.arraycopy(data, 0, newData, 0, len);
-                        MyHttp2Client.postAsync(builder, EVENT_URL, Event.getSpeechRecognizerEvent(), newData, new MyResponseCallback());
+                        MyHttp2Client.postAsync(builder, EVENT_URL, new Gson().toJson(mRecognizeEvent), newData, new MyResponseCallback());
                     }
                 });
 
@@ -194,9 +270,12 @@ public class AlexaClient {
      */
     public void writeRecognizer(byte[] dataS){
         if(isListening) {
-            // AVS特有的头消息
+            LogUtils.e(TAG, "writeRecognizer = " + dataS.length + " mBoundary = " + mBoundary);
+            // AVS 特有的头消息
             Request.Builder builder = Configuration.addPostHeaders(mAccessToken, mBoundary);
-            MyHttp2Client.postAsync(builder, EVENT_URL, Event.getSpeechRecognizerEvent(), dataS, new MyResponseCallback());
+            // 每次消息的ID
+            mRecognizeEvent.event.header.messageId = BaseEvent.getUuid();
+            MyHttp2Client.postAsync(builder, EVENT_URL, new Gson().toJson(mRecognizeEvent), dataS, new MyResponseCallback());
         }
     }
 
@@ -294,17 +373,16 @@ public class AlexaClient {
         @Override
         public void OnSuccess(Response response) {
 
-            /*
             try {
-                LogUtils.e(TAG, response.headers().toString());
-                LogUtils.e(TAG, response.body().string());
+                LogUtils.e(TAG, "header = " + response.headers().toString());
+                LogUtils.e(TAG, "body = " + response.body().string());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            */
 
             String boundary = getBoundary(response);
             LogUtils.e(TAG, "boundary = " + boundary);
+
 
             MultipartStream mpStream = new MultipartStream(response.body().byteStream(), boundary.getBytes(), 100000, null);
             try {

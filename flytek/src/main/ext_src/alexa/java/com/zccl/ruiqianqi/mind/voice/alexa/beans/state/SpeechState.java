@@ -16,8 +16,22 @@ public class SpeechState {
     }
 
     public class Payload{
+        /**
+         * An opaque token provided in the Speak directive.
+         */
         public String token;
+        /**
+         * Identifies the current offset of TTS in milliseconds.
+         */
         public long offsetInMilliseconds;
+        /**
+         * Identifies the component state of SpeechSynthesizer.
+         * Accepted Values: PLAYING or FINISHED
+         *
+         * Player Activity	Description
+         * PLAYING	        Speech was playing.
+         * FINISHED	        Speech was finished playing
+         */
         public String playerActivity;
     }
 }

@@ -31,14 +31,7 @@ public class MicTestReceiver extends BroadcastReceiver {
      * 麦克测试
      */
     private void micTest(Context context, String data) {
-        SavePcmAudio mSavePcmAudio = new SavePcmAudio();
-        if("startSavePcm".equals(data)){
-            mSavePcmAudio.setIsSave(true);
-        }
-        else if("stopSavePcm".equals(data)){
-            mSavePcmAudio.setIsSave(false);
-        }
-        else if("startMicTest".equals(data)){
+        if("startMicTest".equals(data)){
             Intent intent = new Intent(context, MicTestActivity.class);
             intent.addFlags(intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);

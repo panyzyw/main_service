@@ -131,7 +131,7 @@ public class VoiceManager extends AbstractVoice {
      */
     @Override
     public boolean reboot() {
-        return VoiceWakeUp.reboot(mContext);
+        return voiceWakeUp.reboot();
     }
 
     /**

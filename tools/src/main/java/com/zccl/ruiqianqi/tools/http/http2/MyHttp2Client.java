@@ -86,7 +86,7 @@ public class MyHttp2Client {
      */
     public static void postAsync(Request.Builder builder, String url,
                                  String json, byte[] data, final ResponseListener responseListener){
-
+        LogUtils.e(TAG, json);
         MultipartBody.Part part1 = partJson(json);
         RequestBody requestBody;
         if(null != data) {
@@ -129,12 +129,13 @@ public class MyHttp2Client {
                         responseListener.OnSuccess(response);
                     }
                 }
-                /*
                 // 没有数据返回
-                else if(code==204){
-
+                else if(code == 204){
+                    if(null != responseListener){
+                        responseListener.OnSuccess(response);
+                    }
                 }
-                */
+                //
                 else {
                     if(null != responseListener){
                         responseListener.OnFailure(new Throwable("code != 200"));
@@ -149,7 +150,7 @@ public class MyHttp2Client {
      * 异步【GET】请求
      * @param url
      */
-    public static void getAsync(Request.Builder builder, String url){
+    public static void getAsync(Request.Builder builder, String url, final ResponseListener responseListener){
         Request request = builder.url(url).build();
 
         getOkHttpClient().newCall(request).enqueue(new Callback() {
@@ -157,14 +158,35 @@ public class MyHttp2Client {
             @Override
             public void onFailure(Call call, IOException e) {
                 LogUtils.e(TAG, e.getMessage(), e);
+                if(null != responseListener){
+                    responseListener.OnFailure(e);
+                }
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                LogUtils.e(TAG, "Http protocol: " + response.protocol());
-                LogUtils.e(TAG, "Http name: " + response.protocol().name());
-                LogUtils.e(TAG, "Response code is " + response.code());
-                LogUtils.e(TAG, "Response msg is " + response.body().string());
+                int code = response.code();
+                LogUtils.e(TAG, "Http protocol is " + response.protocol());
+                LogUtils.e(TAG, "Http name is " + response.protocol().name());
+                LogUtils.e(TAG, "Response code is " + code);
+
+                // 有数据返回
+                if(code == 200){
+                    if(null != responseListener){
+                        responseListener.OnSuccess(response);
+                    }
+                }
+                // 没有数据返回
+                else if(code == 204){
+                    if(null != responseListener){
+                        responseListener.OnSuccess(response);
+                    }
+                }
+                else {
+                    if(null != responseListener){
+                        responseListener.OnFailure(new Throwable("code != 200"));
+                    }
+                }
             }
 
         });
